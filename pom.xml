@@ -9,7 +9,8 @@
     <packaging>jar</packaging>
     <url>http://www.ini4j.org</url>
     <scm>
-        <connection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j</connection>
+        <connection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j/trunk</connection>
+        <developerConnection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j/trunk</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
@@ -86,8 +87,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.5</source>
+                    <target>1.5</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
@@ -129,14 +130,6 @@
                         <descriptorRef>src</descriptorRef>
                         <descriptorRef>bin</descriptorRef>
                     </descriptorRefs>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <tagBase>https://ini4j.svn.sourceforge.net/svnroot/ini4j/TAGS</tagBase>
                 </configuration>
             </plugin>
             

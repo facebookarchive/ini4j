@@ -13,73 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ini4j;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.prefs.BackingStoreException;
 
+import java.util.prefs.BackingStoreException;
 
 public class IniFile extends IniPreferences
 {
-    public static enum Mode {RO,WO,RW};
-    
-    private final Mode _mode;
+    public static enum Mode
+    {
+        RO,
+        WO,
+        RW
+    }
+
     private final File _file;
+    private final Mode _mode;
+
+    public IniFile(File file) throws BackingStoreException
+    {
+        this(file, Mode.RO);
+    }
 
     public IniFile(File file, Mode mode) throws BackingStoreException
     {
         super(new Ini());
         _file = file;
         _mode = mode;
-        
-        if ( (_mode == Mode.RO) || ( (_mode != Mode.WO) && _file.exists() ) )
+        if ((_mode == Mode.RO) || ((_mode != Mode.WO) && _file.exists()))
         {
             sync();
         }
     }
 
-    public IniFile(File file) throws BackingStoreException
-    {
-        this(file, Mode.RO);
-    }
-    
-    public Mode getMode()
-    {
-	return _mode;
-    }
-    
     public File getFile()
     {
-	return _file;
+        return _file;
     }
 
-    @Override
-    public void sync() throws BackingStoreException
+    public Mode getMode()
     {
-        if ( _mode == Mode.WO )
-        {
-            throw new BackingStoreException("write only instance");
-        }
-        
-        try
-        {
-            synchronized (lock)
-            {
-                getIni().load(_file.toURL());
-            }
-        }
-        catch (Exception x)
-        {
-            throw new BackingStoreException(x);
-        }
+        return _mode;
     }
 
-    @Override
-    public void flush() throws BackingStoreException
+    @Override public void flush() throws BackingStoreException
     {
-        if ( _mode == Mode.RO )
+        if (_mode == Mode.RO)
         {
             throw new BackingStoreException("read only instance");
         }
@@ -89,6 +70,7 @@ public class IniFile extends IniPreferences
             synchronized (lock)
             {
                 FileWriter writer = new FileWriter(_file);
+
                 try
                 {
                     getIni().store(writer);
@@ -97,6 +79,26 @@ public class IniFile extends IniPreferences
                 {
                     writer.close();
                 }
+            }
+        }
+        catch (Exception x)
+        {
+            throw new BackingStoreException(x);
+        }
+    }
+
+    @Override public void sync() throws BackingStoreException
+    {
+        if (_mode == Mode.WO)
+        {
+            throw new BackingStoreException("write only instance");
+        }
+
+        try
+        {
+            synchronized (lock)
+            {
+                getIni().load(_file.toURI().toURL());
             }
         }
         catch (Exception x)
