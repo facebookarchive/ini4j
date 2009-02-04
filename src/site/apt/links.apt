@@ -1,0 +1,20 @@
+                ------
+                Links
+
+Similar projects
+
+ The primary purpose of the [ini4j] is to give a simple user interface for managing .ini files.
+ Constructing a complete configuration managemenet system was not intended.
+ The following projects aim higher, usually they try to realize a complete configuration management system.
+
+ * {{{http://jfig.sourceforge.net/}JFig}}\
+   A complete configuration management system based on Windows .ini files.
+
+ * {{{http://jakarta.apache.org/commons/configuration}Jakarta commons Configuration}}\
+   A complete configuration management system that can read configuration from many sources (JNDI, Properties, JDBC). It doesn't contain .ini file supporting.
+
+ * {{{http://www.churchillobjects.com/c/13004.html}Config4j}}\
+  An XML-based complete configuration management system. It doesn't contain .ini file managing.
+  It is worth mentioning that it's able to manage configuration with Java Beans-style objects.
+
+

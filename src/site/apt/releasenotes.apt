@@ -1,0 +1,15 @@
+   ----
+   Release notes
+
+Release notes
+
+* 0.3.2 (2008-02-17)
+
+    * Fix file close problem: in some case IniFile and IniParser left files open.
+      This cause file deletion problem on some OS.
+
+    * Fix Unicode escape problem: \u sequences now generated correctly (4 character
+      with leading zeros)
+
+
+

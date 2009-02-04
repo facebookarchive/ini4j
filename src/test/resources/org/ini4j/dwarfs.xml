@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ini version='1.0'>
+ <section key='bashful'>
+  <option key='weight' value='45.7'/>
+  <option key='height' value='98.8'/>
+  <option key='age' value='67'/>
+  <option key='homePage' value='http://snowwhite.tale/~bashful'/>
+ </section>
+ <section key='doc'>
+  <option key='weight' value='49.5'/>
+  <option key='height' value='87.7'/>
+  <option key='age' value='63'/>
+  <option key='homePage' value='http://doc.dwarfs'/>
+ </section>
+ <section key='dopey'>
+  <option key='weight' value='${bashful/weight}'/>
+  <option key='height' value='${doc/height}'/>
+  <option key='age' value='23'/>
+  <option key='homePage' value='http://dopey.snowwhite.tale/'/>
+ </section>
+ <section key='grumpy'>
+  <option key='weight' value='65.3'/>
+  <option key='height' value='${dopey/height}'/>
+  <option key='age' value='76'/>
+  <option key='homePage' value='http://snowwhite.tale/~grumpy/'/>
+ </section>
+ <section key='happy'>
+  <option key='weight' value='56.4'/>
+  <option key='height' value='77.66'/>
+  <option key='age' value='99'/>
+  <option key='homePage' value='dummy'/>
+ </section>
+ <section key='sleepy'>
+  <option key='weight' value='76.11'/>
+  <option key='height' value='${doc/height}8'/>
+  <option key='age' value='121'/>
+  <option key='homePage' value='http://snowwhite.tale/~sleepy'/>
+ </section>
+ <section key='sneezy'>
+  <option key='weight' value='69.7'/>
+  <option key='height' value='76.88'/>
+  <option key='age' value='64'/>
+  <option key='homePage' value='${happy/homePage}/~sneezy'/>
+ </section>
+ <section key='happy'>
+  <option key='homePage' value='http://happy.smurf'/>
+ </section>
+</ini>

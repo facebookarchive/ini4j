@@ -1,0 +1,132 @@
+                ------
+                Tutorial
+
+Tutorial
+
+ The purpose of this document is to familiarize the reader with the usage of the
+ \[ini4j\] library. Each chapter contains all the necessary code portions and
+ explanation for a given function.
+    
+* Reading an Ini object
+
++-------------------------------------------------------------------------------
+Ini sample(Reader input) throws IOException, InvalidIniFormatException
+{
+    Ini ini = new Ini();
+    ini.load(input);
+    return ini;
+}
+
+Ini sample2(Reader input) throws IOException, InvalidIniFormatException
+{
+    return new Ini(input)
+}
++-------------------------------------------------------------------------------
+
+ As you can see, the contents of the Ini object can be read by the <<<load()>>> method.
+ For convenience purposes this may even be performed in the constructor, as seen in <<<sample2>>>.
+    
+* Managing XML format
+
++-------------------------------------------------------------------------------
+Ini sample(Reader input) throws IOException, InvalidIniFormatException
+{
+    Ini ini = new Ini();
+    ini.loadFromXML(input);
+    return ini;
+}
+
+void sample2(Writer output) throws IOException
+{
+    ini.storeToXML(output);
+}
++-------------------------------------------------------------------------------
+
+ As you can see, the only difference between managing XML format and .ini format is the "FromXML" / "ToXML" suffix.
+    
+* Getting and modifying settings
+
++-------------------------------------------------------------------------------
+void sample(Ini ini)
+{
+    Ini.Section sec = ini.get("global");
+    
+    System.out.println(sec.get("home"));
+    System.out.println(sec.fetch("size"));
+    
+    sec.put("limit","22");
+}
++-------------------------------------------------------------------------------
+
+ The Ini object is a Map&lt;String,Ini.Section&gt;, that is, a map that assigns Ini.Section objects to String keys.
+ Therefore, the <<<get()>>> method returns the section <<<global>>> in the first line.
+
+ The section is a Map\<String,String\>, that is, a map that assigns String values to String keys.
+ So the <<<get>>> method is used to get values inside the section. To get a value, besides <<<get()>>> you can also
+ use <<<fetch()>>> which resolves any occurrent $\{section/option\} format variable references in the needed value.
+    
+* Variable references
+
++-------------------------------------------------------------------------------
+[global]
+limit = 10
+size = 23
+max = ${limit}
+
+[deck]
+size = ${global/max}
+color = ${@prop/deck.color}
+price = ${@env/PRICE\}
++-------------------------------------------------------------------------------
+
+ Within the .ini file, it is possible to refer to another setting, system property or environment variable.
+ In the example above the value of <<<max>>> is a relative reference within the section. The <<<size>>>
+ property of the <<<deck>>> section is a full variable reference, with the value of <<<10>>>. The value
+ of <<<color>>> refers to the <<<deck.color>>> system property, while the value of <<<price>>> is a reference
+ to the <<<PRICE>>> environment variable.
+
+* Preferences API
+
++-------------------------------------------------------------------------------
+void sample(Reader input) throws IOException, InvalidIniFormatException
+{
+    Preferences prefs = new IniPreferences(input);
+    Preferences deck = prefs.node("deck");
+    System.out.println(deck.get("color","black"));
+}
++-------------------------------------------------------------------------------
+ 
+ In the example above only the class <<<IniPreferences>>> originates from the \[ini4j\] library.
+ As soon as the Preferences object is created it functions as a standard Preferences node, and should be
+ used as such. Implicitly only new nodes can be created in the root node (these will be the sections).
+ In the first level nodes (sections) only values can be created (these will be the options).
+
+ In the case of an invalid operation an <<<UnsupportedOperationException>>> type runtime exception is generated.
+ This happens if we try to set a value at the root node or to create a node on the second level,
+ since these operations cannot be interpreted on the whole .ini file under Preferences.
+    
+* Java Beans API
+
++-------------------------------------------------------------------------------
+interface Node
+{
+    int getSize();
+    void setSize(int s);
+    String getColor();
+    double getWeight();
+}
+
+void sample(Ini ini)
+{
+    Node deck = ini.get("deck").to(Node.class);
+    
+    double d = deck.getWeight();
+    int size = deck.getSize();
+    deck.setSize(size*2);
+}
++-------------------------------------------------------------------------------
+  
+  While writing a program we usually know the type of the section's values, so we can define one or more
+  java interfaces to access them. An advantage of this solution is that the programmer doesn't have to
+  convert the values because they are converted automatically to the type defined in the interface.
+  The <<<deck instanceof Node>>> relation is of course fulfilled in the example above.
