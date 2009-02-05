@@ -3,6 +3,29 @@
 
 Change log
 
+* 0.3.3 (2009-02-05)
+
+    * Bugfix: #2060122, thanx to Julien MARBACH
+      (ini4j does not support files with # in the name)
+
+    * Bugfix: #2120766, thanx to Karl Heinz Marbaise and Gert van Valkenhoef
+      (Java 1.5 Support) now ini4j compiled for jdk 1.5 by default (and
+      translated to 1.4)
+
+    * SVN rename. TRUNK and TAGS renamed to lowercase, to use conventional names
+
+    * New feature: #1918502 (Write Ini file: skip blanks around " = ")
+      Separated IniFormatter class format the .ini file (and XMLFormatter).
+      This class can instantiate using factory pattern (internally use
+      standard jar service locator pattern), and caller can override default
+      IniFormatter implementation. See FancyIniFormatter in addons package,
+      which is by default do not put space around '='.
+
+    * Bugfix: #1897071, thanx to Walter Podesser
+      (Ini.store with null values)
+      By default keys with empty (null) values now skipped, but in FancyIniFormatter
+      empty values printed as empty string.
+
 * 0.3.2 (2008-02-17)
 
     * Fix file close problem: in some case IniFile and IniParser left files open.

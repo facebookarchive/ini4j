@@ -50,15 +50,18 @@ public class FancyIniFormatter extends IniFormatter
             if (isAllowEmptyOption() || (optionValue != null))
             {
                 getOutput().print(escape(optionName));
+                getOutput().print(IniParser.OPERATOR);
             }
 
-            getOutput().print(IniParser.OPERATOR);
             if (optionValue != null)
             {
                 getOutput().print(escape(optionValue));
             }
 
-            getOutput().println();
+            if (isAllowEmptyOption() || (optionValue != null))
+            {
+                getOutput().println();
+            }
         }
         else
         {
