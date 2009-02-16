@@ -1,11 +1,11 @@
-/*
- * Copyright 2005 [ini4j] Development Team
+/**
+ * Copyright 2005,2009 Ivan SZKIBA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,78 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ini4j;
 
-import java.io.File;
-import java.util.prefs.BackingStoreException;
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
 
-///CLOVER:OFF
+import org.junit.Test;
+
+import java.io.File;
+
+import java.util.prefs.BackingStoreException;
 
 /**
  * JUnit test of IniFile class.
  */
-public class IniFileTest extends AbstractTestBase
+public class IniFileTest
 {
-    /**
-     * Instantiate test.
-     *
-     * @param testName name of the test
-     */
-    public IniFileTest(String testName)
-    {
-        super(testName);
-    }
-    
-    /**
-     * Create test suite.
-     *
-     * @return new test suite
-     */
-    public static Test suite()
-    {
-        return new TestSuite(IniFileTest.class);
-    }
 
-    /**
-     * Test of flush method.
-     *
-     * @throws Exception on error
-     */
-    public void testFlush() throws Exception
-    {
-        File tmp = File.createTempFile("ini4j",".ini");
-        
-        IniFile f = new IniFile(tmp, IniFile.Mode.RW);
-	
-	assertEquals(IniFile.Mode.RW, f.getMode());
-	assertEquals(tmp, f.getFile());
-        
-        f.node("doc").put("weight","65");
-        f.flush();
-
-        f = new IniFile(tmp);
-
-        assertEquals(f.node("doc").get("weight",null), "65");
-        
-        tmp.delete();
-    }
-    
     /**
      * Test of various error conditions.
      *
      * @throws Exception on error
      */
     @SuppressWarnings("empty-statement")
-    public void testErrors() throws Exception
+    @Test public void testErrors() throws Exception
     {
-        File tmp = File.createTempFile("ini4j",".ini");
-        
+        File tmp = File.createTempFile("ini4j", ".ini");
+
         // write only can't sync
         IniFile f = new IniFile(tmp, IniFile.Mode.WO);
-        
+
         try
         {
             f.sync();
@@ -97,7 +54,6 @@ public class IniFileTest extends AbstractTestBase
 
         // invalid file for write
         f = new IniFile(new File("/non existent path/to file"), IniFile.Mode.WO);
-        
         try
         {
             f.flush();
@@ -107,7 +63,7 @@ public class IniFileTest extends AbstractTestBase
         {
             ;
         }
-        
+
         // invalid file for read
         try
         {
@@ -118,7 +74,7 @@ public class IniFileTest extends AbstractTestBase
         {
             ;
         }
-        
+
         // read only can't flush
         f = new IniFile(tmp, IniFile.Mode.RO);
         try
@@ -130,7 +86,24 @@ public class IniFileTest extends AbstractTestBase
         {
             ;
         }
-        
-        
+    }
+
+    /**
+     * Test of flush method.
+     *
+     * @throws Exception on error
+     */
+    @Test public void testFlush() throws Exception
+    {
+        File tmp = File.createTempFile("ini4j", ".ini");
+        IniFile f = new IniFile(tmp, IniFile.Mode.RW);
+
+        assertEquals(IniFile.Mode.RW, f.getMode());
+        assertEquals(tmp, f.getFile());
+        f.node(Dwarfs.PROP_DOC).put(Dwarf.PROP_WEIGHT, "65");
+        f.flush();
+        f = new IniFile(tmp);
+        assertEquals(f.node(Dwarfs.PROP_DOC).get(Dwarf.PROP_WEIGHT, null), "65");
+        tmp.delete();
     }
 }

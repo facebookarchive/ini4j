@@ -1,11 +1,11 @@
-/*
- * Copyright 2005 [ini4j] Development Team
+/**
+ * Copyright 2005,2009 Ivan SZKIBA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,27 +22,28 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Proxy;
 
 import java.net.URL;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class Ini extends LinkedHashMap<String, Ini.Section>
+public class Ini extends MultiMapImpl<String, Ini.Section>
 {
-    private static final String OPERATOR = " " + IniParser.OPERATOR + " ";
     private static final char SUBST_CHAR = '$';
-    private static final String SUBST_BEGIN = SUBST_CHAR + "{";
-    private static final int SUBST_BEGIN_LEN = SUBST_BEGIN.length();
-    private static final String SUBST_END = "}";
-    private static final int SUBST_END_LEN = SUBST_END.length();
-    private static final char SUBST_ESCAPE = '\\';
-    private static final char SUBST_SEPARATOR = '/';
-    private static final String SUBST_PROPERTY = "@prop";
-    private static final String SUBST_ENVIRONMENT = "@env";
+    private static final String SECTION_SYSTEM_PROPERTIES = "@prop";
+    private static final String SECTION_ENVIRONMENT = "@env";
+    private static final Pattern expr = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?/)?([^\\[]+)(\\[(([0-9]+))\\])?\\}");
+    private static final int G_SECTION = 2;
+    private static final int G_SECTION_IDX = 4;
+    private static final int G_OPTION = 5;
+    private static final int G_OPTION_IDX = 7;
     private Map<Class, Object> _beans;
+    private Config _config = Config.getGlobal();
 
     @SuppressWarnings("empty-statement")
     public Ini()
@@ -68,79 +69,28 @@ public class Ini extends LinkedHashMap<String, Ini.Section>
         load(input);
     }
 
+    public void setConfig(Config value)
+    {
+        _config = value;
+    }
+
     public Section add(String name)
     {
         Section s = new Section(name);
 
-        put(name, s);
+        if (getConfig().isMultiSection())
+        {
+            add(name, s);
+        }
+        else
+        {
+            put(name, s);
+        }
 
         return s;
     }
 
-    public void load(InputStream input) throws IOException, InvalidIniFormatException
-    {
-        load(new InputStreamReader(input));
-    }
-
-    public void load(Reader input) throws IOException, InvalidIniFormatException
-    {
-        Builder builder = new Builder();
-
-        IniParser.newInstance().parse(input, builder);
-    }
-
-    public void load(URL input) throws IOException, InvalidIniFormatException
-    {
-        Builder builder = new Builder();
-
-        IniParser.newInstance().parse(input, builder);
-    }
-
-    public void loadFromXML(InputStream input) throws IOException, InvalidIniFormatException
-    {
-        loadFromXML(new InputStreamReader(input));
-    }
-
-    public void loadFromXML(Reader input) throws IOException, InvalidIniFormatException
-    {
-        Builder builder = new Builder();
-
-        IniParser.newInstance().parseXML(input, builder);
-    }
-
-    public void loadFromXML(URL input) throws IOException, InvalidIniFormatException
-    {
-        Builder builder = new Builder();
-
-        IniParser.newInstance().parseXML(input, builder);
-    }
-
-    public Section remove(Section section)
-    {
-        return remove((Object) section.getName());
-    }
-
-    public void store(OutputStream output) throws IOException
-    {
-        store(IniFormatter.newInstance(output));
-    }
-
-    public void store(Writer output) throws IOException
-    {
-        store(IniFormatter.newInstance(output));
-    }
-
-    public void storeToXML(OutputStream output) throws IOException
-    {
-        store(XMLFormatter.newInstance(output));
-    }
-
-    public void storeToXML(Writer output) throws IOException
-    {
-        store(XMLFormatter.newInstance(output));
-    }
-
-    public <T> T to(Class<T> clazz)
+    public <T> T as(Class<T> clazz)
     {
         Object bean;
 
@@ -163,71 +113,114 @@ public class Ini extends LinkedHashMap<String, Ini.Section>
         return clazz.cast(bean);
     }
 
+    public void load(InputStream input) throws IOException, InvalidIniFormatException
+    {
+        load(new InputStreamReader(input));
+    }
+
+    public void load(Reader input) throws IOException, InvalidIniFormatException
+    {
+        Builder builder = new Builder();
+
+        IniParser.newInstance(getConfig()).parse(input, builder);
+    }
+
+    public void load(URL input) throws IOException, InvalidIniFormatException
+    {
+        Builder builder = new Builder();
+
+        IniParser.newInstance(getConfig()).parse(input, builder);
+    }
+
+    public void loadFromXML(InputStream input) throws IOException, InvalidIniFormatException
+    {
+        loadFromXML(new InputStreamReader(input));
+    }
+
+    public void loadFromXML(Reader input) throws IOException, InvalidIniFormatException
+    {
+        Builder builder = new Builder();
+
+        IniParser.newInstance(getConfig()).parseXML(input, builder);
+    }
+
+    public void loadFromXML(URL input) throws IOException, InvalidIniFormatException
+    {
+        Builder builder = new Builder();
+
+        IniParser.newInstance(getConfig()).parseXML(input, builder);
+    }
+
+    public Section remove(Section section)
+    {
+        return remove((Object) section.getName());
+    }
+
+    public void store(OutputStream output) throws IOException
+    {
+        store(IniFormatter.newInstance(output, getConfig()));
+    }
+
+    public void store(Writer output) throws IOException
+    {
+        store(IniFormatter.newInstance(output, getConfig()));
+    }
+
+    public void storeToXML(OutputStream output) throws IOException
+    {
+        store(XMLFormatter.newInstance(output));
+    }
+
+    public void storeToXML(Writer output) throws IOException
+    {
+        store(XMLFormatter.newInstance(output));
+    }
+
+    @Deprecated public <T> T to(Class<T> clazz)
+    {
+        return as(clazz);
+    }
+
+    protected Config getConfig()
+    {
+        return _config;
+    }
+
     protected void resolve(StringBuilder buffer, Section owner)
     {
-        int begin = -1;
-        int end = -1;
+        Matcher m = expr.matcher(buffer);
 
-        for (int i = buffer.indexOf(SUBST_BEGIN); (i >= 0); i = buffer.indexOf(SUBST_BEGIN, i + 1))
+        while (m.find())
         {
-            if ((i + 2) > buffer.length())
-            {
-                break;
-            }
-
-            if ((i != 0) && (buffer.charAt(i - 1) == SUBST_ESCAPE))
+            if (m.groupCount() < G_OPTION_IDX)
             {
                 continue;
             }
 
-            begin = i;
-            end = buffer.indexOf(SUBST_END, i);
-            if (end < 0)
+            String sectionName = m.group(G_SECTION);
+            String optionName = m.group(G_OPTION);
+            int sectionIndex = (m.group(G_SECTION_IDX) == null) ? 0 : Integer.parseInt(m.group(G_SECTION_IDX));
+            int optionIndex = (m.group(G_OPTION_IDX) == null) ? 0 : Integer.parseInt(m.group(G_OPTION_IDX));
+            Section section = (sectionName == null) ? owner : get(sectionName, sectionIndex);
+            String value;
+
+            if (SECTION_ENVIRONMENT.equals(sectionName))
             {
-                break;
+                value = System.getenv(optionName);
+            }
+            else if (SECTION_SYSTEM_PROPERTIES.equals(sectionName))
+            {
+                value = System.getProperty(optionName);
+            }
+            else
+            {
+                value = (section == null) ? null : section.fetch(optionName, optionIndex);
             }
 
-            if ((begin >= 0) && (end > 0))
+            if (value != null)
             {
-                String var = buffer.substring(begin + SUBST_BEGIN_LEN, end);
-                String group = null;
-                int sep = var.indexOf(SUBST_SEPARATOR);
-                String value = null;
-
-                if (sep > 0)
-                {
-                    group = var.substring(0, sep);
-                    var = var.substring(sep + 1);
-                }
-
-                if (var != null)
-                {
-                    if (group == null)
-                    {
-                        value = owner.fetch(var);
-                    }
-                    else if (SUBST_ENVIRONMENT.equals(group))
-                    {
-                        value = System.getenv(var);
-                    }
-                    else if (SUBST_PROPERTY.equals(group))
-                    {
-                        value = System.getProperty(var);
-                    }
-                    else
-                    {
-                        owner = get(group);
-                        if (owner != null)
-                        {
-                            value = owner.fetch(var);
-                        }
-                    }
-                }
-
-                if (value != null)
-                {
-                    buffer.replace(begin, end + SUBST_END_LEN, value);
-                }
+                buffer.replace(m.start(), m.end(), value);
+                m.reset(buffer);
             }
         }
     }
@@ -238,9 +231,14 @@ public class Ini extends LinkedHashMap<String, Ini.Section>
         for (Ini.Section s : values())
         {
             formatter.startSection(s.getName());
-            for (Map.Entry<String, String> e : s.entrySet())
+            for (String name : s.keySet())
             {
-                formatter.handleOption(e.getKey(), e.getValue());
+                int n = getConfig().isMultiOption() ? s.length(name) : 1;
+
+                for (int i = 0; i < n; i++)
+                {
+                    formatter.handleOption(name, s.get(name, i));
+                }
             }
 
             formatter.endSection();
@@ -249,7 +247,7 @@ public class Ini extends LinkedHashMap<String, Ini.Section>
         formatter.endIni();
     }
 
-    public class Section extends LinkedHashMap<String, String>
+    public class Section extends MultiMapImpl<String, String>
     {
         private Map<Class, Object> _beans;
         private String _name;
@@ -265,22 +263,7 @@ public class Ini extends LinkedHashMap<String, Ini.Section>
             return _name;
         }
 
-        public String fetch(Object key)
-        {
-            String value = get(key);
-
-            if ((value != null) && (value.indexOf(SUBST_CHAR) >= 0))
-            {
-                StringBuilder buffer = new StringBuilder(value);
-
-                resolve(buffer, this);
-                value = buffer.toString();
-            }
-
-            return value;
-        }
-
-        public synchronized <T> T to(Class<T> clazz)
+        public synchronized <T> T as(Class<T> clazz)
         {
             Object bean;
 
@@ -303,16 +286,83 @@ public class Ini extends LinkedHashMap<String, Ini.Section>
             return clazz.cast(bean);
         }
 
+        public String fetch(Object key)
+        {
+            return fetch(key, 0);
+        }
+
+        public String fetch(Object key, int index)
+        {
+            String value = get(key, index);
+
+            if ((value != null) && (value.indexOf(SUBST_CHAR) >= 0))
+            {
+                StringBuilder buffer = new StringBuilder(value);
+
+                resolve(buffer, this);
+                value = buffer.toString();
+            }
+
+            return value;
+        }
+
+        public void from(Object bean)
+        {
+            BeanTool.getInstance().inject(this, bean);
+        }
+
+        @Deprecated public <T> T to(Class<T> clazz)
+        {
+            return as(clazz);
+        }
+
+        public void to(Object bean)
+        {
+            BeanTool.getInstance().inject(bean, this);
+        }
+
         class BeanInvocationHandler extends AbstractBeanInvocationHandler
         {
             @Override protected Object getPropertySpi(String property, Class<?> clazz)
             {
-                return fetch(property);
+                Object ret;
+
+                if (clazz.isArray())
+                {
+                    String[] all = containsKey(property) ? new String[length(property)] : null;
+
+                    if (all != null)
+                    {
+                        for (int i = 0; i < all.length; i++)
+                        {
+                            all[i] = fetch(property, i);
+                        }
+                    }
+
+                    ret = all;
+                }
+                else
+                {
+                    ret = fetch(property);
+                }
+
+                return ret;
             }
 
             @Override protected void setPropertySpi(String property, Object value, Class<?> clazz)
             {
-                put(property, value.toString());
+                if (clazz.isArray())
+                {
+                    remove(property);
+                    for (int i = 0; i < Array.getLength(value); i++)
+                    {
+                        add(property, Array.get(value, i).toString());
+                    }
+                }
+                else
+                {
+                    put(property, value.toString());
+                }
             }
 
             @Override protected boolean hasPropertySpi(String property)
@@ -324,20 +374,50 @@ public class Ini extends LinkedHashMap<String, Ini.Section>
 
     class BeanInvocationHandler extends AbstractBeanInvocationHandler
     {
-        private Map<String, Object> _sectionBeans = new HashMap<String, Object>();
+        private MultiMap<String, Object> _sectionBeans = new MultiMapImpl<String, Object>();
 
         @Override protected Object getPropertySpi(String property, Class<?> clazz)
         {
-            Object o = _sectionBeans.get(property);
+            Object o;
 
-            if (o == null)
+            if (clazz.isArray())
             {
-                Section section = get(property);
-
-                if (section != null)
+                if (!_sectionBeans.containsKey(property))
                 {
-                    o = section.to(clazz);
-                    _sectionBeans.put(property, o);
+                    if (containsKey(property))
+                    {
+                        for (int i = 0; i < length(property); i++)
+                        {
+                            _sectionBeans.add(property, get(property, i).as(clazz.getComponentType()));
+                        }
+                    }
+                }
+
+                if (_sectionBeans.containsKey(property))
+                {
+                    o = Array.newInstance(clazz.getComponentType(), _sectionBeans.length(property));
+                    for (int i = 0; i < _sectionBeans.length(property); i++)
+                    {
+                        Array.set(o, i, _sectionBeans.get(property, i));
+                    }
+                }
+                else
+                {
+                    o = null;
+                }
+            }
+            else
+            {
+                o = _sectionBeans.get(property);
+                if (o == null)
+                {
+                    Section section = get(property);
+
+                    if (section != null)
+                    {
+                        o = section.as(clazz);
+                        _sectionBeans.put(property, o);
+                    }
                 }
             }
 
@@ -346,12 +426,30 @@ public class Ini extends LinkedHashMap<String, Ini.Section>
 
         @Override protected void setPropertySpi(String property, Object value, Class<?> clazz)
         {
-            throw new UnsupportedOperationException("read only bean");
+            remove(property);
+            if (value != null)
+            {
+                if (clazz.isArray())
+                {
+                    for (int i = 0; i < Array.getLength(value); i++)
+                    {
+                        Section sec = add(property);
+
+                        sec.from(Array.get(value, i));
+                    }
+                }
+                else
+                {
+                    Section sec = add(property);
+
+                    sec.from(value);
+                }
+            }
         }
 
         @Override protected boolean hasPropertySpi(String property)
         {
-            return false;
+            return containsKey(property);
         }
     }
 
@@ -372,7 +470,14 @@ public class Ini extends LinkedHashMap<String, Ini.Section>
 
         @Override public void handleOption(String name, String value)
         {
-            currentSection.put(name, value);
+            if (getConfig().isMultiOption())
+            {
+                currentSection.add(name, value);
+            }
+            else
+            {
+                currentSection.put(name, value);
+            }
         }
 
         @SuppressWarnings("empty-statement")
@@ -383,9 +488,16 @@ public class Ini extends LinkedHashMap<String, Ini.Section>
 
         @Override public void startSection(String sectionName)
         {
-            Section s = get(sectionName);
+            if (getConfig().isMultiSection())
+            {
+                currentSection = add(sectionName);
+            }
+            else
+            {
+                Section s = get(sectionName);
 
-            currentSection = (s != null) ? s : add(sectionName);
+                currentSection = (s != null) ? s : add(sectionName);
+            }
         }
     }
 }

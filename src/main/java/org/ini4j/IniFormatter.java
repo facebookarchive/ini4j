@@ -1,11 +1,11 @@
-/*
- * Copyright 2005 [ini4j] Development Team
+/**
+ * Copyright 2005,2009 Ivan SZKIBA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,9 +22,8 @@ import java.io.Writer;
 
 public class IniFormatter implements IniHandler
 {
-    public static final String SERVICE_ID = "org.ini4j.IniFormatter";
-    public static final String DEFAULT_SERVICE = SERVICE_ID;
     private static final String OPERATOR = " " + IniParser.OPERATOR + " ";
+    private Config _config = Config.getGlobal();
     private PrintWriter output;
 
     public static IniFormatter newInstance(Writer out)
@@ -41,6 +40,25 @@ public class IniFormatter implements IniHandler
         return newInstance(new OutputStreamWriter(out));
     }
 
+    public static IniFormatter newInstance(Writer out, Config config)
+    {
+        IniFormatter instance = newInstance(out);
+
+        instance.setConfig(config);
+
+        return instance;
+    }
+
+    public static IniFormatter newInstance(OutputStream out, Config config)
+    {
+        return newInstance(new OutputStreamWriter(out), config);
+    }
+
+    public Config getConfig()
+    {
+        return _config;
+    }
+
     public void endIni()
     {
         getOutput().flush();
@@ -53,11 +71,34 @@ public class IniFormatter implements IniHandler
 
     public void handleOption(String optionName, String optionValue)
     {
-        if (optionValue != null)
+        if (getConfig().isStrictOperator())
         {
-            getOutput().print(escape(optionName));
-            getOutput().print(OPERATOR);
-            getOutput().println(escape(optionValue));
+            if (getConfig().isEmptyOption() || (optionValue != null))
+            {
+                getOutput().print(escape(optionName));
+                getOutput().print(IniParser.OPERATOR);
+            }
+
+            if (optionValue != null)
+            {
+                getOutput().print(escape(optionValue));
+            }
+
+            if (getConfig().isEmptyOption() || (optionValue != null))
+            {
+                getOutput().println();
+            }
+        }
+        else
+        {
+            String value = ((optionValue == null) && getConfig().isEmptyOption()) ? "" : optionValue;
+
+            if (value != null)
+            {
+                getOutput().print(escape(optionName));
+                getOutput().print(OPERATOR);
+                getOutput().println(escape(value));
+            }
         }
     }
 
@@ -76,7 +117,12 @@ public class IniFormatter implements IniHandler
 
     protected static IniFormatter newInstance()
     {
-        return (IniFormatter) ServiceFinder.findService(SERVICE_ID, DEFAULT_SERVICE);
+        return ServiceFinder.findService(IniFormatter.class);
+    }
+
+    protected void setConfig(Config value)
+    {
+        _config = value;
     }
 
     protected PrintWriter getOutput()
@@ -91,6 +137,6 @@ public class IniFormatter implements IniHandler
 
     protected String escape(String input)
     {
-        return Convert.escape(input);
+        return getConfig().isEscape() ? EscapeTool.getInstance().escape(input) : input;
     }
 }

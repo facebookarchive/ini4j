@@ -13,22 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j.sample;
+package org.ini4j;
 
-import org.ini4j.Ini;
+import java.util.List;
+import java.util.Map;
 
-import java.io.FileReader;
-
-public class IniSample
+public interface MultiMap<K, V> extends Map<K, V>
 {
-    public static void main(String[] args) throws Exception
-    {
-        String filename = (args.length > 0) ? args[0] : "dwarfs.ini";
-        Ini ini = new Ini(new FileReader(filename));
+    List<V> getAll(Object key);
 
-        for (String key : ini.get("sleepy").keySet())
-        {
-            System.out.println("sleepy/" + key + " = " + ini.get("sleepy").fetch(key));
-        }
-    }
+    void add(K key, V value);
+
+    void add(K key, V value, int index);
+
+    V get(Object key, int index);
+
+    int length(Object key);
+
+    V put(K key, V value, int index);
+
+    List<V> putAll(K key, List<V> values);
+
+    V remove(Object key, int index);
 }

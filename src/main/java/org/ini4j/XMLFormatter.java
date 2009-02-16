@@ -1,18 +1,19 @@
-/*
- * Copyright 2005 [ini4j] Development Team
- *
+/**
+ * Copyright 2005,2009 Ivan SZKIBA
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.ini4j;
 
 import java.io.OutputStream;
@@ -22,8 +23,6 @@ import java.io.Writer;
 
 public class XMLFormatter implements IniHandler
 {
-    public static final String SERVICE_ID = "org.ini4j.XMLFormatter";
-    public static final String DEFAULT_SERVICE = SERVICE_ID;
     private PrintWriter output;
 
     public static XMLFormatter newInstance(Writer out)
@@ -74,7 +73,7 @@ public class XMLFormatter implements IniHandler
 
     protected static XMLFormatter newInstance()
     {
-        return (XMLFormatter) ServiceFinder.findService(SERVICE_ID, DEFAULT_SERVICE);
+        return ServiceFinder.findService(XMLFormatter.class);
     }
 
     protected PrintWriter getOutput()

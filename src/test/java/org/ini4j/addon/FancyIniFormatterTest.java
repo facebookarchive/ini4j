@@ -1,11 +1,11 @@
-/*
- * Copyright 2005 [ini4j] Development Team
+/**
+ * Copyright 2005,2009 Ivan SZKIBA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,21 +15,22 @@
  */
 package org.ini4j.addon;
 
-///CLOVER:OFF
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-import org.ini4j.AbstractTestBase;
+import org.ini4j.Config;
 import org.ini4j.Ini;
 import org.ini4j.IniFormatter;
 import org.ini4j.IniHandler;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-public class FancyIniFormatterTest extends AbstractTestBase
+public class FancyIniFormatterTest
 {
     private static final String STRICTOPERATOR = "[section]\noption=value\n\n";
     private static final String NORMALOPERATOR = "[section]\noption = value\n\n";
@@ -39,30 +40,21 @@ public class FancyIniFormatterTest extends AbstractTestBase
     private FancyIniFormatter formatter;
     private StringWriter output;
 
-    public FancyIniFormatterTest(String testName)
+    @Before public void setUp() throws Exception
     {
-        super(testName);
-    }
-
-    public static Test suite()
-    {
-        return new TestSuite(FancyIniFormatterTest.class);
-    }
-
-    @Override public void setUp() throws Exception
-    {
-        System.setProperty(IniFormatter.SERVICE_ID, FancyIniFormatter.class.getName());
+        System.setProperty(IniFormatter.class.getName(), FancyIniFormatter.class.getName());
         output = new StringWriter();
         formatter = (FancyIniFormatter) IniFormatter.newInstance(output);
     }
 
-    public void testDefaults() throws Exception
+    @Test public void testDefaults() throws Exception
     {
+        formatter.setConfig(new Config());
         assertTrue(formatter.isAllowStrictOperator());
         assertTrue(formatter.isAllowEmptyOption());
     }
 
-    public void testEmptyOption() throws Exception
+    @Test public void testEmptyOption() throws Exception
     {
         formatter.setAllowEmptyOption(true);
         IniHelper ini = new IniHelper(new StringReader(STRICTOPERATOR));
@@ -72,7 +64,7 @@ public class FancyIniFormatterTest extends AbstractTestBase
         assertEquals(WITHDUMMY, output.toString());
     }
 
-    public void testNoEmptyOption() throws Exception
+    @Test public void testNoEmptyOption() throws Exception
     {
         formatter.setAllowEmptyOption(false);
         IniHelper ini = new IniHelper(new StringReader(STRICTOPERATOR));
@@ -83,7 +75,7 @@ public class FancyIniFormatterTest extends AbstractTestBase
         assertEquals(STRICTOPERATOR, output.toString());
     }
 
-    public void testNoStrictOperator() throws Exception
+    @Test public void testNoStrictOperator() throws Exception
     {
         formatter.setAllowStrictOperator(false);
         IniHelper ini = new IniHelper(new StringReader(NORMALOPERATOR));
@@ -92,7 +84,7 @@ public class FancyIniFormatterTest extends AbstractTestBase
         assertEquals(NORMALOPERATOR, output.toString());
     }
 
-    public void testStrictOperator() throws Exception
+    @Test public void testStrictOperator() throws Exception
     {
         formatter.setAllowStrictOperator(true);
         IniHelper ini = new IniHelper(new StringReader(STRICTOPERATOR));

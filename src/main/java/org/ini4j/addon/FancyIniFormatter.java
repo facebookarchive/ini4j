@@ -1,11 +1,11 @@
-/*
- * Copyright 2005 [ini4j] Development Team
+/**
+ * Copyright 2005,2009 Ivan SZKIBA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,57 +15,44 @@
  */
 package org.ini4j.addon;
 
+import org.ini4j.Config;
 import org.ini4j.IniFormatter;
-import org.ini4j.IniParser;
 
-public class FancyIniFormatter extends IniFormatter
+@Deprecated public class FancyIniFormatter extends IniFormatter
 {
-    private boolean _allowEmptyOption = true;
-    private boolean _allowStrictOperator = true;
-
-    public synchronized void setAllowEmptyOption(boolean flag)
+    public FancyIniFormatter()
     {
-        _allowEmptyOption = flag;
+        Config cfg = getConfig().clone();
+
+        cfg.setEmptyOption(true);
+        cfg.setStrictOperator(true);
+        super.setConfig(cfg);
     }
 
-    public synchronized void setAllowStrictOperator(boolean flag)
+    @Deprecated public synchronized void setAllowEmptyOption(boolean flag)
     {
-        _allowStrictOperator = flag;
+        getConfig().setEmptyOption(flag);
     }
 
-    public synchronized boolean isAllowEmptyOption()
+    @Deprecated public synchronized void setAllowStrictOperator(boolean flag)
     {
-        return _allowEmptyOption;
+        getConfig().setStrictOperator(flag);
     }
 
-    public synchronized boolean isAllowStrictOperator()
+    @Deprecated @Override
+    @SuppressWarnings("empty-statement")
+    public void setConfig(Config value)
     {
-        return _allowStrictOperator;
+        ;
     }
 
-    @Override public void handleOption(String optionName, String optionValue)
+    @Deprecated public synchronized boolean isAllowEmptyOption()
     {
-        if (isAllowStrictOperator())
-        {
-            if (isAllowEmptyOption() || (optionValue != null))
-            {
-                getOutput().print(escape(optionName));
-                getOutput().print(IniParser.OPERATOR);
-            }
+        return getConfig().isEmptyOption();
+    }
 
-            if (optionValue != null)
-            {
-                getOutput().print(escape(optionValue));
-            }
-
-            if (isAllowEmptyOption() || (optionValue != null))
-            {
-                getOutput().println();
-            }
-        }
-        else
-        {
-            super.handleOption(optionName, ((optionValue == null) && isAllowEmptyOption()) ? "" : optionValue);
-        }
+    @Deprecated public synchronized boolean isAllowStrictOperator()
+    {
+        return getConfig().isStrictOperator();
     }
 }
