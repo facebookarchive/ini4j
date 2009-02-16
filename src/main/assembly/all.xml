@@ -24,9 +24,9 @@
   <fileSets>
     <fileSet>
       <includes>
-        <include>${project.basedir}/README*</include>
-        <include>${project.basedir}/LICENSE*</include>
-        <include>${project.basedir}/NOTICE*</include>
+        <include>README*</include>
+        <include>LICENSE*</include>
+        <include>NOTICE*</include>
       </includes>
     </fileSet>
     <fileSet>

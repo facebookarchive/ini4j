@@ -3,19 +3,6 @@
 
 TODO list
 
-  * {{{apidocs/org/ini4j/IniParser.html}IniParser.html}}
-
-      * Backslash support at end of line ?
-
-      * Should use ':' also as operator ? (maybe bad idea, BTW Properties file do it)
-
-  * Code cleanup\
-      Cleanup imports, format and check code (checkstyle, jalopy, pmd)
-    
   * Improve documentation
-
-       * Correct existing documentations English, and write new docs, tutorials. Any helps are welcome...
-
-       * Write sample codes to introduce JDK 1.4 backport (see ini4j-compat.jar and retroweaver-rt.jar).
 
 

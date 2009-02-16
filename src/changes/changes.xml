@@ -23,9 +23,28 @@
   </properties>
   <body>
 
-    <release version="0.4.0" description="Refactoring and new features" issue="222" due-to="lala">
+    <release version="0.4.0" description="Refactoring and new features">
       <action type="add" dev="szkiba">
+      New from() and to() methods in Ini.Section for
+      marshalling/unmarshalling bean properties.
+      </action>
 
+      <action type="add" dev="szkiba">
+      Indexed property access in bean interafce for multi value options and
+      sections.
+      </action>
+
+      <action type="add" dev="szkiba">
+      Configurable multi value handling both for options and sections.
+      </action>
+
+      <action type="add" dev="szkiba">
+      Configurable escape handling. Now possible to handle windows path
+      values (caontains backslases).
+      </action>
+
+      <action type="update" dev="szkiba">
+      Migrate junit test to 4.x version.
       </action>
 
       <action type="update" dev="szkiba">
@@ -38,13 +57,20 @@
       IniFormatter. Make them configurable (enable/disable features via Config
       object).
       </action>
+
       <action type="update" dev="szkiba">
       Make bean manipulation (BeanTool) and escaping (EscapeTool) replaceable via
       standard services mechanism (/META-INF/services/XXX)
       </action>
+
       <action type="add" dev="szkiba">
       Internal changes: migrating changelog.apt to changes.xml, generating text
       version of ChangeLog and Releasenotes from changes.xml
+      </action>
+
+      <action type="add" dev="szkiba">
+      Internal changes: use wagon plugin for helping SourceForge release upload,
+      use license plugin to keep up to date file headers.
       </action>
     </release>
 

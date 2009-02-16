@@ -263,7 +263,7 @@
                         <aggregate>true</aggregate>
                         <encoding>UTF-8</encoding>
                         <useDefaultExcludes>true</useDefaultExcludes>
-                        <header>src/site/resources/header.txt</header>
+                        <header>NOTICE.txt</header>
                         <excludes>
                             <exclude>**/META-INF/services/**</exclude>
                             <exclude>**/*.txt</exclude>
