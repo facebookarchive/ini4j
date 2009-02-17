@@ -23,7 +23,7 @@
   </properties>
   <body>
 
-    <release version="0.4.0" description="Refactoring and new features">
+    <release version="0.4.0" date="2009-02-17" description="Refactoring and new features">
       <action type="add" dev="szkiba">
       New from() and to() methods in Ini.Section for
       marshalling/unmarshalling bean properties.
