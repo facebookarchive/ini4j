@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ini4j</groupId>
     <artifactId>ini4j</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1-SNAPSHOT</version>
     <name>ini4j</name>
     <description>The [ini4j] is a simple Java API for handling configuration files in Windows .ini format. Additionally, the library includes Java Preferences API implementation based on the .ini file.</description>
     <packaging>jar</packaging>
     <url>http://www.ini4j.org</url>
     <scm>
-        <connection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j/tags/ini4j-0.4.0</connection>
-        <developerConnection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j/tags/ini4j-0.4.0</developerConnection>
+        <connection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j/trunk</connection>
+        <developerConnection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j/trunk</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
