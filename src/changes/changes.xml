@@ -59,8 +59,8 @@
       </action>
 
       <action type="update" dev="szkiba">
-      Make bean manipulation (BeanTool) and escaping (EscapeTool) replaceable via
-      standard services mechanism (/META-INF/services/XXX)
+      Make bean manipulation (BeanTool) and escaping (EscapeTool) replaceable
+      via standard services mechanism (/META-INF/services/XXX)
       </action>
 
       <action type="add" dev="szkiba">
@@ -69,8 +69,8 @@
       </action>
 
       <action type="add" dev="szkiba">
-      Internal changes: use wagon plugin for helping SourceForge release upload,
-      use license plugin to keep up to date file headers.
+      Internal changes: use wagon plugin for helping SourceForge release
+      upload, use license plugin to keep up to date file headers.
       </action>
     </release>
 
@@ -95,19 +95,19 @@
       </action>
       <action type="fix" dev="szkiba" issue="1897071" due-to="Walter Podesser">
       Ini.store with null values:
-      By default keys with empty (null) values now skipped, but in FancyIniFormatter
-      empty values printed as empty string.
+      By default keys with empty (null) values now skipped, but in
+      FancyIniFormatter empty values printed as empty string.
       </action>
     </release>
 
     <release version="0.3.2" date="2008-02-17" description="Minor bugfixes">
       <action type="fix" dev="szkiba">
-      Fix file close problem: in some case IniFile and IniParser left files open.
-      This cause file deletion problem on some OS.
+      Fix file close problem: in some case IniFile and IniParser left files
+      open. This cause file deletion problem on some OS.
       </action>
       <action type="fix" dev="szkiba">
-      Fix Unicode escape problem: \u sequences now generated correctly (4 character
-      with leading zeros)
+      Fix Unicode escape problem: \u sequences now generated correctly
+      (4 character with leading zeros)
       </action>
     </release>
 
@@ -127,38 +127,41 @@
 
     <release version="0.2.6" date="2005-11-29" description="Include handling">
       <action type="update" dev="szkiba">
-      Refactored code for customization: Ini, IniPreferences, IniParser now also handle URL
-      as input. It makes possible to create C like #include directive at IniParser level,
-      when using URL as input source.
+      Refactored code for customization: Ini, IniPreferences, IniParser now
+      also handle URL as input. It makes possible to create C like #include
+      directive at IniParser level, when using URL as input source.
       </action>
       <action type="add" dev="szkiba">
-      Added include feature to FancyIniParser: &lt;location&gt; mean: '&lt;' and '&gt;' token, location
-      is either relative or absolute URL of include file. Unlimited level of includes allowed.
-      Relative URLs only allowed, when container file loaded via URL (not via stream or reader).
+      Added include feature to FancyIniParser: &lt;location&gt; mean: '&lt;'
+      and '&gt;' token, location is either relative or absolute URL of include
+      file. Unlimited level of includes allowed. Relative URLs only allowed,
+      when container file loaded via URL (not via stream or reader).
       </action>
       <action type="add" dev="szkiba">
       IniFile got getMode() and getFile() accessor methods.
       </action>
       <action type="add" dev="szkiba">
-      PreferencesWrapper class in addon package to support decorator design pattern
-      for java.util.Preferences objects.
+      PreferencesWrapper class in addon package to support decorator design
+      pattern for java.util.Preferences objects.
       </action>
       <action type="add" dev="szkiba">
-      StrictPreferences decorator class, which has getXXX methods without default parameter,
-      and throws java.util.NoSuchElementException on missing values instead of returning default
-      value.
+      StrictPreferences decorator class, which has getXXX methods without
+      default parameter, and throws java.util.NoSuchElementException on missing
+      values instead of returning default value.
       </action>
     </release>
 
     <release version="0.2.5" date="2005-11-26" description="Backport to JDK 1.4">
       <action type="fix" dev="szkiba">
       As per many programmers request, finally [ini4j] backported to JDK 1.4.
-      There is a ini4j-compat.jar and retroweaver-rt*.jar in distribution directory.
-      These 2 jar need for JDK 1.4 to use [ini4j]. Every JUnit test run successfully,
-      so I'm sure that [ini4j] work correctly with JDK 1.4 (JUnit test coverage ~ 98% :)
+      There is a ini4j-compat.jar and retroweaver-rt*.jar in distribution
+      directory. These 2 jar need for JDK 1.4 to use [ini4j]. Every JUnit test
+      run successfully, so I'm sure that [ini4j] work correctly with JDK 1.4
+      (JUnit test coverage ~ 98% :)
 
-      I like retroweaver tool, so I'd like to mentoin here: retroweaver.sorceforge.net
-      and forked project (I used for ini4j) retroweaver-ng.sourceforge.net
+      I like retroweaver tool, so I'd like to mentoin here:
+      retroweaver.sorceforge.net and forked project (I used for ini4j)
+      retroweaver-ng.sourceforge.net
       </action>
     </release>
 
@@ -171,13 +174,14 @@
       META-INF/services/org.ini4j.IniParser file is the configuration point.
       This is conform with JAR specifications service definition.
 
-      Thanx this to James Ahlborn and Steve Buschman. They are suggested some changes
-      in IniParser. I disagree with the changes, but I made the possibility of changing
-      IniParser without change Ini4j source :)
+      Thanx this to James Ahlborn and Steve Buschman. They are suggested some
+      changes in IniParser. I disagree with the changes, but I made the
+      possibility of changing IniParser without change Ini4j source :)
       </action>
       <action type="add" dev="szkiba">added org.ini4j.addon package for optional classes.</action>
       <action type="add" dev="szkiba">
-     added org.ini4j.addon.FancyIniParser as alternate parser with following features:
+      added org.ini4j.addon.FancyIniParser as alternate parser with following
+      features:
       - option without = operator mean empty option
       - empty section names [] mean empty string as section name
       - first section tag ([name]) is optional, by default it is same as []
