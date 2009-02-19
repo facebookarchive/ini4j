@@ -22,6 +22,8 @@
     <title>[ini4j] Changes</title>
   </properties>
   <body>
+    <release version="0.4.1" description="">
+    </release>
 
     <release version="0.4.0" date="2009-02-17" description="Refactoring and new features">
       <action type="add" dev="szkiba">

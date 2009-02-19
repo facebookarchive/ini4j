@@ -150,7 +150,7 @@
                     <source>1.5</source>
                     <target>1.5</target>
                     <encoding>UTF-8</encoding>
-                    <compilerArgument>-Xlint:unchecked</compilerArgument>
+                    <compilerArgument>-Xlint</compilerArgument>
                 </configuration>
             </plugin>
             <plugin>
