@@ -56,6 +56,7 @@ public class BeanToolTest
         Map<String, String> map = new HashMap<String, String>();
 
         instance.inject(map, bean);
+        assertEquals(5, map.size());
         assertEquals("23", map.get(Dwarf.PROP_AGE));
         assertEquals("5.3", map.get(Dwarf.PROP_HEIGHT));
         assertEquals(uri.toString(), map.get(Dwarf.PROP_HOME_PAGE));

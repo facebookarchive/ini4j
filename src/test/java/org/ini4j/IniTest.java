@@ -49,6 +49,7 @@ public class IniTest
         Helper.assertEquals(exp.getDoc(), bean);
         sec.clear();
         sec.from(bean);
+        assertEquals(5, sec.size());
         Helper.assertEquals(exp.getDoc(), sec);
     }
 
