@@ -23,6 +23,12 @@
   </properties>
   <body>
     <release version="0.4.1" description="">
+      <action type="add" dev="szkiba">
+      Python ConfigParser interface for .ini files.
+      </action>
+      <action type="fix" dev="szkiba">
+      Skip "class" property in Ini.Section#from method.
+      </action>
     </release>
 
     <release version="0.4.0" date="2009-02-17" description="Refactoring and new features">
