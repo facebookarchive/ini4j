@@ -183,6 +183,13 @@ public class ConfigParser
         return new ArrayList<Map.Entry<String, String>>(ret.entrySet());
     }
 
+    public List<String> options(String sectionName) throws NoSectionException
+    {
+        requireSection(sectionName);
+
+        return new ArrayList<String>(_ini.get(sectionName).keySet());
+    }
+
     public void read(String... filenames) throws IOException, ParsingException
     {
         for (String filename : filenames)

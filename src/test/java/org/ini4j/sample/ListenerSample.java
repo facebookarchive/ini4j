@@ -23,9 +23,11 @@ import java.util.prefs.*;
 
 public class ListenerSample
 {
+    public static final String FILENAME = "dwarfs.ini";
+
     public static void main(String[] args) throws Exception
     {
-        String filename = (args.length > 0) ? args[0] : "sample.ini";
+        String filename = (args.length > 0) ? args[0] : FILENAME;
         Preferences prefs = new IniPreferences(new FileInputStream(filename));
         Listener listener = new Listener();
 

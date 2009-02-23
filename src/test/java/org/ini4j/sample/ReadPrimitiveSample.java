@@ -23,9 +23,11 @@ import java.util.prefs.Preferences;
 
 public class ReadPrimitiveSample
 {
+    public static final String FILENAME = "dwarfs.ini";
+
     public static void main(String[] args) throws Exception
     {
-        String filename = (args.length > 0) ? args[0] : "dwarfs.ini";
+        String filename = (args.length > 0) ? args[0] : FILENAME;
         Preferences prefs = new IniFile(new File(filename));
         Preferences dopey = prefs.node("dopey");
         int age = dopey.getInt("age", 0);

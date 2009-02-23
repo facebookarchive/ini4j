@@ -23,9 +23,11 @@ import java.util.prefs.Preferences;
 
 public class WriteSample
 {
+    public static final String FILENAME = "dwarfs.ini";
+
     public static void main(String[] args) throws Exception
     {
-        String filename = (args.length > 0) ? args[0] : "dwarfs.ini";
+        String filename = (args.length > 0) ? args[0] : FILENAME;
         Preferences prefs = new IniFile(new File(filename), IniFile.Mode.RW);
         Preferences doc = prefs.node("doc");
 

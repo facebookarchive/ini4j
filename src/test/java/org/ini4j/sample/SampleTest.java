@@ -15,11 +15,23 @@
  */
 package org.ini4j.sample;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
-public class SampleTest extends TestCase
+import org.junit.runner.RunWith;
+
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
+import java.lang.reflect.Method;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+@RunWith(Parameterized.class)
+public class SampleTest
 {
 
     static
@@ -27,30 +39,64 @@ public class SampleTest extends TestCase
         System.setProperty("java.util.prefs.PreferencesFactory", "org.ini4j.IniPreferencesFactory");
     }
 
-    private static final String[] ARGS = { System.getProperty("basedir") + "/src/test/java/org/ini4j/sample/dwarfs.ini" };
-    private static final String[] SAMPLES = { "ReadStringSample", "ReadPrimitiveSample", "WriteSample", "IniSample", "StreamSample", "DumpSample", "BeanSample", "NoImportSample", "ListenerSample" };
-    private static final String SEPARATOR = "************";
+    private static final String SAMPLE_DIR = System.getProperty("basedir") + "/src/test/java/org/ini4j/sample/";
+    private static final String OUT_DIR = System.getProperty("basedir") + "/target/site/sample/";
+    private final Class _sampleClass;
 
-    public SampleTest(String testName)
+    public SampleTest(Class sampleClass)
     {
-        super(testName);
+        _sampleClass = sampleClass;
     }
 
-    public static Test suite()
+    @Parameters public static Collection data()
     {
-        return new TestSuite(SampleTest.class);
+        return Arrays.asList(
+                new Object[][]
+                {
+                    { ReadStringSample.class },
+                    { ReadPrimitiveSample.class },
+                    { WriteSample.class },
+                    { IniSample.class },
+                    { StreamSample.class },
+                    { DumpSample.class },
+                    { NoImportSample.class },
+                    { ListenerSample.class },
+                    { FromSample.class },
+                    { ToSample.class },
+                    { PyReadSample.class }
+                });
     }
 
-    public void testSamples() throws Exception
+    @SuppressWarnings("unchecked")
+    @Test public void testMain() throws Exception
     {
-        String pkg = SampleTest.class.getPackage().getName() + '.';
+        Method main = _sampleClass.getDeclaredMethod("main", String[].class);
+        String[] args;
 
-        for (String name : SAMPLES)
+        try
         {
-            String clazz = pkg + name;
+            String filename = (String) _sampleClass.getDeclaredField("FILENAME").get(null);
 
-            System.out.println(SEPARATOR + " " + clazz + " " + SEPARATOR);
-            Class.forName(clazz).getDeclaredMethod("main", String[].class).invoke((Object) null, (Object) ARGS);
+            args = new String[] { SAMPLE_DIR + filename };
+        }
+        catch (NoSuchFieldException x)
+        {
+            args = new String[] {};
+        }
+
+        System.out.println("Executing " + _sampleClass.getName());
+        PrintStream saved = System.out;
+        PrintStream out = new PrintStream(new FileOutputStream(OUT_DIR + _sampleClass.getSimpleName() + ".txt"));
+
+        System.setOut(out);
+        try
+        {
+            main.invoke((Object) null, (Object) args);
+        }
+        finally
+        {
+            System.setOut(saved);
+            out.flush();
         }
     }
 }

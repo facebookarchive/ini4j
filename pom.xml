@@ -237,7 +237,7 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>test</phase>
+                        <phase>test-compile</phase>
                         <configuration>
                             <tasks>
                                 <property name="src" value="src/test/java/org/ini4j/sample" />
@@ -247,6 +247,7 @@
                                     <fileset dir="${src}" />
                                 </copy>
                                 <copy file="${src}/dwarfs.ini" tofile="${dst}/dwarfs.ini.txt" />
+                                <copy file="${src}/dwarfs-py.ini" tofile="${dst}/dwarfs-py.ini.txt" />
                             </tasks>
                         </configuration>
                         <goals>

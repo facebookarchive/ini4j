@@ -28,9 +28,11 @@ import java.net.URI;
 
 public class BeanEventSample
 {
+    public static final String FILENAME = "dwarfs.ini";
+
     public static void main(String[] args) throws Exception
     {
-        String filename = (args.length > 0) ? args[0] : "dwarfs.ini";
+        String filename = (args.length > 0) ? args[0] : FILENAME;
         Ini ini = new Ini(new FileInputStream(filename));
         Dwarf sneezy = ini.get("sneezy").as(Dwarf.class);
 

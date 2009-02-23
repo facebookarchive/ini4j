@@ -15,21 +15,21 @@
  */
 package org.ini4j.sample;
 
-import org.ini4j.IniFile;
+import org.ini4j.addon.ConfigParser;
 
-import java.io.File;
-
-import java.util.prefs.Preferences;
-
-public class ReadStringSample
+public class PyReadSample
 {
-    public static final String FILENAME = "dwarfs.ini";
+    public static final String FILENAME = "dwarfs-py.ini";
 
     public static void main(String[] args) throws Exception
     {
         String filename = (args.length > 0) ? args[0] : FILENAME;
-        Preferences prefs = new IniFile(new File(filename));
+        ConfigParser config = new ConfigParser();
 
-        System.out.println("grumpy/homePage: " + prefs.node("grumpy").get("homePage", null));
+        config.read(filename);
+        for (String key : config.options("sleepy"))
+        {
+            System.out.println("sleepy/" + key + " = " + config.get("sleepy", key));
+        }
     }
 }

@@ -23,9 +23,11 @@ import java.util.prefs.Preferences;
 
 public class StreamSample
 {
+    public static final String FILENAME = "dwarfs.ini";
+
     public static void main(String[] args) throws Exception
     {
-        String filename = (args.length > 0) ? args[0] : "dwarfs.ini";
+        String filename = (args.length > 0) ? args[0] : FILENAME;
         Preferences prefs = new IniPreferences(new FileInputStream(filename));
 
         for (String key : prefs.node("sleepy").keys())

@@ -237,6 +237,18 @@ public class ConfigParserTest
         assertEquals("%(_height)", dopey.get(Dwarf.PROP_HEIGHT));
     }
 
+    @Test public void testOptions() throws Exception
+    {
+        instance.addSection(SECTION);
+        assertEquals(0, instance.options(SECTION).size());
+        for (int i = 0; i < 10; i++)
+        {
+            instance.set(SECTION, OPTION + i, DUMMY);
+        }
+
+        assertEquals(10, instance.options(SECTION).size());
+    }
+
     @Test public void testRead() throws Exception
     {
         File file = newTestFile(DWARFS_PATH);
