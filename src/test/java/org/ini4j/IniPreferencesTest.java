@@ -36,13 +36,13 @@ public class IniPreferencesTest
         IniPreferences prefs = new IniPreferences(ini);
 
         assertSame(ini, prefs.getIni());
-        Helper.doTestDwarfs(ini.to(Dwarfs.class));
+        Helper.doTestDwarfs(ini.as(Dwarfs.class));
         prefs = new IniPreferences(getClass().getClassLoader().getResourceAsStream(Helper.DWARFS_INI));
-        Helper.assertEquals(ini.get(Dwarfs.PROP_DOC).to(Dwarf.class), prefs.node(Dwarfs.PROP_DOC));
+        Helper.assertEquals(ini.get(Dwarfs.PROP_DOC).as(Dwarf.class), prefs.node(Dwarfs.PROP_DOC));
         prefs = new IniPreferences(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(Helper.DWARFS_INI)));
-        Helper.assertEquals(ini.get(Dwarfs.PROP_HAPPY).to(Dwarf.class), prefs.node(Dwarfs.PROP_HAPPY));
+        Helper.assertEquals(ini.get(Dwarfs.PROP_HAPPY).as(Dwarf.class), prefs.node(Dwarfs.PROP_HAPPY));
         prefs = new IniPreferences(getClass().getClassLoader().getResource(Helper.DWARFS_INI));
-        Helper.assertEquals(ini.get(Dwarfs.PROP_HAPPY).to(Dwarf.class), prefs.node(Dwarfs.PROP_HAPPY));
+        Helper.assertEquals(ini.get(Dwarfs.PROP_HAPPY).as(Dwarf.class), prefs.node(Dwarfs.PROP_HAPPY));
     }
 
     /**

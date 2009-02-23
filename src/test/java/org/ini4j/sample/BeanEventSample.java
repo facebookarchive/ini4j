@@ -32,7 +32,7 @@ public class BeanEventSample
     {
         String filename = (args.length > 0) ? args[0] : "dwarfs.ini";
         Ini ini = new Ini(new FileInputStream(filename));
-        Dwarf sneezy = ini.get("sneezy").to(Dwarf.class);
+        Dwarf sneezy = ini.get("sneezy").as(Dwarf.class);
 
         sneezy.addPropertyChangeListener("age", new PropertyChangeListener()
             {

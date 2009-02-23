@@ -26,7 +26,7 @@ public class BeanSample
     public static void main(String[] args) throws Exception
     {
         String filename = (args.length > 0) ? args[0] : "dwarfs.ini";
-        Dwarfs dwarfs = new Ini(new FileInputStream(filename)).to(Dwarfs.class);
+        Dwarfs dwarfs = new Ini(new FileInputStream(filename)).as(Dwarfs.class);
         Dwarf happy = dwarfs.getHappy();
         Dwarf doc = dwarfs.getDoc();
 

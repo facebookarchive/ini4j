@@ -30,6 +30,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+@SuppressWarnings("deprecation")
 public class FancyIniFormatterTest
 {
     private static final String STRICTOPERATOR = "[section]\noption=value\n\n";

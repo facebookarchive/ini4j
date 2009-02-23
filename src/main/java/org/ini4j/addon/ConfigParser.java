@@ -150,13 +150,13 @@ public class ConfigParser
         return _ini.containsKey(sectionName);
     }
 
-    @SuppressWarnings("unschecked")
+    @SuppressWarnings("unchecked")
     public List<Map.Entry<String, String>> items(String sectionName) throws NoSectionException, InterpolationMissingOptionException
     {
         return items(sectionName, false, Collections.EMPTY_MAP);
     }
 
-    @SuppressWarnings("unschecked")
+    @SuppressWarnings("unchecked")
     public List<Map.Entry<String, String>> items(String sectionName, boolean raw) throws NoSectionException, InterpolationMissingOptionException
     {
         return items(sectionName, raw, Collections.EMPTY_MAP);

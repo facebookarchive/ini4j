@@ -22,12 +22,18 @@
     <title>[ini4j] Changes</title>
   </properties>
   <body>
-    <release version="0.4.1" description="">
+    <release version="0.4.1" description="Python like ConfigParser and minor fixes">
       <action type="add" dev="szkiba">
       Python ConfigParser interface for .ini files.
       </action>
       <action type="fix" dev="szkiba">
+      Cleanup deprecated warnings from test code.
+      </action>
+      <action type="fix" dev="szkiba" issue="2623266" due-to="Karl Heinz Marbaise">
       Skip "class" property in Ini.Section#from method.
+      </action>
+      <action type="fix" dev="szkiba" issue="2623274" due-to="Karl Heinz Marbaise">
+      Added Issue Tracking to Project Information on maven generated site.
       </action>
     </release>
 

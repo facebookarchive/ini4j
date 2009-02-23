@@ -190,7 +190,7 @@
                 <executions>
                     <execution>
                         <id>attach-sources</id>
-                        <phase>package</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -203,7 +203,7 @@
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
-                        <phase>package</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -217,7 +217,7 @@
                 <executions>
                     <execution>
                         <id>zip</id>
-                        <phase>package</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
@@ -227,6 +227,7 @@
                               <descriptor>src/main/assembly/bin.xml</descriptor>
                               <descriptor>src/main/assembly/all.xml</descriptor>
                             </descriptors>
+                            <attach>false</attach>
                         </configuration>
                     </execution>
                 </executions>
@@ -340,6 +341,7 @@
                         <reports>
                             <report>index</report>
                             <report>summary</report>
+                            <report>issue-tracking</report>
                             <report>license</report>
                             <report>project-team</report>
                             <report>dependencies</report>

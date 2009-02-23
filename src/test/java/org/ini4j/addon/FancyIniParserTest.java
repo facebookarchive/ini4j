@@ -33,9 +33,7 @@ import java.io.ByteArrayInputStream;
 
 import java.net.MalformedURLException;
 
-/**
- * JUnit test of IniParser class.
- */
+@SuppressWarnings("deprecation")
 public class FancyIniParserTest
 {
     private static final String[] _extraIni = { "[section]\noption\n", "[]\noption=value\n", "option=value\n" };
