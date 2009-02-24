@@ -19,18 +19,14 @@
 <project name="[ini4j]">
     <bannerLeft>
         <name>[ini4j]</name>
-        <src>ini4j.png</src>
+        <src>ini4j-banner.png</src>
         <href>http://www.ini4j.org</href>
     </bannerLeft>
-    <bannerRight>
-        <name>SourceForge</name>
-        <src>http://sourceforge.net/sflogo.php?group_id=129580&amp;type=1</src>
-        <href>http://sourceforge.net</href>
-    </bannerRight>       
     <publishDate position="left" format="yyyy-MM-dd"/>
     <version position="left"/>
     <body>
         <head>
+            <link rel="shortcut icon" href="/favicon.ico"/>
             <meta name="keywords" content="windows ini,java library,ini,configuration"></meta>
             <meta name="author" content="szkiba"></meta>
             <meta name="description" content="Java API for handling configuration files in Windows .ini format. Additionally, the library includes Java Preferences API implementation based on the .ini file."></meta>
