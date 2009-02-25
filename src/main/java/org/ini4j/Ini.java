@@ -115,7 +115,9 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 
     public void load(InputStream input) throws IOException, InvalidIniFormatException
     {
-        load(new InputStreamReader(input));
+        Builder builder = new Builder();
+
+        IniParser.newInstance(getConfig()).parse(input, builder);
     }
 
     public void load(Reader input) throws IOException, InvalidIniFormatException
@@ -247,6 +249,48 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         formatter.endIni();
     }
 
+    public class Section extends Options
+    {
+        private String _name;
+
+        public Section(String name)
+        {
+            super();
+            _name = name;
+        }
+
+        public String getName()
+        {
+            return _name;
+        }
+
+        @Override public String fetch(Object key)
+        {
+            return super.fetch(key);
+        }
+
+        @Override public String fetch(Object key, int index)
+        {
+            String value = get(key, index);
+
+            if ((value != null) && (value.indexOf(SUBST_CHAR) >= 0))
+            {
+                StringBuilder buffer = new StringBuilder(value);
+
+                resolve(buffer, this);
+                value = buffer.toString();
+            }
+
+            return value;
+        }
+
+        @Deprecated public <T> T to(Class<T> clazz)
+        {
+            return as(clazz);
+        }
+    }
+
+/*
     public class Section extends MultiMapImpl<String, String>
     {
         private Map<Class, Object> _beans;
@@ -371,7 +415,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
             }
         }
     }
-
+*/
     class BeanInvocationHandler extends AbstractBeanInvocationHandler
     {
         private MultiMap<String, Object> _sectionBeans = new MultiMapImpl<String, Object>();

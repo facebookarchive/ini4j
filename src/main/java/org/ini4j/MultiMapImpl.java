@@ -26,11 +26,16 @@ import java.util.Set;
 
 public class MultiMapImpl<K, V> implements MultiMap<K, V>
 {
-    private LinkedHashMap<K, List<V>> _impl;
+    private final Map<K, List<V>> _impl;
 
     public MultiMapImpl()
     {
-        _impl = new LinkedHashMap<K, List<V>>();
+        this(new LinkedHashMap<K, List<V>>());
+    }
+
+    public MultiMapImpl(Map<K, List<V>> impl)
+    {
+        _impl = impl;
     }
 
     @Override public List<V> getAll(Object key)
