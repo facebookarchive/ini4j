@@ -17,11 +17,42 @@
 h1,h2,h3,h4,h5,h6
 {
     border: none;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid darkgray;
+    background-color: white;
+    font-family: Palatino Linotype, Georgia, "Times New Roman", Times, serif;
+    font-weight: normal;
+}
+
+h1,h2
+{
+    border-bottom: 3px double darkgray;
+}
+
+#breadcrumbs
+{
+    background-color: lightgrey;
+    border-top: 1px solid darkgray;
+    border-bottom: 1px solid darkgray;
+}
+
+.source
+{
+    background-color: lightyellow;
+}
+
+#leftColumn
+{
+    border: none;
     background-color: white;
 }
 
-h1
+#navcolumn h5
 {
-    border-bottom: 1px double black;
+    border: none;
+    font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+
+#bodyColumn
+{
+    margin-left: 170px;
 }

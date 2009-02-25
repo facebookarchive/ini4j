@@ -22,6 +22,15 @@
         <src>ini4j-banner.png</src>
         <href>http://www.ini4j.org</href>
     </bannerLeft>
+    <bannerRight>
+        <name>SourceForge</name>
+        <src>http://sourceforge.net/sflogo.php?group_id=129580&amp;type=16</src>
+        <href>http://sourceforge.net</href>
+    </bannerRight>
+    <poweredBy>
+      <logo name="java.net" href="http://www.java.net"
+          img="http://java.net/images/javanet_button_90.gif"/>
+    </poweredBy>
     <publishDate position="left" format="yyyy-MM-dd"/>
     <version position="left"/>
     <body>
