@@ -15,106 +15,250 @@
  */
 package org.ini4j;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Proxy;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URL;
 
-public class Options extends MultiMapImpl<String, String>
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Options extends OptionMap
 {
-    private Map<Class, Object> _beans;
+    private static final char OPERATOR = '=';
+    private static final char COMMENT = '#';
+    private static final String NEWLINE = "\n";
+    public static final String COMMENTS = "!;" + COMMENT;
+    public static final String OPERATORS = ":" + OPERATOR;
+    private static final char SUBST_CHAR = '$';
+    private static final String SYSTEM_PROPERTY_PREFIX = "@prop/";
+    private static final String ENVIRONMENT_PREFIX = "@env/";
+    private static final int SYSTEM_PROPERTY_PREFIX_LEN = SYSTEM_PROPERTY_PREFIX.length();
+    private static final int ENVIRONMENT_PREFIX_LEN = ENVIRONMENT_PREFIX.length();
+    private static final Pattern expr = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?)\\}");
+    private static final int G_OPTION = 2;
+    private static final int G_INDEX = 4;
+    private Config _config;
 
-    public synchronized <T> T as(Class<T> clazz)
+    public Options()
     {
-        Object bean;
+        _config = Config.getGlobal().clone();
+        _config.setEmptyOption(true);
+    }
 
-        if (_beans == null)
+    public Options(Reader input) throws IOException, InvalidIniFormatException
+    {
+        this();
+        load(input);
+    }
+
+    public Options(InputStream input) throws IOException, InvalidIniFormatException
+    {
+        this();
+        load(input);
+    }
+
+    public Options(URL input) throws IOException, InvalidIniFormatException
+    {
+        this();
+        load(input);
+    }
+
+    public void setConfig(Config value)
+    {
+        _config = value;
+    }
+
+    @Override public String fetch(Object key)
+    {
+        return super.fetch(key);
+    }
+
+    @Override public String fetch(Object key, int index)
+    {
+        String value = get(key, index);
+
+        if ((value != null) && (value.indexOf(SUBST_CHAR) >= 0))
         {
-            _beans = new HashMap<Class, Object>();
-            bean = null;
+            StringBuilder buffer = new StringBuilder(value);
+
+            resolve(buffer);
+            value = buffer.toString();
         }
-        else
+
+        return value;
+    }
+
+    public void load(InputStream input) throws IOException, InvalidIniFormatException
+    {
+        parse(new IniSource(input, getConfig().isInclude()));
+    }
+
+    public void load(Reader input) throws IOException, InvalidIniFormatException
+    {
+        parse(new IniSource(input, getConfig().isInclude()));
+    }
+
+    public void load(URL input) throws IOException, InvalidIniFormatException
+    {
+        parse(new IniSource(input, getConfig().isInclude()));
+    }
+
+    public void store(OutputStream output) throws IOException
+    {
+        format(new OutputStreamWriter(output));
+    }
+
+    public void store(Writer output) throws IOException
+    {
+        format(output);
+    }
+
+    protected Config getConfig()
+    {
+        return _config;
+    }
+
+    protected String escape(String input)
+    {
+        return getConfig().isEscape() ? EscapeTool.getInstance().escape(input) : input;
+    }
+
+    protected void format(Writer output) throws IOException
+    {
+        for (String name : keySet())
         {
-            bean = _beans.get(clazz);
-        }
+            int n = getConfig().isMultiOption() ? length(name) : 1;
 
-        if (bean == null)
-        {
-            bean = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { clazz }, new BeanInvocationHandler());
-            _beans.put(clazz, bean);
-        }
-
-        return clazz.cast(bean);
-    }
-
-    public void from(Object bean)
-    {
-        BeanTool.getInstance().inject(this, bean);
-    }
-
-    public void to(Object bean)
-    {
-        BeanTool.getInstance().inject(bean, this);
-    }
-
-    protected String fetch(Object key)
-    {
-        return fetch(key, 0);
-    }
-
-    protected String fetch(Object key, int index)
-    {
-        return get(key, index);
-    }
-
-    class BeanInvocationHandler extends AbstractBeanInvocationHandler
-    {
-        @Override protected Object getPropertySpi(String property, Class<?> clazz)
-        {
-            Object ret;
-
-            if (clazz.isArray())
+            for (int i = 0; i < n; i++)
             {
-                String[] all = containsKey(property) ? new String[length(property)] : null;
+                String value = get(name, i);
 
-                if (all != null)
+                if ((value != null) || getConfig().isEmptyOption())
                 {
-                    for (int i = 0; i < all.length; i++)
+                    output.append(escape(name));
+                    output.append(OPERATOR);
+                    if (value != null)
                     {
-                        all[i] = fetch(property, i);
+                        output.append(escape(value));
                     }
-                }
 
-                ret = all;
+                    output.append(NEWLINE);
+                }
+            }
+        }
+
+        output.flush();
+    }
+
+    protected void parseError(String line, int lineNumber) throws InvalidIniFormatException
+    {
+        throw new InvalidIniFormatException("parse error (at line: " + lineNumber + "): " + line);
+    }
+
+    protected void resolve(StringBuilder buffer)
+    {
+        Matcher m = expr.matcher(buffer);
+
+        while (m.find())
+        {
+            String name = m.group(G_OPTION);
+            int index = (m.group(G_INDEX) == null) ? 0 : Integer.parseInt(m.group(G_INDEX));
+            String value;
+
+            if (name.startsWith(ENVIRONMENT_PREFIX))
+            {
+                value = System.getenv(name.substring(ENVIRONMENT_PREFIX_LEN));
+            }
+            else if (name.startsWith(SYSTEM_PROPERTY_PREFIX))
+            {
+                value = System.getProperty(name.substring(SYSTEM_PROPERTY_PREFIX_LEN));
             }
             else
             {
-                ret = fetch(property);
+                value = fetch(name, index);
             }
 
-            return ret;
-        }
-
-        @Override protected void setPropertySpi(String property, Object value, Class<?> clazz)
-        {
-            if (clazz.isArray())
+            if (value != null)
             {
-                remove(property);
-                for (int i = 0; i < Array.getLength(value); i++)
+                buffer.replace(m.start(), m.end(), value);
+                m.reset(buffer);
+            }
+        }
+    }
+
+    protected String unescape(String line)
+    {
+        return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
+    }
+
+    private void parse(IniSource source) throws IOException, InvalidIniFormatException
+    {
+        boolean multi = getConfig().isMultiOption();
+
+        for (String line = source.readLine(); line != null; line = source.readLine())
+        {
+            line = line.trim();
+            if ((line.length() == 0) || (COMMENTS.indexOf(line.charAt(0)) >= 0))
+            {
+                continue;
+            }
+
+            int idx = -1;
+
+            for (char c : OPERATORS.toCharArray())
+            {
+                int index = line.indexOf(c);
+
+                if ((index >= 0) && ((idx == -1) || (index < idx)))
                 {
-                    add(property, Array.get(value, i).toString());
+                    idx = index;
+                }
+            }
+
+            String name = null;
+            String value = null;
+
+            if (idx < 0)
+            {
+                if (getConfig().isEmptyOption())
+                {
+                    name = line;
+                }
+                else
+                {
+                    parseError(line, source.getLineNumber());
                 }
             }
             else
             {
-                put(property, value.toString());
+                name = unescape(line.substring(0, idx)).trim();
+                value = unescape(line.substring(idx + 1)).trim();
             }
-        }
 
-        @Override protected boolean hasPropertySpi(String property)
-        {
-            return containsKey(property);
+            if (name.length() == 0)
+            {
+                parseError(line, source.getLineNumber());
+            }
+
+            if (getConfig().isLowerCaseOption())
+            {
+                name = name.toLowerCase(Locale.getDefault());
+            }
+
+            if (multi)
+            {
+                add(name, value);
+            }
+            else
+            {
+                put(name, value);
+            }
         }
     }
 }

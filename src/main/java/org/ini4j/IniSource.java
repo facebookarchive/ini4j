@@ -29,37 +29,37 @@ class IniSource
     public static final char INCLUDE_END = '>';
     public static final char INCLUDE_OPTIONAL = '?';
     protected boolean allowInclude;
-    protected URL base;
-    protected IniSource chain;
-    protected LineNumberReader reader;
+    private URL _base;
+    private IniSource _chain;
+    private LineNumberReader _reader;
 
     protected IniSource(InputStream input, boolean includeFlag)
     {
-        reader = new LineNumberReader(new InputStreamReader(input));
+        _reader = new LineNumberReader(new InputStreamReader(input));
         allowInclude = includeFlag;
     }
 
     protected IniSource(Reader input, boolean includeFlag)
     {
-        reader = new LineNumberReader(input);
+        _reader = new LineNumberReader(input);
         allowInclude = includeFlag;
     }
 
-    protected IniSource(URL base, boolean includeFlag) throws IOException
+    protected IniSource(URL input, boolean includeFlag) throws IOException
     {
-        this.base = base;
-        reader = new LineNumberReader(new InputStreamReader(base.openStream()));
+        _base = input;
+        _reader = new LineNumberReader(new InputStreamReader(input.openStream()));
         allowInclude = includeFlag;
     }
 
     protected int getLineNumber()
     {
-        return reader.getLineNumber();
+        return _reader.getLineNumber();
     }
 
     protected void close() throws IOException
     {
-        reader.close();
+        _reader.close();
     }
 
     @SuppressWarnings("empty-statement")
@@ -67,18 +67,18 @@ class IniSource
     {
         String line;
 
-        if (chain != null)
+        if (_chain != null)
         {
-            line = chain.readLine();
+            line = _chain.readLine();
             if (line == null)
             {
-                chain = null;
+                _chain = null;
                 line = readLine();
             }
         }
         else
         {
-            line = reader.readLine();
+            line = _reader.readLine();
             if (line == null)
             {
                 close();
@@ -97,13 +97,13 @@ class IniSource
                         buff = buff.substring(1).trim();
                     }
 
-                    URL loc = (base == null) ? new URL(buff) : new URL(base, buff);
+                    URL loc = (_base == null) ? new URL(buff) : new URL(_base, buff);
 
                     if (optional)
                     {
                         try
                         {
-                            chain = new IniSource(loc, allowInclude);
+                            _chain = new IniSource(loc, allowInclude);
                         }
                         catch (IOException x)
                         {
@@ -116,7 +116,7 @@ class IniSource
                     }
                     else
                     {
-                        chain = new IniSource(loc, allowInclude);
+                        _chain = new IniSource(loc, allowInclude);
                         line = readLine();
                     }
                 }

@@ -18,14 +18,26 @@ package org.ini4j;
 import org.junit.Assert;
 
 import java.net.URI;
+import java.net.URL;
 
 import java.util.prefs.Preferences;
 
 public class Helper
 {
-    public static String DWARFS_INI = "org/ini4j/dwarfs.ini";
-    public static String DWARFS_XML = "org/ini4j/dwarfs.xml";
+    private static final String RESOURCE_PREFIX = "org/ini4j/";
+    public static final String DWARFS_INI = RESOURCE_PREFIX + "dwarfs.ini";
+    public static final String DWARFS_XML = RESOURCE_PREFIX + "dwarfs.xml";
+    public static final String PROPERTIES_SUFFIX = ".properties";
+    public static final String BASHFUL_PROPERTIES = RESOURCE_PREFIX + "bashful.properties";
+    public static final String DOC_PROPERTIES = RESOURCE_PREFIX + "doc.properties";
+    public static final String DOPEY_PROPERTIES = RESOURCE_PREFIX + "dopey.properties";
+    public static final String HAPPY_PROPERTIES = RESOURCE_PREFIX + "happy.properties";
     public static final float DELTA = 0.00000001f;
+
+    public static URL getResource(String name) throws Exception
+    {
+        return Helper.class.getClassLoader().getResource(RESOURCE_PREFIX + name);
+    }
 
     public static void assertEquals(Dwarf expected, Dwarf actual)
     {
@@ -35,7 +47,7 @@ public class Helper
         Assert.assertEquals(expected.getHomePage().toString(), actual.getHomePage().toString());
     }
 
-    public static void assertEquals(Dwarf expected, Ini.Section actual)
+    public static void assertEquals(Dwarf expected, OptionMap actual)
     {
         Assert.assertEquals("" + expected.getAge(), actual.fetch(Dwarf.PROP_AGE));
         Assert.assertEquals("" + expected.getHeight(), actual.fetch(Dwarf.PROP_HEIGHT));
@@ -99,6 +111,11 @@ public class Helper
         Assert.assertEquals(76.88, d.getHeight(), DELTA);
         Assert.assertEquals(64, d.getAge());
         Assert.assertEquals(dwarfs.getHappy().getHomePage().toString() + "/~sneezy", d.getHomePage().toString());
+    }
+
+    public static Options loadDwarf(String name) throws Exception
+    {
+        return new Options(Helper.class.getClassLoader().getResource(RESOURCE_PREFIX + name + PROPERTIES_SUFFIX));
     }
 
     public static Ini loadDwarfs() throws Exception

@@ -106,7 +106,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 
         if (bean == null)
         {
-            bean = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { clazz }, new BeanInvocationHandler());
+            bean = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler());
             _beans.put(clazz, bean);
         }
 
@@ -249,7 +249,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         formatter.endIni();
     }
 
-    public class Section extends Options
+    public class Section extends OptionMap
     {
         private String _name;
 
@@ -290,132 +290,6 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         }
     }
 
-/*
-    public class Section extends MultiMapImpl<String, String>
-    {
-        private Map<Class, Object> _beans;
-        private String _name;
-
-        public Section(String name)
-        {
-            super();
-            _name = name;
-        }
-
-        public String getName()
-        {
-            return _name;
-        }
-
-        public synchronized <T> T as(Class<T> clazz)
-        {
-            Object bean;
-
-            if (_beans == null)
-            {
-                _beans = new HashMap<Class, Object>();
-                bean = null;
-            }
-            else
-            {
-                bean = _beans.get(clazz);
-            }
-
-            if (bean == null)
-            {
-                bean = Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { clazz }, new BeanInvocationHandler());
-                _beans.put(clazz, bean);
-            }
-
-            return clazz.cast(bean);
-        }
-
-        public String fetch(Object key)
-        {
-            return fetch(key, 0);
-        }
-
-        public String fetch(Object key, int index)
-        {
-            String value = get(key, index);
-
-            if ((value != null) && (value.indexOf(SUBST_CHAR) >= 0))
-            {
-                StringBuilder buffer = new StringBuilder(value);
-
-                resolve(buffer, this);
-                value = buffer.toString();
-            }
-
-            return value;
-        }
-
-        public void from(Object bean)
-        {
-            BeanTool.getInstance().inject(this, bean);
-        }
-
-        @Deprecated public <T> T to(Class<T> clazz)
-        {
-            return as(clazz);
-        }
-
-        public void to(Object bean)
-        {
-            BeanTool.getInstance().inject(bean, this);
-        }
-
-        class BeanInvocationHandler extends AbstractBeanInvocationHandler
-        {
-            @Override protected Object getPropertySpi(String property, Class<?> clazz)
-            {
-                Object ret;
-
-                if (clazz.isArray())
-                {
-                    String[] all = containsKey(property) ? new String[length(property)] : null;
-
-                    if (all != null)
-                    {
-                        for (int i = 0; i < all.length; i++)
-                        {
-                            all[i] = fetch(property, i);
-                        }
-                    }
-
-                    ret = all;
-                }
-                else
-                {
-                    ret = fetch(property);
-                }
-
-                return ret;
-            }
-
-            @Override protected void setPropertySpi(String property, Object value, Class<?> clazz)
-            {
-                if (clazz.isArray())
-                {
-                    remove(property);
-                    for (int i = 0; i < Array.getLength(value); i++)
-                    {
-                        add(property, Array.get(value, i).toString());
-                    }
-                }
-                else
-                {
-                    put(property, value.toString());
-                }
-            }
-
-            @Override protected boolean hasPropertySpi(String property)
-            {
-                return containsKey(property);
-            }
-        }
-    }
-*/
     class BeanInvocationHandler extends AbstractBeanInvocationHandler
     {
         private MultiMap<String, Object> _sectionBeans = new MultiMapImpl<String, Object>();
