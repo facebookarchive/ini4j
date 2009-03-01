@@ -15,6 +15,12 @@
  */
 package org.ini4j.sample;
 
+//|ReadPrimitiveSample
+//|
+//| Reading some Java primitive type values.
+//|
+//|+---------------------------------------------------------------------------+
+//{
 import org.ini4j.IniFile;
 
 import java.io.File;
@@ -37,3 +43,5 @@ public class ReadPrimitiveSample
         System.out.println("dopey/weight: " + weight);
     }
 }
+//}
+//|+---------------------------------------------------------------------------+

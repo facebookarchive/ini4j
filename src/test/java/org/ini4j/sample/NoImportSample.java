@@ -15,6 +15,14 @@
  */
 package org.ini4j.sample;
 
+//|NoImportSample
+//|
+//| Using [ini4j] without class level dependency (no Java imports). You may use
+//| \[ini4j\] library as full Preferences implementation for user and system
+//| root.
+//|
+//|+---------------------------------------------------------------------------+
+//{
 import java.util.prefs.Preferences;
 
 public class NoImportSample
@@ -36,3 +44,5 @@ public class NoImportSample
         System.out.println(prefs.getClass());
     }
 }
+//}
+//|+---------------------------------------------------------------------------+

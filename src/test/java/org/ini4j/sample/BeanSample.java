@@ -15,6 +15,12 @@
  */
 package org.ini4j.sample;
 
+//|BeanSample
+//|
+//| Accessing the whole .ini file as Java Beans-style beans.
+//|
+//|+---------------------------------------------------------------------------+
+//{
 import org.ini4j.Ini;
 
 import java.io.FileInputStream;
@@ -73,3 +79,5 @@ public class BeanSample
         Dwarf getSneezy();
     }
 }
+//}
+//|+---------------------------------------------------------------------------+

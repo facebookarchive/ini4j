@@ -140,8 +140,7 @@
                     </configuration>
                 </execution>
               </executions>
-              <configuration>
-              </configuration>
+              <configuration></configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -232,30 +231,13 @@
                     </execution>
                 </executions>
             </plugin>
-            
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>test-compile</phase>
-                        <configuration>
-                            <tasks>
-                                <property name="src" value="src/test/java/org/ini4j/sample" />
-                                <property name="dst" value="${project.build.directory}/site/sample" />
-                                <mkdir dir="${dst}" />
-                                <copy todir="${dst}">
-                                    <fileset dir="${src}" />
-                                </copy>
-                                <copy file="${src}/dwarfs.ini" tofile="${dst}/dwarfs.ini.txt" />
-                                <copy file="${src}/dwarfs-py.ini" tofile="${dst}/dwarfs-py.ini.txt" />
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>            
+      <plugin>
+       <groupId>org.apache.maven.plugins</groupId>
+       <artifactId>maven-site-plugin</artifactId>
+       <configuration>
+         <generatedSiteDirectory>${basedir}/target/generated-site</generatedSiteDirectory>
+       </configuration>
+      </plugin>
             <plugin>
                 <groupId>com.google.code.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>

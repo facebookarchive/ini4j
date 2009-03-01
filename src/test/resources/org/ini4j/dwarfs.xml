@@ -59,6 +59,7 @@
   <option key='age' value='121'/>
   <option key='homePage' value='http://snowwhite.tale/~sleepy'/>
   <option key="homeDir" value="/home/sleepy"/>
+  <option key="fortuneNumber" value="99"/>
  </section>
  <section key='sneezy'>
   <option key='weight' value='69.7'/>
@@ -66,6 +67,10 @@
   <option key='age' value='64'/>
   <option key='homePage' value='${happy/homePage}/~sneezy'/>
   <option key="homeDir" value="/home/sneezy"/>
+  <option key="fortuneNumber" value="11"/>
+  <option key="fortuneNumber" value="22"/>
+  <option key="fortuneNumber" value="33"/>
+  <option key="fortuneNumber" value="44"/>
  </section>
  <section key='happy'>
   <option key='homePage' value='http://happy.smurf'/>

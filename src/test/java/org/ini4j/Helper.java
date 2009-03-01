@@ -184,6 +184,7 @@ public class Helper
         d.setAge(121);
         d.setHomePage(new URI("http://snowwhite.tale/~sleepy"));
         d.setHomeDir("/home/sleepy");
+        d.setFortuneNumber(new int[] { 99 });
         dwarfs.setSleepy(d);
         d = new DwarfBean();
         d.setWeight(69.7);
@@ -191,6 +192,7 @@ public class Helper
         d.setAge(64);
         d.setHomePage(new URI(dwarfs.getHappy().getHomePage().toString() + "/~sneezy"));
         d.setHomeDir("/home/sneezy");
+        d.setFortuneNumber(new int[] { 11, 22, 33, 44 });
         dwarfs.setSneezy(d);
 
         return dwarfs;

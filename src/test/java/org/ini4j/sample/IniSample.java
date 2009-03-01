@@ -15,6 +15,12 @@
  */
 package org.ini4j.sample;
 
+//|IniSample
+//|
+//| Displaying every setting of a given section.
+//|
+//|+---------------------------------------------------------------------------+
+//{
 import org.ini4j.Ini;
 
 import java.io.FileReader;
@@ -34,3 +40,5 @@ public class IniSample
         }
     }
 }
+//}
+//|+---------------------------------------------------------------------------+

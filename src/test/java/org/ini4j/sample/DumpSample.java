@@ -15,6 +15,12 @@
  */
 package org.ini4j.sample;
 
+//|DumpSample
+//|
+//| Writing the .ini file received as input to the stand output.
+//|
+//|+---------------------------------------------------------------------------+
+//{
 import org.ini4j.Ini;
 
 import java.io.FileReader;
@@ -40,3 +46,5 @@ public class DumpSample
         }
     }
 }
+//}
+//|+---------------------------------------------------------------------------+

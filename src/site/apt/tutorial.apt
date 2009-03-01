@@ -63,7 +63,7 @@ void sample(Ini ini)
 
  The section is a Map\<String,String\>, that is, a map that assigns String values to String keys.
  So the <<<get>>> method is used to get values inside the section. To get a value, besides <<<get()>>> you can also
- use <<<fetch()>>> which resolves any occurrent $\{section/option\} format variable references in the needed value.
+ use <<<fetch()>>> which resolves any occurrent $\{section/option\ format variable references in the needed value.
     
 * Variable references
 
@@ -76,7 +76,7 @@ max = ${limit}
 [deck]
 size = ${global/max}
 color = ${@prop/deck.color}
-price = ${@env/PRICE\}
+price = ${@env/PRICE}
 +-------------------------------------------------------------------------------
 
  Within the .ini file, it is possible to refer to another setting, system property or environment variable.

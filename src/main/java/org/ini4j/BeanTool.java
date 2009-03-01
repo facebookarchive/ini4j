@@ -21,12 +21,12 @@ import java.beans.PropertyDescriptor;
 
 import java.io.File;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 
 import java.net.URI;
 import java.net.URL;
 
-import java.util.Map;
 import java.util.TimeZone;
 
 public class BeanTool
@@ -39,7 +39,7 @@ public class BeanTool
         return _instance;
     }
 
-    public void inject(Object bean, Map<String, String> props)
+    public void inject(Object bean, OptionMap props)
     {
         for (PropertyDescriptor pd : getPropertyDescriptors(bean.getClass()))
         {
@@ -50,7 +50,20 @@ public class BeanTool
 
                 if ((method != null) && props.containsKey(name))
                 {
-                    Object value = parse(props.get(name), pd.getPropertyType());
+                    Object value;
+
+                    if (pd.getPropertyType().isArray())
+                    {
+                        value = Array.newInstance(pd.getPropertyType().getComponentType(), props.length(name));
+                        for (int i = 0; i < props.length(name); i++)
+                        {
+                            Array.set(value, i, parse(props.fetch(name, i), pd.getPropertyType().getComponentType()));
+                        }
+                    }
+                    else
+                    {
+                        value = parse(props.fetch(name), pd.getPropertyType());
+                    }
 
                     method.invoke(bean, value);
                 }
@@ -62,7 +75,7 @@ public class BeanTool
         }
     }
 
-    public void inject(Map<String, String> props, Object bean)
+    public void inject(OptionMap props, Object bean)
     {
         for (PropertyDescriptor pd : getPropertyDescriptors(bean.getClass()))
         {
@@ -76,7 +89,19 @@ public class BeanTool
 
                     if (value != null)
                     {
-                        props.put(pd.getName(), value.toString());
+                        if (pd.getPropertyType().isArray())
+                        {
+                            for (int i = 0; i < Array.getLength(value); i++)
+                            {
+                                Object v = Array.get(value, i);
+
+                                props.add(pd.getName(), (v == null) ? null : v.toString());
+                            }
+                        }
+                        else
+                        {
+                            props.put(pd.getName(), value.toString());
+                        }
                     }
                 }
             }

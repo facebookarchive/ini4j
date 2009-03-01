@@ -101,6 +101,7 @@ public class IniHandlerTest
         handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[0]));
         handler.endSection();
         dwarf = dwarfs.getSneezy();
         handler.startSection(Dwarfs.PROP_SNEEZY);
@@ -109,6 +110,10 @@ public class IniHandlerTest
         handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
         handler.handleOption(Dwarf.PROP_HOME_PAGE, SNEEZY_HOME_PAGE);
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[0]));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[1]));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[2]));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[3]));
         handler.endSection();
         dwarf = dwarfs.getHappy();
         handler.startSection(Dwarfs.PROP_HAPPY);

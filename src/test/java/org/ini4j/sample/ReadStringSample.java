@@ -15,6 +15,12 @@
  */
 package org.ini4j.sample;
 
+//|ReadStringSample
+//|
+//| This sample presents accessing String type values.
+//|
+//|+---------------------------------------------------------------------------+
+//{
 import org.ini4j.IniFile;
 
 import java.io.File;
@@ -33,3 +39,5 @@ public class ReadStringSample
         System.out.println("grumpy/homePage: " + prefs.node("grumpy").get("homePage", null));
     }
 }
+//}
+//|+---------------------------------------------------------------------------+

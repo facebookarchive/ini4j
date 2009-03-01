@@ -15,6 +15,14 @@
  */
 package org.ini4j.sample;
 
+//|StreamSample
+//|
+//| This sample demonstrates that the Preferences API may be used without a
+//| filesystem access. In this case, naturally, there's no way of saving the
+//| altered settings, they may only be accessed in the memory.
+//|
+//|+---------------------------------------------------------------------------+
+//{
 import org.ini4j.IniPreferences;
 
 import java.io.FileInputStream;
@@ -36,3 +44,5 @@ public class StreamSample
         }
     }
 }
+//}
+//|+---------------------------------------------------------------------------+

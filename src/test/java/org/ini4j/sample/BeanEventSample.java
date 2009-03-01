@@ -15,6 +15,12 @@
  */
 package org.ini4j.sample;
 
+//|BeanEventSample
+//|
+//| A sample that demonstrates the handling of the bound bean properties.
+//|
+//|+---------------------------------------------------------------------------+
+//{
 import org.ini4j.Ini;
 
 import java.beans.PropertyChangeEvent;
@@ -76,3 +82,5 @@ public class BeanEventSample
         void removeVetoableChangeListener(String property, VetoableChangeListener listener);
     }
 }
+//}
+//|+---------------------------------------------------------------------------+

@@ -15,6 +15,12 @@
  */
 package org.ini4j.sample;
 
+//|PyReadSample
+//|
+//| This sample presents accessing .ini files as Python ConfigParser objects.
+//|
+//|+---------------------------------------------------------------------------+
+//{
 import org.ini4j.addon.ConfigParser;
 
 public class PyReadSample
@@ -33,3 +39,5 @@ public class PyReadSample
         }
     }
 }
+//}
+//|+---------------------------------------------------------------------------+

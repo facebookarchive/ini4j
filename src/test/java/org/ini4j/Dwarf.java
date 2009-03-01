@@ -24,6 +24,7 @@ import java.net.URI;
 public interface Dwarf
 {
     String PROP_AGE = "age";
+    String PROP_FORTUNE_NUMBER = "fortuneNumber";
     String PROP_HEIGHT = "height";
     String PROP_HOME_DIR = "homeDir";
     String PROP_HOME_PAGE = "homePage";
@@ -32,6 +33,10 @@ public interface Dwarf
     int getAge();
 
     void setAge(int age);
+
+    int[] getFortuneNumber();
+
+    void setFortuneNumber(int[] value);
 
     double getHeight();
 

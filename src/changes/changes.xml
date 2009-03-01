@@ -24,6 +24,11 @@
   <body>
     <release version="0.4.1" description="Python like ConfigParser and minor fixes">
       <action type="add" dev="szkiba">
+      Added Options as replacement for java.util.Properties. Options has a lot
+      of useful features, like: ${} macro handling, multi value
+      handling, bean marshalling/unmarshalling etc.
+      </action>
+      <action type="add" dev="szkiba">
       Python ConfigParser interface for .ini files.
       </action>
       <action type="fix" dev="szkiba">
@@ -34,6 +39,9 @@
       </action>
       <action type="fix" dev="szkiba" issue="2623274" due-to="Karl Heinz Marbaise">
       Added Issue Tracking to Project Information on maven generated site.
+      </action>
+      <action type="fix" dev="szkiba">
+      Fix BeanTool bug: ${} macros an dindexed properties not handled properly in inject().
       </action>
     </release>
 

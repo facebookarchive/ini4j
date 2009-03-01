@@ -15,6 +15,12 @@
  */
 package org.ini4j.sample;
 
+//|ToSample
+//|
+//| Unmarshall Java Beans from Ini.Section.
+//|
+//|+---------------------------------------------------------------------------+
+//{
 import org.ini4j.Ini;
 
 import java.io.FileInputStream;
@@ -84,3 +90,5 @@ public class ToSample
         }
     }
 }
+//}
+//|+---------------------------------------------------------------------------+

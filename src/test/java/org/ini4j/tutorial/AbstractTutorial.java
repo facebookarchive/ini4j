@@ -13,31 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j.sample;
-
-import org.ini4j.IniFile;
+package org.ini4j.tutorial;
 
 import java.io.File;
 
-import java.util.prefs.Preferences;
-
-public class WriteSample
+public abstract class AbstractTutorial
 {
     public static final String FILENAME = "dwarfs.ini";
+    protected File _argument;
 
-    public static void main(String[] args) throws Exception
+    public void run(String[] args) throws Exception
     {
-        String filename = (args.length > 0) ? args[0] : FILENAME;
-        Preferences prefs = new IniFile(new File(filename), IniFile.Mode.RW);
-        Preferences doc = prefs.node("doc");
+        _argument = new File((args.length > 0) ? args[0] : FILENAME);
+        run();
+    }
 
-        doc.putInt("age", 63);
-        doc.putFloat("weight", 49.5f);
-        doc.flush();
-        int age = doc.getInt("age", 0);
-        float weight = doc.getFloat("weight", 0);
+    protected abstract void run() throws Exception;
 
-        System.out.println("doc/age: " + age);
-        System.out.println("doc/weight: " + weight);
+    protected File getArgument()
+    {
+        return _argument;
     }
 }

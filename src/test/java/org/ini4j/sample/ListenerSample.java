@@ -15,6 +15,13 @@
  */
 package org.ini4j.sample;
 
+//|ListenerSample
+//|
+//| This advanced sample presents the event-controlled usage. The \[ini4j\]
+//| library fully supports the events defined in Preferences API.
+//|
+//|+---------------------------------------------------------------------------+
+//{
 import org.ini4j.IniPreferences;
 
 import java.io.FileInputStream;
@@ -58,3 +65,5 @@ public class ListenerSample
         }
     }
 }
+//}
+//|+---------------------------------------------------------------------------+

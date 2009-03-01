@@ -26,6 +26,7 @@ import java.net.URI;
 public class DwarfBean implements Dwarf
 {
     private int _age;
+    private int[] _fortuneNumber;
     private double _height;
     private String _homeDir;
     private URI _homePage;
@@ -51,6 +52,16 @@ public class DwarfBean implements Dwarf
         _age = value;
 
         _pcSupport.firePropertyChange(PROP_AGE, old, value);
+    }
+
+    @Override public int[] getFortuneNumber()
+    {
+        return _fortuneNumber;
+    }
+
+    @Override public void setFortuneNumber(int[] value)
+    {
+        _fortuneNumber = value;
     }
 
     @Override public double getHeight()

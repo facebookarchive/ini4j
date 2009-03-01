@@ -15,6 +15,12 @@
  */
 package org.ini4j.sample;
 
+//|FromSample
+//|
+//| Marshall Java Beans to Ini.Section.
+//|
+//|+---------------------------------------------------------------------------+
+//{
 import org.ini4j.Ini;
 
 import java.net.URI;
@@ -82,3 +88,5 @@ public class FromSample
         }
     }
 }
+//}
+//|+---------------------------------------------------------------------------+

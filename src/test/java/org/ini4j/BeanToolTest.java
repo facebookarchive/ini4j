@@ -25,8 +25,6 @@ import java.io.File;
 import java.net.URI;
 import java.net.URL;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -53,14 +51,19 @@ public class BeanToolTest
         String dir = "/home/happy";
 
         bean.setHomeDir(dir);
-        Map<String, String> map = new HashMap<String, String>();
+        bean.setFortuneNumber(new int[] { 1, 2, 3 });
+        OptionMap map = new OptionMap();
 
         instance.inject(map, bean);
-        assertEquals(5, map.size());
+        assertEquals(6, map.size());
         assertEquals("23", map.get(Dwarf.PROP_AGE));
         assertEquals("5.3", map.get(Dwarf.PROP_HEIGHT));
         assertEquals(uri.toString(), map.get(Dwarf.PROP_HOME_PAGE));
         assertEquals(dir, map.get(Dwarf.PROP_HOME_DIR));
+        assertEquals(3, map.length(Dwarf.PROP_FORTUNE_NUMBER));
+        assertEquals("1", map.get(Dwarf.PROP_FORTUNE_NUMBER, 0));
+        assertEquals("2", map.get(Dwarf.PROP_FORTUNE_NUMBER, 1));
+        assertEquals("3", map.get(Dwarf.PROP_FORTUNE_NUMBER, 2));
         bean.setAge(0);
         bean.setHeight(0);
         bean.setHomePage(null);
@@ -69,6 +72,7 @@ public class BeanToolTest
         assertEquals(5.3, bean.getHeight(), Helper.DELTA);
         assertEquals(uri, bean.getHomePage());
         assertEquals(dir, bean.getHomeDir());
+        assertArrayEquals(new int[] { 1, 2, 3 }, bean.getFortuneNumber());
     }
 
     @SuppressWarnings("empty-statement")
