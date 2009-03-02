@@ -15,9 +15,15 @@
  */
 package org.ini4j.sample;
 
+//|                          -------------------
+//|                          ReadPrimitiveSample
+//|
 //|ReadPrimitiveSample
 //|
 //| Reading some Java primitive type values.
+//|
+//| This sample program expect the .ini file as a command line argument.
+//| If there is no such argument, it use the {{{dwarfs.html}dwarfs.ini}} file.
 //|
 //|+---------------------------------------------------------------------------+
 //{

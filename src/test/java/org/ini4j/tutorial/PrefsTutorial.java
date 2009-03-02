@@ -25,9 +25,9 @@ import java.io.IOException;
 import java.util.prefs.Preferences;
 
 //|                -------------
-//|                Prefs Tutorial
+//|                Preferences Tutorial
 //|
-//|Prefs Tutorial
+//|Preferences Tutorial
 //|
 //| The purpose of this document is to familiarize the reader with the usage of
 //| the [ini4j] library's Preferences interface. Each chapter contains all the

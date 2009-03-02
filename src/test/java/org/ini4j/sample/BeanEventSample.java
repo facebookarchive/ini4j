@@ -15,9 +15,15 @@
  */
 package org.ini4j.sample;
 
+//|                       ---------------
+//|                       BeanEventSample
+//|
 //|BeanEventSample
 //|
 //| A sample that demonstrates the handling of the bound bean properties.
+//|
+//| This sample program expect the .ini file as a command line argument.
+//| If there is no such argument, it use the {{{dwarfs.html}dwarfs.ini}} file.
 //|
 //|+---------------------------------------------------------------------------+
 //{

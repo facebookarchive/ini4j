@@ -15,9 +15,15 @@
  */
 package org.ini4j.sample;
 
+//|                                 ----------
+//|                                 DumpSample
+//|
 //|DumpSample
 //|
 //| Writing the .ini file received as input to the stand output.
+//|
+//| This sample program expect the .ini file as a command line argument.
+//| If there is no such argument, it use the {{{dwarfs.html}dwarfs.ini}} file.
 //|
 //|+---------------------------------------------------------------------------+
 //{

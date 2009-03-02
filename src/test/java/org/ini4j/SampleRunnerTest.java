@@ -30,6 +30,7 @@ import org.ini4j.sample.ToSample;
 
 import org.ini4j.tutorial.BeanTutorial;
 import org.ini4j.tutorial.IniTutorial;
+import org.ini4j.tutorial.OptTutorial;
 import org.ini4j.tutorial.PrefsTutorial;
 
 import org.junit.BeforeClass;
@@ -102,6 +103,7 @@ public class SampleRunnerTest
                     { PyReadSample.class },
                     { IniTutorial.class },
                     { BeanTutorial.class },
+                    { OptTutorial.class },
                     { PrefsTutorial.class }
                 });
     }

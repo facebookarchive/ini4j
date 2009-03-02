@@ -15,9 +15,16 @@
  */
 package org.ini4j.sample;
 
+//|                                 ------------
+//|                                 PyReadSample
+//|
 //|PyReadSample
 //|
 //| This sample presents accessing .ini files as Python ConfigParser objects.
+//|
+//| This sample program expect the .ini file as a command line argument.
+//| If there is no such argument, it use the {{{dwarfs-py.html}dwarfs-py.ini}}
+//| file.
 //|
 //|+---------------------------------------------------------------------------+
 //{

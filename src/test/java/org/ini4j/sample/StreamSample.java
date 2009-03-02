@@ -15,11 +15,17 @@
  */
 package org.ini4j.sample;
 
+//|                               ------------
+//|                               StreamSample
+//|
 //|StreamSample
 //|
 //| This sample demonstrates that the Preferences API may be used without a
 //| filesystem access. In this case, naturally, there's no way of saving the
 //| altered settings, they may only be accessed in the memory.
+//|
+//| This sample program expect the .ini file as a command line argument.
+//| If there is no such argument, it use the {{{dwarfs.html}dwarfs.ini}} file.
 //|
 //|+---------------------------------------------------------------------------+
 //{

@@ -15,10 +15,16 @@
  */
 package org.ini4j.sample;
 
+//|                             --------------
+//|                             ListenerSample
+//|
 //|ListenerSample
 //|
 //| This advanced sample presents the event-controlled usage. The \[ini4j\]
 //| library fully supports the events defined in Preferences API.
+//|
+//| This sample program expect the .ini file as a command line argument.
+//| If there is no such argument, it use the {{{dwarfs.html}dwarfs.ini}} file.
 //|
 //|+---------------------------------------------------------------------------+
 //{

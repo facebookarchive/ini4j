@@ -15,11 +15,17 @@
  */
 package org.ini4j.sample;
 
+//|                               --------------
+//|                               NoImportSample
+//|
 //|NoImportSample
 //|
 //| Using [ini4j] without class level dependency (no Java imports). You may use
 //| \[ini4j\] library as full Preferences implementation for user and system
 //| root.
+//|
+//| This sample program expect the .ini file as a command line argument.
+//| If there is no such argument, it use the {{{dwarfs.html}dwarfs.ini}} file.
 //|
 //|+---------------------------------------------------------------------------+
 //{

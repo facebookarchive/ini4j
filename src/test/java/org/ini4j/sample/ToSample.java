@@ -15,9 +15,15 @@
  */
 package org.ini4j.sample;
 
+//|                                 --------
+//|                                 ToSample
+//|
 //|ToSample
 //|
 //| Unmarshall Java Beans from Ini.Section.
+//|
+//| This sample program expect the .ini file as a command line argument.
+//| If there is no such argument, it use the {{{dwarfs.html}dwarfs.ini}} file.
 //|
 //|+---------------------------------------------------------------------------+
 //{
