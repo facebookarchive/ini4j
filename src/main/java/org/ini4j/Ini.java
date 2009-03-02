@@ -249,7 +249,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         formatter.endIni();
     }
 
-    public class Section extends OptionMap
+    public class Section extends OptionMapImpl
     {
         private String _name;
 
@@ -264,29 +264,14 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
             return _name;
         }
 
-        @Override public String fetch(Object key)
-        {
-            return super.fetch(key);
-        }
-
-        @Override public String fetch(Object key, int index)
-        {
-            String value = get(key, index);
-
-            if ((value != null) && (value.indexOf(SUBST_CHAR) >= 0))
-            {
-                StringBuilder buffer = new StringBuilder(value);
-
-                resolve(buffer, this);
-                value = buffer.toString();
-            }
-
-            return value;
-        }
-
         @Deprecated public <T> T to(Class<T> clazz)
         {
             return as(clazz);
+        }
+
+        @Override protected void resolve(StringBuilder buffer)
+        {
+            Ini.this.resolve(buffer, this);
         }
     }
 

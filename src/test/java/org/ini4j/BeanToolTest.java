@@ -52,7 +52,7 @@ public class BeanToolTest
 
         bean.setHomeDir(dir);
         bean.setFortuneNumber(new int[] { 1, 2, 3 });
-        OptionMap map = new OptionMap();
+        OptionMap map = new OptionMapImpl();
 
         instance.inject(map, bean);
         assertEquals(6, map.size());

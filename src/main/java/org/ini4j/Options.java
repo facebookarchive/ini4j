@@ -25,24 +25,14 @@ import java.io.Writer;
 import java.net.URL;
 
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class Options extends OptionMap
+public class Options extends OptionMapImpl
 {
     private static final char OPERATOR = '=';
     private static final char COMMENT = '#';
     private static final String NEWLINE = "\n";
     public static final String COMMENTS = "!;" + COMMENT;
     public static final String OPERATORS = ":" + OPERATOR;
-    private static final char SUBST_CHAR = '$';
-    private static final String SYSTEM_PROPERTY_PREFIX = "@prop/";
-    private static final String ENVIRONMENT_PREFIX = "@env/";
-    private static final int SYSTEM_PROPERTY_PREFIX_LEN = SYSTEM_PROPERTY_PREFIX.length();
-    private static final int ENVIRONMENT_PREFIX_LEN = ENVIRONMENT_PREFIX.length();
-    private static final Pattern expr = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?)\\}");
-    private static final int G_OPTION = 2;
-    private static final int G_INDEX = 4;
     private Config _config;
 
     public Options()
@@ -72,26 +62,6 @@ public class Options extends OptionMap
     public void setConfig(Config value)
     {
         _config = value;
-    }
-
-    @Override public String fetch(Object key)
-    {
-        return super.fetch(key);
-    }
-
-    @Override public String fetch(Object key, int index)
-    {
-        String value = get(key, index);
-
-        if ((value != null) && (value.indexOf(SUBST_CHAR) >= 0))
-        {
-            StringBuilder buffer = new StringBuilder(value);
-
-            resolve(buffer);
-            value = buffer.toString();
-        }
-
-        return value;
     }
 
     public void load(InputStream input) throws IOException, InvalidIniFormatException
@@ -159,37 +129,6 @@ public class Options extends OptionMap
     protected void parseError(String line, int lineNumber) throws InvalidIniFormatException
     {
         throw new InvalidIniFormatException("parse error (at line: " + lineNumber + "): " + line);
-    }
-
-    protected void resolve(StringBuilder buffer)
-    {
-        Matcher m = expr.matcher(buffer);
-
-        while (m.find())
-        {
-            String name = m.group(G_OPTION);
-            int index = (m.group(G_INDEX) == null) ? 0 : Integer.parseInt(m.group(G_INDEX));
-            String value;
-
-            if (name.startsWith(ENVIRONMENT_PREFIX))
-            {
-                value = System.getenv(name.substring(ENVIRONMENT_PREFIX_LEN));
-            }
-            else if (name.startsWith(SYSTEM_PROPERTY_PREFIX))
-            {
-                value = System.getProperty(name.substring(SYSTEM_PROPERTY_PREFIX_LEN));
-            }
-            else
-            {
-                value = fetch(name, index);
-            }
-
-            if (value != null)
-            {
-                buffer.replace(m.start(), m.end(), value);
-                m.reset(buffer);
-            }
-        }
     }
 
     protected String unescape(String line)
