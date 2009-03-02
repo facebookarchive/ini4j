@@ -91,7 +91,7 @@ public class OptTutorial extends AbstractTutorial
 //|       .
 //|+---------------------------------------------------------------------------+
 //|
-        assertEquals(7, opt.keySet().size());
+        assertEquals(8, opt.keySet().size());
     }
 
 //|
