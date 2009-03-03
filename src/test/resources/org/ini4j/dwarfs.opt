@@ -1,0 +1,56 @@
+; Bashful
+bashful.weight = 45.7
+bashful.height = 98.8
+bashful.age = 67
+bashful.homePage = http://snowwhite.tale/~bashful
+bashful.homeDir = /home/bashful
+
+; Doc
+doc.weight = 49.5
+doc.height = 87.7
+doc.age = 63
+doc.homePage = http://doc.dwarfs
+doc.homeDir = c:\Documents and Settings\doc
+
+; Dopey
+dopey.weight = ${bashful.weight}
+dopey.height = ${doc.height}
+dopey.age = 23
+dopey.homePage = http://dopey.snowwhite.tale/
+dopey.homeDir = c:\\Documents and Settings\\dopey
+
+; Grumpy
+grumpy.weight = 65.3
+grumpy.height = ${dopey.height}
+grumpy.age = 76
+grumpy.homePage = http://snowwhite.tale/~grumpy/
+grumpy.homeDir = /home/grumpy
+
+; Happy
+happy.weight = 56.4
+happy.height = 77.66
+happy.age = 99
+happy.homePage = dummy
+happy.homeDir = /home/happy
+
+; Sleepy
+sleepy.weight = 76.11
+sleepy.height = ${doc.height}8
+sleepy.age = 121
+sleepy.homePage = http://snowwhite.tale/~sleepy
+sleepy.homeDir = /home/sleepy
+sleepy.fortuneNumber = 99
+
+; Sneezy
+sneezy.weight = 69.7
+sneezy.height = 76.88
+sneezy.age = 64
+sneezy.homePage = ${happy.homePage}/~sneezy
+sneezy.homeDir = /home/sneezy
+sneezy.fortuneNumber = 11
+sneezy.fortuneNumber = 22
+sneezy.fortuneNumber = 33
+sneezy.fortuneNumber = 44
+
+; Happy again
+happy.homePage = http://happy.smurf

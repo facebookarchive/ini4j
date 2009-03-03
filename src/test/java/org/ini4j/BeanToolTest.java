@@ -15,6 +15,8 @@
  */
 package org.ini4j;
 
+import org.ini4j.OptionMapImpl.Access;
+
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -41,38 +43,8 @@ public class BeanToolTest
 
     @Test public void testInject() throws Exception
     {
-        Dwarf bean = new DwarfBean();
-
-        bean.setAge(23);
-        bean.setHeight(5.3);
-        URI uri = new URI("http://www.ini4j.org");
-
-        bean.setHomePage(uri);
-        String dir = "/home/happy";
-
-        bean.setHomeDir(dir);
-        bean.setFortuneNumber(new int[] { 1, 2, 3 });
-        OptionMap map = new OptionMapImpl();
-
-        instance.inject(map, bean);
-        assertEquals(6, map.size());
-        assertEquals("23", map.get(Dwarf.PROP_AGE));
-        assertEquals("5.3", map.get(Dwarf.PROP_HEIGHT));
-        assertEquals(uri.toString(), map.get(Dwarf.PROP_HOME_PAGE));
-        assertEquals(dir, map.get(Dwarf.PROP_HOME_DIR));
-        assertEquals(3, map.length(Dwarf.PROP_FORTUNE_NUMBER));
-        assertEquals("1", map.get(Dwarf.PROP_FORTUNE_NUMBER, 0));
-        assertEquals("2", map.get(Dwarf.PROP_FORTUNE_NUMBER, 1));
-        assertEquals("3", map.get(Dwarf.PROP_FORTUNE_NUMBER, 2));
-        bean.setAge(0);
-        bean.setHeight(0);
-        bean.setHomePage(null);
-        instance.inject(bean, map);
-        assertEquals(23, bean.getAge());
-        assertEquals(5.3, bean.getHeight(), Helper.DELTA);
-        assertEquals(uri, bean.getHomePage());
-        assertEquals(dir, bean.getHomeDir());
-        assertArrayEquals(new int[] { 1, 2, 3 }, bean.getFortuneNumber());
+        testInject(null);
+        testInject("dummy");
     }
 
     @SuppressWarnings("empty-statement")
@@ -158,5 +130,53 @@ public class BeanToolTest
         assertNotNull((instance.zero(boolean.class)));
         assertFalse(((Boolean) instance.zero(boolean.class)));
         assertEquals('\0', ((Character) instance.zero(char.class)).charValue());
+    }
+
+    protected void testInject(String prefix) throws Exception
+    {
+        String p = (prefix == null) ? "" : prefix;
+        Dwarf bean = new DwarfBean();
+
+        bean.setAge(23);
+        bean.setHeight(5.3);
+        URI uri = new URI("http://www.ini4j.org");
+
+        bean.setHomePage(uri);
+        String dir = "/home/happy";
+
+        bean.setHomeDir(dir);
+        bean.setFortuneNumber(new int[] { 1, 2, 3 });
+        OptionMapImpl map = new OptionMapImpl();
+
+        instance.inject(map.new Access(prefix), bean);
+        assertEquals(6, map.size());
+        assertEquals("23", map.get(p + Dwarf.PROP_AGE));
+        assertEquals("5.3", map.get(p + Dwarf.PROP_HEIGHT));
+        assertEquals(uri.toString(), map.get(p + Dwarf.PROP_HOME_PAGE));
+        assertEquals(dir, map.get(p + Dwarf.PROP_HOME_DIR));
+        assertEquals(3, map.length(p + Dwarf.PROP_FORTUNE_NUMBER));
+        assertEquals("1", map.get(p + Dwarf.PROP_FORTUNE_NUMBER, 0));
+        assertEquals("2", map.get(p + Dwarf.PROP_FORTUNE_NUMBER, 1));
+        assertEquals("3", map.get(p + Dwarf.PROP_FORTUNE_NUMBER, 2));
+        bean.setAge(0);
+        bean.setHeight(0);
+        bean.setHomePage(null);
+        instance.inject(bean, map.new Access(prefix));
+        assertEquals(23, bean.getAge());
+        assertEquals(5.3, bean.getHeight(), Helper.DELTA);
+        assertEquals(uri, bean.getHomePage());
+        assertEquals(dir, bean.getHomeDir());
+        assertArrayEquals(new int[] { 1, 2, 3 }, bean.getFortuneNumber());
+
+        //
+        // bean interface
+        //
+        Dwarf proxy = instance.proxy(Dwarf.class, map.newBeanAccess(prefix));
+
+        assertEquals(23, proxy.getAge());
+        assertEquals(5.3, proxy.getHeight(), Helper.DELTA);
+        assertEquals(uri, proxy.getHomePage());
+        assertEquals(dir, proxy.getHomeDir());
+        assertArrayEquals(new int[] { 1, 2, 3 }, proxy.getFortuneNumber());
     }
 }

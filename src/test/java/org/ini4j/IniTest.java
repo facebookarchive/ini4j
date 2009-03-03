@@ -38,6 +38,7 @@ public class IniTest
      *
      * @throws Exception on error
      */
+    @SuppressWarnings("deprecation")
     @Test public void testBeanInterface() throws Exception
     {
         Dwarfs exp = Helper.newDwarfs();
@@ -51,6 +52,12 @@ public class IniTest
         sec.from(bean);
         assertEquals(5, sec.size());
         Helper.assertEquals(exp.getDoc(), sec);
+
+        //
+        // deprecated api test
+        bean = sec.to(Dwarf.class);
+        assertSame(bean, sec.to(Dwarf.class));
+        Helper.assertEquals(exp.getDoc(), bean);
     }
 
     @Test public void testConfig() throws Exception

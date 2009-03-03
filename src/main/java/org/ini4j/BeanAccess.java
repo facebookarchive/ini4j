@@ -15,21 +15,19 @@
  */
 package org.ini4j;
 
-public interface OptionMap extends MultiMap<String, String>
+public interface BeanAccess
 {
-    <T> T as(Class<T> clazz);
+    void propAdd(String propertyName, String value);
 
-    <T> T as(Class<T> clazz, String keyPrefix);
+    String propDel(String propertyName);
 
-    String fetch(Object key);
+    String propGet(String propertyName);
 
-    String fetch(Object key, int index);
+    String propGet(String propertyName, int index);
 
-    void from(Object bean);
+    int propLength(String propertyName);
 
-    void from(Object bean, String keyPrefix);
+    String propSet(String propertyName, String value);
 
-    void to(Object bean);
-
-    void to(Object bean, String keyPrefix);
+    String propSet(String propertyName, String value, int index);
 }

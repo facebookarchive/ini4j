@@ -15,11 +15,6 @@
  */
 package org.ini4j;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Proxy;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,32 +28,19 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
     private static final Pattern expr = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?)\\}");
     private static final int G_OPTION = 2;
     private static final int G_INDEX = 4;
-    private Map<Class, Object> _beans;
+    private BeanAccess _defaultBeanAccess;
 
-    public synchronized <T> T as(Class<T> clazz)
+    @Override public <T> T as(Class<T> clazz)
     {
-        Object bean;
-
-        if (_beans == null)
-        {
-            _beans = new HashMap<Class, Object>();
-            bean = null;
-        }
-        else
-        {
-            bean = _beans.get(clazz);
-        }
-
-        if (bean == null)
-        {
-            bean = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler());
-            _beans.put(clazz, bean);
-        }
-
-        return clazz.cast(bean);
+        return BeanTool.getInstance().proxy(clazz, getDefaultBeanAccess());
     }
 
-    public String fetch(Object key)
+    @Override public <T> T as(Class<T> clazz, String keyPrefix)
+    {
+        return BeanTool.getInstance().proxy(clazz, newBeanAccess(keyPrefix));
+    }
+
+    @Override public String fetch(Object key)
     {
         return fetch(key, 0);
     }
@@ -78,14 +60,44 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
         return value;
     }
 
-    public void from(Object bean)
+    @Override public void from(Object bean)
     {
-        BeanTool.getInstance().inject(this, bean);
+        BeanTool.getInstance().inject(getDefaultBeanAccess(), bean);
     }
 
-    public void to(Object bean)
+    @Override public void from(Object bean, String keyPrefix)
     {
-        BeanTool.getInstance().inject(bean, this);
+        BeanTool.getInstance().inject(newBeanAccess(keyPrefix), bean);
+    }
+
+    @Override public void to(Object bean)
+    {
+        BeanTool.getInstance().inject(bean, getDefaultBeanAccess());
+    }
+
+    @Override public void to(Object bean, String keyPrefix)
+    {
+        BeanTool.getInstance().inject(bean, newBeanAccess(keyPrefix));
+    }
+
+    protected synchronized BeanAccess getDefaultBeanAccess()
+    {
+        if (_defaultBeanAccess == null)
+        {
+            _defaultBeanAccess = newBeanAccess();
+        }
+
+        return _defaultBeanAccess;
+    }
+
+    protected BeanAccess newBeanAccess()
+    {
+        return new Access();
+    }
+
+    protected BeanAccess newBeanAccess(String propertyNamePrefix)
+    {
+        return new Access(propertyNamePrefix);
     }
 
     protected void resolve(StringBuilder buffer)
@@ -119,53 +131,58 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
         }
     }
 
-    class BeanInvocationHandler extends AbstractBeanInvocationHandler
+    class Access implements BeanAccess
     {
-        @Override protected Object getPropertySpi(String property, Class<?> clazz)
+        private final String _prefix;
+
+        Access()
         {
-            Object ret;
-
-            if (clazz.isArray())
-            {
-                String[] all = containsKey(property) ? new String[length(property)] : null;
-
-                if (all != null)
-                {
-                    for (int i = 0; i < all.length; i++)
-                    {
-                        all[i] = fetch(property, i);
-                    }
-                }
-
-                ret = all;
-            }
-            else
-            {
-                ret = fetch(property);
-            }
-
-            return ret;
+            this(null);
         }
 
-        @Override protected void setPropertySpi(String property, Object value, Class<?> clazz)
+        Access(String prefix)
         {
-            if (clazz.isArray())
-            {
-                remove(property);
-                for (int i = 0; i < Array.getLength(value); i++)
-                {
-                    add(property, Array.get(value, i).toString());
-                }
-            }
-            else
-            {
-                put(property, value.toString());
-            }
+            _prefix = prefix;
         }
 
-        @Override protected boolean hasPropertySpi(String property)
+        public void propAdd(String propertyName, String value)
         {
-            return containsKey(property);
+            add(transform(propertyName), value);
+        }
+
+        public String propDel(String propertyName)
+        {
+            return remove(transform(propertyName));
+        }
+
+        public String propGet(String propertyName)
+        {
+            return fetch(transform(propertyName));
+        }
+
+        public String propGet(String propertyName, int index)
+        {
+            return fetch(transform(propertyName), index);
+        }
+
+        public int propLength(String propertyName)
+        {
+            return length(transform(propertyName));
+        }
+
+        public String propSet(String propertyName, String value)
+        {
+            return put(transform(propertyName), value);
+        }
+
+        public String propSet(String propertyName, String value, int index)
+        {
+            return put(transform(propertyName), value, index);
+        }
+
+        private String transform(String orig)
+        {
+            return (orig == null) ? null : ((_prefix == null) ? orig : (_prefix + orig));
         }
     }
 }

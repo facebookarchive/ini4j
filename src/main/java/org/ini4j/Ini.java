@@ -92,25 +92,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 
     public <T> T as(Class<T> clazz)
     {
-        Object bean;
-
-        if (_beans == null)
-        {
-            _beans = new HashMap<Class, Object>();
-            bean = null;
-        }
-        else
-        {
-            bean = _beans.get(clazz);
-        }
-
-        if (bean == null)
-        {
-            bean = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler());
-            _beans.put(clazz, bean);
-        }
-
-        return clazz.cast(bean);
+        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler()));
     }
 
     public void load(InputStream input) throws IOException, InvalidIniFormatException
@@ -178,9 +160,27 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         store(XMLFormatter.newInstance(output));
     }
 
-    @Deprecated public <T> T to(Class<T> clazz)
+    @Deprecated public synchronized <T> T to(Class<T> clazz)
     {
-        return as(clazz);
+        Object bean;
+
+        if (_beans == null)
+        {
+            _beans = new HashMap<Class, Object>();
+            bean = null;
+        }
+        else
+        {
+            bean = _beans.get(clazz);
+        }
+
+        if (bean == null)
+        {
+            bean = as(clazz);
+            _beans.put(clazz, bean);
+        }
+
+        return clazz.cast(bean);
     }
 
     protected Config getConfig()
@@ -251,6 +251,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 
     public class Section extends OptionMapImpl
     {
+        private Map<Class, Object> _beans;
         private String _name;
 
         public Section(String name)
@@ -264,9 +265,27 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
             return _name;
         }
 
-        @Deprecated public <T> T to(Class<T> clazz)
+        @Deprecated public synchronized <T> T to(Class<T> clazz)
         {
-            return as(clazz);
+            Object bean;
+
+            if (_beans == null)
+            {
+                _beans = new HashMap<Class, Object>();
+                bean = null;
+            }
+            else
+            {
+                bean = _beans.get(clazz);
+            }
+
+            if (bean == null)
+            {
+                bean = as(clazz);
+                _beans.put(clazz, bean);
+            }
+
+            return clazz.cast(bean);
         }
 
         @Override protected void resolve(StringBuilder buffer)

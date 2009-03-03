@@ -29,6 +29,22 @@ public class OptionsTest
 {
     private static final String[] _badOptions = { "=value\n", "\\u000d\\u000d=value\n" };
 
+    @Test public void testBean() throws Exception
+    {
+        Dwarfs dwarfs = Helper.newDwarfs();
+        Options opts = Helper.loadDwarfsOpt();
+        DwarfBean bean = new DwarfBean();
+
+        opts.to(bean, Dwarfs.PROP_BASHFUL + '.');
+        Helper.assertEquals(dwarfs.getBashful(), bean);
+        OptionMap map = new OptionMapImpl();
+
+        map.from(bean, Dwarfs.PROP_BASHFUL + '.');
+        bean = new DwarfBean();
+        map.to(bean, Dwarfs.PROP_BASHFUL + '.');
+        Helper.assertEquals(dwarfs.getBashful(), bean);
+    }
+
     @Test public void testConfig()
     {
         Options opts = new Options();
@@ -147,6 +163,20 @@ public class OptionsTest
                 ;
             }
         }
+    }
+
+    @Test public void testPrefixed() throws Exception
+    {
+        Dwarfs dwarfs = Helper.newDwarfs();
+        Options opts = Helper.loadDwarfsOpt();
+
+        Helper.assertEquals(dwarfs.getBashful(), opts.as(Dwarf.class, Dwarfs.PROP_BASHFUL + '.'));
+        Helper.assertEquals(dwarfs.getDoc(), opts.as(Dwarf.class, Dwarfs.PROP_DOC + '.'));
+        Helper.assertEquals(dwarfs.getDopey(), opts.as(Dwarf.class, Dwarfs.PROP_DOPEY + '.'));
+        Helper.assertEquals(dwarfs.getGrumpy(), opts.as(Dwarf.class, Dwarfs.PROP_GRUMPY + '.'));
+        Helper.assertEquals(dwarfs.getHappy(), opts.as(Dwarf.class, Dwarfs.PROP_HAPPY + '.'));
+        Helper.assertEquals(dwarfs.getSleepy(), opts.as(Dwarf.class, Dwarfs.PROP_SLEEPY + '.'));
+        Helper.assertEquals(dwarfs.getSneezy(), opts.as(Dwarf.class, Dwarfs.PROP_SNEEZY + '.'));
     }
 
     @Test public void testResolve() throws Exception

@@ -26,6 +26,7 @@ public class Helper
 {
     private static final String RESOURCE_PREFIX = "org/ini4j/";
     public static final String DWARFS_INI = RESOURCE_PREFIX + "dwarfs.ini";
+    public static final String DWARFS_OPT = RESOURCE_PREFIX + "dwarfs.opt";
     public static final String DWARFS_XML = RESOURCE_PREFIX + "dwarfs.xml";
     public static final String PROPERTIES_SUFFIX = ".properties";
     public static final String BASHFUL_PROPERTIES = RESOURCE_PREFIX + "bashful.properties";
@@ -131,6 +132,11 @@ public class Helper
         ini.load(Helper.class.getClassLoader().getResourceAsStream(DWARFS_INI));
 
         return ini;
+    }
+
+    public static Options loadDwarfsOpt() throws Exception
+    {
+        return new Options(Helper.class.getClassLoader().getResourceAsStream(DWARFS_OPT));
     }
 
     public static Dwarf newDwarf()

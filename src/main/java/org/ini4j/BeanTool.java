@@ -23,6 +23,7 @@ import java.io.File;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 import java.net.URI;
 import java.net.URL;
@@ -39,7 +40,7 @@ public class BeanTool
         return _instance;
     }
 
-    public void inject(Object bean, OptionMap props)
+    public void inject(Object bean, BeanAccess props)
     {
         for (PropertyDescriptor pd : getPropertyDescriptors(bean.getClass()))
         {
@@ -48,21 +49,22 @@ public class BeanTool
                 Method method = pd.getWriteMethod();
                 String name = pd.getName();
 
-                if ((method != null) && props.containsKey(name))
+//                if ((method != null) && props.containsKey(name))
+                if ((method != null) && (props.propLength(name) != 0))
                 {
                     Object value;
 
                     if (pd.getPropertyType().isArray())
                     {
-                        value = Array.newInstance(pd.getPropertyType().getComponentType(), props.length(name));
-                        for (int i = 0; i < props.length(name); i++)
+                        value = Array.newInstance(pd.getPropertyType().getComponentType(), props.propLength(name));
+                        for (int i = 0; i < props.propLength(name); i++)
                         {
-                            Array.set(value, i, parse(props.fetch(name, i), pd.getPropertyType().getComponentType()));
+                            Array.set(value, i, parse(props.propGet(name, i), pd.getPropertyType().getComponentType()));
                         }
                     }
                     else
                     {
-                        value = parse(props.fetch(name), pd.getPropertyType());
+                        value = parse(props.propGet(name), pd.getPropertyType());
                     }
 
                     method.invoke(bean, value);
@@ -75,7 +77,7 @@ public class BeanTool
         }
     }
 
-    public void inject(OptionMap props, Object bean)
+    public void inject(BeanAccess props, Object bean)
     {
         for (PropertyDescriptor pd : getPropertyDescriptors(bean.getClass()))
         {
@@ -95,12 +97,12 @@ public class BeanTool
                             {
                                 Object v = Array.get(value, i);
 
-                                props.add(pd.getName(), (v == null) ? null : v.toString());
+                                props.propAdd(pd.getName(), (v == null) ? null : v.toString());
                             }
                         }
                         else
                         {
-                            props.put(pd.getName(), value.toString());
+                            props.propSet(pd.getName(), value.toString());
                         }
                     }
                 }
@@ -184,6 +186,11 @@ public class BeanTool
         }
 
         return o;
+    }
+
+    public <T> T proxy(Class<T> clazz, BeanAccess props)
+    {
+        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler(props)));
     }
 
     public Object zero(Class clazz)
@@ -282,6 +289,64 @@ public class BeanTool
         catch (IntrospectionException x)
         {
             throw new IllegalArgumentException(x);
+        }
+    }
+
+    static class BeanInvocationHandler extends AbstractBeanInvocationHandler
+    {
+        private final BeanAccess _backend;
+
+        BeanInvocationHandler(BeanAccess backend)
+        {
+            _backend = backend;
+        }
+
+        @Override protected Object getPropertySpi(String property, Class<?> clazz)
+        {
+            Object ret;
+
+            if (clazz.isArray())
+            {
+                int length = _backend.propLength(property);
+                String[] all = (length == 0) ? null : new String[length];
+
+                if (all != null)
+                {
+                    for (int i = 0; i < all.length; i++)
+                    {
+                        all[i] = _backend.propGet(property, i);
+                    }
+                }
+
+                ret = all;
+            }
+            else
+            {
+                ret = _backend.propGet(property);
+            }
+
+            return ret;
+        }
+
+        @Override protected void setPropertySpi(String property, Object value, Class<?> clazz)
+        {
+            if (clazz.isArray())
+            {
+                _backend.propDel(property);
+                for (int i = 0; i < Array.getLength(value); i++)
+                {
+                    _backend.propAdd(property, Array.get(value, i).toString());
+                }
+            }
+            else
+            {
+                _backend.propSet(property, value.toString());
+            }
+        }
+
+        @Override protected boolean hasPropertySpi(String property)
+        {
+            return _backend.propLength(property) != 0;
         }
     }
 }
