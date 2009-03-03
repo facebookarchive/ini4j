@@ -30,6 +30,51 @@ import java.util.Set;
 //|
 //|Options Tutorial
 //|
+//| "Failure is not an option" (Gene Kranz, Apollo 13)
+//|
+//|* What is Options
+//|
+//| Options (org.ini4j.Options) is a java.util.Properties replacement with
+//| several useful features, like:
+//|
+//|  * variable/macro substitution. You may refer to other property's value with
+//|  $\{NAME\} expression, where NAME is the name of the referred property.
+//|  ofcourse you can use more than one property reference per property, and
+//|  you can mix constant text and property references:
+//|
+//|+-------------------+
+//|player.name = Joe
+//|player.greetings = Hi ${player.name}!
+//|player.domain = foo.bar
+//|player.email = ${player.name}@${player.domain}
+//|+-------------------+
+//|
+//|  * multiply property values. You can refer to multi value properties with
+//| integer indexes. Ofcource it is also works in macro/variable substitutions:
+//| $\{user.fortuneNumber\[2\]\}
+//|
+//|+-------------------+
+//|player.fortuneNumber = 33
+//|player.fortuneNumber = 44
+//|player.fortuneNumber = 55
+//|player.fortuneNumber = 66
+//|
+//|magicNumber = ${player.foruneNumber[1]}
+//|+--------------------+
+//|
+//|  The magicNumber property will have value: <<<44>>>
+//|
+//|  * as Java class, Options is basicly map of Strings indexed with Strings. It
+//|  is standard Collection API (ok, it is a bit enhanced to deal with multi
+//|  values, but in general it is a Map\<String,String\>).
+//|
+//|  * Java Beans api. You can read/write properties in type safe way. To do it
+//|  you just define an interface, call Options#as() method. This method will
+//|  provide an implementation of given interface on top of Options. Property
+//|  types are mapped automatically between Java type and String.
+//|
+//|* Why need Options
+//|
 //| With standard Properties class there is several small problem. Most of them
 //| came from backward compatibility.
 //|
@@ -39,20 +84,20 @@ import java.util.Set;
 //|  * only single property values allowed. Probably you already see ugly
 //|    workarounds: index number in property names, like: file.1, file.2 ...
 //|
-//|  * can't refer to other property values. In some environment, like
+//|  * no macro/variable substitution. In some environment, like
 //|    Apache Ant, you can use ${name} like references, but with standard
 //|    java.util.Properties you can't.
 //|
 //| As side effect of \[ini4j\] development, there is a solution for aboves.
-//| This is the Options class, which is basicly a feature rich replacement
-//| for java.util.Properties.
+//| This is the org.ini4j.Options class, which is basicly a feature rich
+//| replacement for java.util.Properties.
 //|
 //| Code sniplets in this tutorial tested with the following .opt file:
-//| {{{dwarf.html}dwarf.opt}}
+//| {{{dwarfs.html}dwarfs.opt}}
 //|
 public class OptTutorial extends AbstractTutorial
 {
-    public static final String FILENAME = "dwarf.opt";
+    public static final String FILENAME = "dwarfs.opt";
 
     public static void main(String[] args) throws Exception
     {
@@ -91,7 +136,7 @@ public class OptTutorial extends AbstractTutorial
 //|       .
 //|+---------------------------------------------------------------------------+
 //|
-        assertEquals(8, opt.keySet().size());
+        assertFalse(opt.keySet().isEmpty());
     }
 
 //|
@@ -119,9 +164,9 @@ public class OptTutorial extends AbstractTutorial
 //| use <<<fetch()>>> which resolves any occurrent $\{option\} format
 //| variable references in the needed value.
         assertEquals("23", opt.get("age"));
-        assertEquals("${bashful_weight}", opt.get("weight"));
+        assertEquals("${bashful.weight}", opt.get("weight"));
         assertEquals("45.7", opt.fetch("weight"));
-        assertEquals("${doc_height}", opt.get("height"));
+        assertEquals("${doc.height}", opt.get("height"));
         assertEquals("87.7", opt.fetch("height"));
     }
 }

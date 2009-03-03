@@ -21,6 +21,7 @@ import org.ini4j.Options;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 
 import java.net.URI;
@@ -60,6 +61,11 @@ public class BeanTutorial extends AbstractTutorial
 
         opts.putAll(ini.get("bashful"));
         sample05(opts);
+
+        //
+        File optFile = new File(getArgument().getParentFile(), OptTutorial.FILENAME);
+
+        sample06(optFile.toURI().toURL());
     }
 
 //|
@@ -202,24 +208,54 @@ public class BeanTutorial extends AbstractTutorial
 //{
     void sample05(Options opts)
     {
-        Dwarf bashful = opts.as(Dwarf.class);
-        int age = bashful.getAge();
+        Dwarf dwarf = opts.as(Dwarf.class);
+        int age = dwarf.getAge();
 
         //
         // same as above but with unmarshalling
         //
-        DwarfBean bashfulBean = new DwarfBean();
+        DwarfBean dwarfBean = new DwarfBean();
 
-        opts.to(bashfulBean);
-        age = bashfulBean.getAge();
+        opts.to(dwarfBean);
+        age = dwarfBean.getAge();
 
 //}
 //|       .
 //|       .
 //|+---------------------------------------------------------------------------+
 //|
-        assertEquals(67, bashful.getAge());
-        assertEquals(67, bashfulBean.getAge());
+//| In sample above the top level properties (like "age") mapped to bean
+//| properties.
+//|
+        assertEquals(67, dwarf.getAge());
+        assertEquals(67, dwarfBean.getAge());
+    }
+
+//|* Prefixed mapping
+//|
+//| Both Ini.Section and Options has possibility to add a prefix to property
+//| names while mapping from bean property name to Ini.Section or Options
+//| key.
+//|+---------------------------------------------------------------------------+
+//{
+    void sample06(URL optPath) throws IOException
+    {
+        Options opt = new Options(optPath);
+        Dwarf dwarf = opt.as(Dwarf.class, "happy.");
+        DwarfBean bean = new DwarfBean();
+
+        opt.to(bean, "dopey.");
+
+//}
+//|       .
+//|       .
+//|+---------------------------------------------------------------------------+
+//|
+//| In the above example, <<<dwarf>>> bean will contain properties starts with
+//| <<<happy.>>> while <<<bean>>> will contain properties starts with
+//| <<<dopey.>>>
+        assertEquals(99, dwarf.getAge());
+        assertEquals(23, bean.getAge());
     }
 
     static  //

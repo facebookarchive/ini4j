@@ -36,9 +36,9 @@
     <body>
         <head>
             <link rel="shortcut icon" href="/favicon.ico"/>
-            <meta name="keywords" content="windows ini,java library,ini,configuration"></meta>
+            <meta name="keywords" content="windows ini,java library,ini,configuration,properties,java.util.Properties,properties replacement,properties macro substitution"></meta>
             <meta name="author" content="szkiba"></meta>
-            <meta name="description" content="Java API for handling configuration files in Windows .ini format. Additionally, the library includes Java Preferences API implementation based on the .ini file."></meta>
+            <meta name="description" content="Java API for handling configuration files in Windows .ini format. The library includes its own Map based API, Java Preferences API and Java Beans API for handling .ini files. Additionally, the library includes a feature rich (variable/macro substitution, multiply property values, etc) java.util.Properties replacement."></meta>
         </head>
         
         <menu name="[ini4j]">
