@@ -86,10 +86,10 @@ public class ArrayTest
         assertEquals(2, sec.length("number"));
         buffer = new StringBuilder("${number}");
         ini.resolve(buffer, sec);
-        assertEquals("1", buffer.toString());
+        assertEquals("2", buffer.toString());
         buffer = new StringBuilder("${number[0]}-${section/number[1]}-${section[0]/number}");
         ini.resolve(buffer, sec);
-        assertEquals("1-2-1", buffer.toString());
+        assertEquals("1-2-2", buffer.toString());
     }
 
     @Test public void testSectionArray() throws Exception

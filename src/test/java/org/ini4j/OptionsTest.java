@@ -53,7 +53,7 @@ public class OptionsTest
         assertTrue(conf.isEmptyOption());
         assertTrue(conf.isEscape());
         assertFalse(conf.isInclude());
-        assertFalse(conf.isMultiOption());
+        assertTrue(conf.isMultiOption());
         conf = new Config();
         opts.setConfig(conf);
         assertSame(conf, opts.getConfig());

@@ -86,7 +86,7 @@ public class ConfigTest
         cfg.setLowerCaseOption(false);
         cfg.setLowerCaseSection(false);
         cfg.setMultiSection(false);
-        cfg.setMultiOption(false);
+        cfg.setMultiOption(true);
         cfg.setStrictOperator(false);
         cfg.setUnnamedSection(false);
 

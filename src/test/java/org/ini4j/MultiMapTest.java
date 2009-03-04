@@ -89,7 +89,7 @@ public class MultiMapTest
         {
             if (e.getKey().equals(KEY1))
             {
-                assertEquals(VALUES[0], e.getValue());
+                assertEquals(VALUES[2], e.getValue());
                 e.setValue(VALUES[1]);
             }
             else if (e.getKey().equals(KEY2))
@@ -117,8 +117,7 @@ public class MultiMapTest
         assertEquals(VALUE2, map.get(KEY1, 1));
         map.put(KEY1, VALUE3, 1);
         assertEquals(VALUE3, map.get(KEY1, 1));
-        map.put(KEY1, VALUE2, 0);
-        assertEquals(VALUE2, map.get(KEY1));
+        assertEquals(VALUE3, map.get(KEY1));
     }
 
     @Test public void testPutAll()

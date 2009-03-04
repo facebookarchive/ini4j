@@ -42,7 +42,9 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
 
     @Override public String fetch(Object key)
     {
-        return fetch(key, 0);
+        int len = length(key);
+
+        return (len == 0) ? null : fetch(key, len - 1);
     }
 
     @Override public String fetch(Object key, int index)
@@ -107,7 +109,7 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
         while (m.find())
         {
             String name = m.group(G_OPTION);
-            int index = (m.group(G_INDEX) == null) ? 0 : Integer.parseInt(m.group(G_INDEX));
+            int index = (m.group(G_INDEX) == null) ? -1 : Integer.parseInt(m.group(G_INDEX));
             String value;
 
             if (name.startsWith(ENVIRONMENT_PREFIX))
@@ -120,7 +122,7 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
             }
             else
             {
-                value = fetch(name, index);
+                value = (index == -1) ? fetch(name) : fetch(name, index);
             }
 
             if (value != null)

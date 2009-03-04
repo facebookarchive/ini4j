@@ -99,7 +99,9 @@ public class MultiMapImpl<K, V> implements MultiMap<K, V>
 
     @Override public V get(Object key)
     {
-        return get(key, 0);
+        List<V> values = getList(key, false);
+
+        return (values == null) ? null : values.get(values.size() - 1);
     }
 
     @Override public V get(Object key, int index)
@@ -133,7 +135,7 @@ public class MultiMapImpl<K, V> implements MultiMap<K, V>
         }
         else
         {
-            ret = values.set(0, value);
+            ret = values.set(values.size() - 1, value);
         }
 
         return ret;
@@ -141,18 +143,7 @@ public class MultiMapImpl<K, V> implements MultiMap<K, V>
 
     @Override public V put(K key, V value, int index)
     {
-        V ret;
-
-        if (index == 0)
-        {
-            ret = put(key, value);
-        }
-        else
-        {
-            ret = getList(key, false).set(index, value);
-        }
-
-        return ret;
+        return getList(key, false).set(index, value);
     }
 
     @SuppressWarnings("unchecked")

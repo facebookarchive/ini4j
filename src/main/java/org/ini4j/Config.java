@@ -35,7 +35,7 @@ public class Config implements Cloneable
     public static final boolean DEFAULT_INCLUDE = false;
     public static final boolean DEFAULT_LOWER_CASE_OPTION = false;
     public static final boolean DEFAULT_LOWER_CASE_SECTION = false;
-    public static final boolean DEFAULT_MULTI_OPTION = false;
+    public static final boolean DEFAULT_MULTI_OPTION = true;
     public static final boolean DEFAULT_MULTI_SECTION = false;
     public static final boolean DEFAULT_STRICT_OPERATOR = false;
     public static final boolean DEFAULT_UNNAMED_SECTION = false;

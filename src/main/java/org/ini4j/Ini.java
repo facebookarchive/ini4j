@@ -201,9 +201,9 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 
             String sectionName = m.group(G_SECTION);
             String optionName = m.group(G_OPTION);
-            int sectionIndex = (m.group(G_SECTION_IDX) == null) ? 0 : Integer.parseInt(m.group(G_SECTION_IDX));
-            int optionIndex = (m.group(G_OPTION_IDX) == null) ? 0 : Integer.parseInt(m.group(G_OPTION_IDX));
-            Section section = (sectionName == null) ? owner : get(sectionName, sectionIndex);
+            int sectionIndex = (m.group(G_SECTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_SECTION_IDX));
+            int optionIndex = (m.group(G_OPTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_OPTION_IDX));
+            Section section = (sectionName == null) ? owner : ((sectionIndex == -1) ? get(sectionName) : get(sectionName, sectionIndex));
             String value;
 
             if (SECTION_ENVIRONMENT.equals(sectionName))
@@ -216,7 +216,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
             }
             else
             {
-                value = (section == null) ? null : section.fetch(optionName, optionIndex);
+                value = (section == null) ? null : ((optionIndex == -1) ? section.fetch(optionName) : section.fetch(optionName, optionIndex));
             }
 
             if (value != null)
