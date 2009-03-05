@@ -19,8 +19,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import java.io.InputStreamReader;
-
 public class IniPreferencesTest
 {
     private static final String DUMMY = "dummy";
@@ -32,16 +30,16 @@ public class IniPreferencesTest
      */
     @Test public void testConstructor() throws Exception
     {
-        Ini ini = Helper.loadDwarfs();
+        Ini ini = Helper.loadDwarfsIni();
         IniPreferences prefs = new IniPreferences(ini);
 
         assertSame(ini, prefs.getIni());
         Helper.doTestDwarfs(ini.as(Dwarfs.class));
-        prefs = new IniPreferences(getClass().getClassLoader().getResourceAsStream(Helper.DWARFS_INI));
+        prefs = new IniPreferences(Helper.getResourceStream(Helper.DWARFS_INI));
         Helper.assertEquals(ini.get(Dwarfs.PROP_DOC).as(Dwarf.class), prefs.node(Dwarfs.PROP_DOC));
-        prefs = new IniPreferences(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(Helper.DWARFS_INI)));
+        prefs = new IniPreferences(Helper.getResourceReader(Helper.DWARFS_INI));
         Helper.assertEquals(ini.get(Dwarfs.PROP_HAPPY).as(Dwarf.class), prefs.node(Dwarfs.PROP_HAPPY));
-        prefs = new IniPreferences(getClass().getClassLoader().getResource(Helper.DWARFS_INI));
+        prefs = new IniPreferences(Helper.getResourceURL(Helper.DWARFS_INI));
         Helper.assertEquals(ini.get(Dwarfs.PROP_HAPPY).as(Dwarf.class), prefs.node(Dwarfs.PROP_HAPPY));
     }
 

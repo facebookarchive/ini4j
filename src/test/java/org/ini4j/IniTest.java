@@ -42,7 +42,7 @@ public class IniTest
     @Test public void testBeanInterface() throws Exception
     {
         Dwarfs exp = Helper.newDwarfs();
-        Ini ini = Helper.loadDwarfs();
+        Ini ini = Helper.loadDwarfsIni();
         Ini.Section sec = ini.get(Dwarfs.PROP_DOC);
         Dwarf bean = Helper.newDwarf();
 
@@ -65,7 +65,7 @@ public class IniTest
         Config cfg = Config.getGlobal().clone();
 
         cfg.setMultiSection(true);
-        Ini ini = Helper.loadDwarfs(cfg);
+        Ini ini = Helper.loadDwarfsIni(cfg);
 
         assertEquals(2, ini.length(Dwarfs.PROP_HAPPY));
         Ini.Section happy1 = ini.get(Dwarfs.PROP_HAPPY, 0);
@@ -75,7 +75,7 @@ public class IniTest
         assertEquals(1, happy2.size());
         cfg.setMultiSection(false);
         cfg.setMultiOption(true);
-        ini = Helper.loadDwarfs(cfg);
+        ini = Helper.loadDwarfsIni(cfg);
         Ini.Section happy = ini.get(Dwarfs.PROP_HAPPY);
 
         assertEquals(5, happy.size());
@@ -87,7 +87,7 @@ public class IniTest
         Config config = Config.getGlobal().clone();
 
         config.setEscape(false);
-        Ini ini = Helper.loadDwarfs(config);
+        Ini ini = Helper.loadDwarfsIni(config);
         Ini.Section doc = ini.get(Dwarfs.PROP_DOC);
         Ini.Section dopey = ini.get(Dwarfs.PROP_DOPEY);
 
@@ -102,12 +102,13 @@ public class IniTest
      */
     @Test public void testLoad() throws Exception
     {
-        Ini ini = Helper.loadDwarfs();
+        Ini ini;
 
+        ini = new Ini(Helper.getResourceURL(Helper.DWARFS_INI));
         Helper.doTestDwarfs(ini.as(Dwarfs.class));
-        ini = new Ini(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(Helper.DWARFS_INI)));
+        ini = new Ini(Helper.getResourceStream(Helper.DWARFS_INI));
         Helper.doTestDwarfs(ini.as(Dwarfs.class));
-        ini = new Ini(getClass().getClassLoader().getResource(Helper.DWARFS_INI));
+        ini = new Ini(Helper.getResourceReader(Helper.DWARFS_INI));
         Helper.doTestDwarfs(ini.as(Dwarfs.class));
     }
 
@@ -133,7 +134,7 @@ public class IniTest
      */
     @Test public void testRemove() throws Exception
     {
-        Ini ini = Helper.loadDwarfs();
+        Ini ini = Helper.loadDwarfsIni();
 
         ini.remove(ini.get(Dwarfs.PROP_DOC));
         assertNull(ini.get(Dwarfs.PROP_DOC));
@@ -146,7 +147,7 @@ public class IniTest
      */
     @Test public void testResolve() throws Exception
     {
-        Ini ini = Helper.loadDwarfs();
+        Ini ini = Helper.loadDwarfsIni();
         Ini.Section doc = ini.get(Dwarfs.PROP_DOC);
         Dwarfs dwarfs = ini.as(Dwarfs.class);
         StringBuilder buffer;
@@ -247,7 +248,7 @@ public class IniTest
      */
     @Test public void testStore() throws Exception
     {
-        Ini ini = Helper.loadDwarfs();
+        Ini ini = Helper.loadDwarfsIni();
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
         ini.store(buffer);
@@ -269,7 +270,7 @@ public class IniTest
      */
     @Test public void testStoreToXML() throws Exception
     {
-        Ini ini = Helper.loadDwarfs();
+        Ini ini = Helper.loadDwarfsIni();
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
         ini.storeToXML(buffer);
@@ -286,7 +287,7 @@ public class IniTest
 
     @Test public void testToBean() throws Exception
     {
-        Ini ini = Helper.loadDwarfs();
+        Ini ini = Helper.loadDwarfsIni();
         Ini.Section sec = ini.get(Dwarfs.PROP_DOC);
         Dwarf doc = sec.as(Dwarf.class);
     }

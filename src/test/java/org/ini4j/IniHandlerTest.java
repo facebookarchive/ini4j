@@ -39,11 +39,11 @@ public class IniHandlerTest
 
         handler = newHandler();
         EasyMock.replay(handler);
-        parser.parse(getClass().getClassLoader().getResourceAsStream(Helper.DWARFS_INI), handler);
+        parser.parse(Helper.getResourceStream(Helper.DWARFS_INI), handler);
         EasyMock.verify(handler);
         handler = newHandler();
         EasyMock.replay(handler);
-        parser.parseXML(getClass().getClassLoader().getResourceAsStream(Helper.DWARFS_XML), handler);
+        parser.parseXML(Helper.getResourceStream(Helper.DWARFS_XML), handler);
         EasyMock.verify(handler);
     }
 

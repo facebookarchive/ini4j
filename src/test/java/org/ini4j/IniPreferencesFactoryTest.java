@@ -42,7 +42,7 @@ public class IniPreferencesFactoryTest
         assertNotNull(factory.getResourceAsStream(Helper.DWARFS_INI));
 
         // url
-        String location = getClass().getClassLoader().getResource(Helper.DWARFS_INI).toString();
+        String location = Helper.getResourceURL(Helper.DWARFS_INI).toString();
 
         assertNotNull(factory.getResourceAsStream(location));
 

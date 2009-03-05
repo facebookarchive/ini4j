@@ -91,16 +91,16 @@ public class OptionsTest
 
     @Test public void testLoad() throws Exception
     {
-        Options bashful = new Options(Helper.getResource(Dwarfs.PROP_BASHFUL + Helper.PROPERTIES_SUFFIX));
-        Options doc = new Options(Helper.getResource(Dwarfs.PROP_DOC + Helper.PROPERTIES_SUFFIX).openStream());
-        Options dopey = new Options(new InputStreamReader(Helper.getResource(Dwarfs.PROP_DOPEY + Helper.PROPERTIES_SUFFIX).openStream()));
-        Options happy = new Options(Helper.getResource(Dwarfs.PROP_HAPPY + Helper.PROPERTIES_SUFFIX));
-        Dwarfs dwarfs = Helper.newDwarfs();
+        Options o1 = new Options(Helper.getResourceURL(Helper.DWARFS_OPT));
+        Options o2 = new Options(Helper.getResourceURL(Helper.DWARFS_OPT).openStream());
+        Options o3 = new Options(new InputStreamReader(Helper.getResourceURL(Helper.DWARFS_OPT).openStream()));
+        Options o4 = new Options(Helper.getResourceURL(Helper.DWARFS_OPT));
+        Dwarf dopey = Helper.newDwarfs().getDopey();
 
-        Helper.assertEquals(dwarfs.getBashful(), bashful);
-        Helper.assertEquals(dwarfs.getDoc(), doc);
-        Helper.assertEquals(dwarfs.getDopey(), dopey);
-        Helper.assertEquals(dwarfs.getHappy(), happy);
+        Helper.assertEquals(dopey, o1);
+        Helper.assertEquals(dopey, o2);
+        Helper.assertEquals(dopey, o3);
+        Helper.assertEquals(dopey, o4);
     }
 
     @Test public void testLowerCase() throws Exception
@@ -119,18 +119,16 @@ public class OptionsTest
         Config cfg = new Config();
 
         cfg.setMultiOption(true);
-        Options opts = new Options();
+        Options opts = Helper.loadDwarfsOpt(cfg);
 
-        opts.setConfig(cfg);
-        opts.load(Helper.getResource(Dwarfs.PROP_HAPPY + Helper.PROPERTIES_SUFFIX));
-        assertEquals(2, opts.length(Dwarf.PROP_HOME_PAGE));
+        assertEquals(2, opts.length(Dwarfs.PROP_HAPPY + '.' + Dwarf.PROP_HOME_PAGE));
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
         opts.store(buffer);
         opts = new Options();
         opts.setConfig(cfg);
         opts.load(new ByteArrayInputStream(buffer.toByteArray()));
-        assertEquals(2, opts.length(Dwarf.PROP_HOME_PAGE));
+        assertEquals(2, opts.length(Dwarfs.PROP_HAPPY + '.' + Dwarf.PROP_HOME_PAGE));
     }
 
     @Test(expected = InvalidIniFormatException.class)
@@ -181,8 +179,8 @@ public class OptionsTest
 
     @Test public void testResolve() throws Exception
     {
-        Dwarf doc = Helper.newDwarfs().getDoc();
-        Options opts = new Options(Helper.getResource(Dwarfs.PROP_DOC + Helper.PROPERTIES_SUFFIX));
+        Dwarf dopey = Helper.newDwarfs().getDopey();
+        Options opts = Helper.loadDwarfsOpt();
         StringBuilder buffer;
         String input;
 
@@ -191,7 +189,7 @@ public class OptionsTest
         buffer = new StringBuilder(input);
 
         opts.resolve(buffer);
-        assertEquals("" + doc.getHeight(), buffer.toString());
+        assertEquals("" + dopey.getHeight(), buffer.toString());
 
         // system property
         input = "${@prop/user.home}";
@@ -246,7 +244,7 @@ public class OptionsTest
         buffer = new StringBuilder(input);
 
         opts.resolve(buffer);
-        assertEquals("" + doc.getWeight(), buffer.toString());
+        assertEquals("" + dopey.getWeight(), buffer.toString());
         input = "\\" + input;
         buffer = new StringBuilder(input);
 

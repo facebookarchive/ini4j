@@ -59,30 +59,25 @@ import java.util.regex.Pattern;
 @RunWith(Parameterized.class)
 public class SampleRunnerTest
 {
-    private static final String SRC_PATH = "src/test/java";
-    private static final String DOC_PATH = "target/generated-site/apt";
-    private static final File _baseDir = new File(System.getProperty("basedir"));
+    private static final String DOC_PATH = "generated-site/apt";
     private static final String JAVA_SUFFIX = ".java";
     private static final String APT_SUFFIX = ".apt";
     private static final String CODE_BEGIN = "\n+----+\n";
     private static final String CODE_END = "+----+\n\n";
-    private static File _sourceDir;
     private static File _documentDir;
     private final Class _clazz;
     private final File _sourceFile;
 
-    public SampleRunnerTest(Class sampleClass)
+    public SampleRunnerTest(Class sampleClass) throws Exception
     {
         _clazz = sampleClass;
-        _sourceFile = new File(_sourceDir, _clazz.getName().replaceAll("\\.", "/") + JAVA_SUFFIX);
+        _sourceFile = Helper.getSourceFile(_clazz.getName().replaceAll("\\.", "/") + JAVA_SUFFIX);
     }
 
     @BeforeClass public static void setUpClass() throws Exception
     {
         System.setProperty("java.util.prefs.PreferencesFactory", "org.ini4j.IniPreferencesFactory");
-        _sourceDir = new File(_baseDir, SRC_PATH);
-        _documentDir = new File(_baseDir, DOC_PATH);
-
+        _documentDir = new File(Helper.getBuildDirectory(), DOC_PATH);
         _documentDir.mkdirs();
     }
 

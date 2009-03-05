@@ -48,7 +48,7 @@ public class PreferencesWrapperTest
     @Test public void testCalls() throws Exception
     {
         String value;
-        Preferences root = new IniPreferences(Helper.loadDwarfs());
+        Preferences root = new IniPreferences(Helper.loadDwarfsIni());
         Preferences toor = new PreferencesWrapper(root);
         Preferences peer = root.node(DOC);
         Preferences pref = new PreferencesWrapper(peer);
