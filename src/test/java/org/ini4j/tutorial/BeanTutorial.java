@@ -236,6 +236,7 @@ public class BeanTutorial extends AbstractTutorial
 //| Both Ini.Section and Options has possibility to add a prefix to property
 //| names while mapping from bean property name to Ini.Section or Options
 //| key.
+//|
 //|+---------------------------------------------------------------------------+
 //{
     void sample06(URL optPath) throws IOException
