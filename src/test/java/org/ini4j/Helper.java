@@ -166,6 +166,45 @@ public class Helper
         return opt;
     }
 
+    public static Dwarf newBashful() throws Exception
+    {
+        Dwarf d = new DwarfBean();
+
+        d.setWeight(45.7);
+        d.setHeight(98.8);
+        d.setAge(67);
+        d.setHomePage(new URI("http://snowwhite.tale/~bashful"));
+        d.setHomeDir("/home/bashful");
+
+        return d;
+    }
+
+    public static Dwarf newDoc() throws Exception
+    {
+        Dwarf d = new DwarfBean();
+
+        d.setWeight(49.5);
+        d.setHeight(87.7);
+        d.setAge(63);
+        d.setHomePage(new URI("http://doc.dwarfs"));
+        d.setHomeDir("c:Documents and Settingsdoc");
+
+        return d;
+    }
+
+    public static Dwarf newDopey() throws Exception
+    {
+        Dwarf d = new DwarfBean();
+
+        d.setWeight(45.7);
+        d.setHeight(87.7);
+        d.setAge(23);
+        d.setHomePage(new URI("http://dopey.snowwhite.tale/"));
+        d.setHomeDir("c:\\Documents and Settings\\dopey");
+
+        return d;
+    }
+
     public static Dwarf newDwarf()
     {
         return new DwarfBean();
@@ -174,61 +213,127 @@ public class Helper
     public static Dwarfs newDwarfs() throws Exception
     {
         DwarfsBean dwarfs = new DwarfsBean();
-        Dwarf d;
 
-        d = new DwarfBean();
-        d.setWeight(45.7);
-        d.setHeight(98.8);
-        d.setAge(67);
-        d.setHomePage(new URI("http://snowwhite.tale/~bashful"));
-        d.setHomeDir("/home/bashful");
-        dwarfs.setBashful(d);
-        d = new DwarfBean();
-        d.setWeight(49.5);
-        d.setHeight(87.7);
-        d.setAge(63);
-        d.setHomePage(new URI("http://doc.dwarfs"));
-        d.setHomeDir("c:Documents and Settingsdoc");
-        dwarfs.setDoc(d);
-        d = new DwarfBean();
-        d.setWeight(dwarfs.getBashful().getWeight());
-        d.setHeight(dwarfs.getDoc().getHeight());
-        d.setAge(23);
-        d.setHomePage(new URI("http://dopey.snowwhite.tale/"));
-        d.setHomeDir("c:\\Documents and Settings\\dopey");
-        dwarfs.setDopey(d);
-        d = new DwarfBean();
+        dwarfs.setBashful(newBashful());
+        dwarfs.setDoc(newDoc());
+        dwarfs.setDopey(newDopey());
+        dwarfs.setGrumpy(newGrumpy());
+        dwarfs.setHappy(newHappy());
+        dwarfs.setSleepy(newSleepy());
+        dwarfs.setSneezy(newSneezy());
+
+        return dwarfs;
+    }
+
+    public static Ini newDwarfsIni()
+    {
+        Ini ini = new Ini();
+        Ini.Section s;
+
+        s = ini.add(Dwarfs.PROP_BASHFUL);
+        s.put(Dwarf.PROP_WEIGHT, "45.7");
+        s.put(Dwarf.PROP_HEIGHT, "98.8");
+        s.put(Dwarf.PROP_AGE, "67");
+        s.put(Dwarf.PROP_HOME_PAGE, "http://snowwhite.tale/~bashful");
+        s.put(Dwarf.PROP_HOME_DIR, "/home/bashful");
+        s = ini.add(Dwarfs.PROP_DOC);
+        s.put(Dwarf.PROP_WEIGHT, "49.5");
+        s.put(Dwarf.PROP_HEIGHT, "87.7");
+        s.put(Dwarf.PROP_AGE, "63");
+        s.put(Dwarf.PROP_HOME_PAGE, "http://doc.dwarfs");
+        s.put(Dwarf.PROP_HOME_DIR, "c:Documents and Settingsdoc");
+        s = ini.add(Dwarfs.PROP_DOPEY);
+        s.put(Dwarf.PROP_WEIGHT, "${bashful/weight}");
+        s.put(Dwarf.PROP_HEIGHT, "${doc/height}");
+        s.put(Dwarf.PROP_AGE, "23");
+        s.put(Dwarf.PROP_HOME_PAGE, "http://dopey.snowwhite.tale/");
+        s.put(Dwarf.PROP_HOME_DIR, "c:\\Documents and Settings\\dopey");
+        s = ini.add(Dwarfs.PROP_GRUMPY);
+        s.put(Dwarf.PROP_WEIGHT, "65.3");
+        s.put(Dwarf.PROP_HEIGHT, "${dopey/height}");
+        s.put(Dwarf.PROP_AGE, "76");
+        s.put(Dwarf.PROP_HOME_PAGE, "http://snowwhite.tale/~grumpy/");
+        s.put(Dwarf.PROP_HOME_DIR, "/home/grumpy");
+        s = ini.add(Dwarfs.PROP_HAPPY);
+        s.put(Dwarf.PROP_WEIGHT, "56.4");
+        s.put(Dwarf.PROP_HEIGHT, "77.66");
+        s.put(Dwarf.PROP_AGE, "99");
+        s.put(Dwarf.PROP_HOME_PAGE, "dummy");
+        s.put(Dwarf.PROP_HOME_DIR, "/home/happy");
+        s.add(Dwarf.PROP_HOME_PAGE, "http://happy.smurf");
+        s = ini.add(Dwarfs.PROP_SLEEPY);
+        s.put(Dwarf.PROP_WEIGHT, "76.11");
+        s.put(Dwarf.PROP_HEIGHT, "${doc/height}8");
+        s.put(Dwarf.PROP_AGE, "121");
+        s.put(Dwarf.PROP_HOME_PAGE, "http://snowwhite.tale/~sleepy");
+        s.put(Dwarf.PROP_HOME_DIR, "/home/sleepy");
+        s.put(Dwarf.PROP_FORTUNE_NUMBER, "99");
+        s = ini.add(Dwarfs.PROP_SNEEZY);
+        s.put(Dwarf.PROP_WEIGHT, "69.7");
+        s.put(Dwarf.PROP_HEIGHT, "76.88");
+        s.put(Dwarf.PROP_AGE, "64");
+        s.put(Dwarf.PROP_HOME_PAGE, "${happy/homePage}/~sneezy");
+        s.put(Dwarf.PROP_HOME_DIR, "/home/sneezy");
+        s.put(Dwarf.PROP_FORTUNE_NUMBER, "11");
+        s.put(Dwarf.PROP_FORTUNE_NUMBER, "22");
+        s.put(Dwarf.PROP_FORTUNE_NUMBER, "33");
+        s.put(Dwarf.PROP_FORTUNE_NUMBER, "44");
+
+        return ini;
+    }
+
+    public static Dwarf newGrumpy() throws Exception
+    {
+        Dwarf d = new DwarfBean();
+
         d.setWeight(65.3);
-        d.setHeight(dwarfs.getDopey().getHeight());
+        d.setHeight(87.7);
         d.setAge(76);
         d.setHomePage(new URI("http://snowwhite.tale/~grumpy/"));
         d.setHomeDir("/home/grumpy");
-        dwarfs.setGrumpy(d);
-        d = new DwarfBean();
+
+        return d;
+    }
+
+    public static Dwarf newHappy() throws Exception
+    {
+        Dwarf d = new DwarfBean();
+
         d.setWeight(56.4);
         d.setHeight(77.66);
         d.setAge(99);
         d.setHomePage(new URI("http://happy.smurf"));
         d.setHomeDir("/home/happy");
-        dwarfs.setHappy(d);
-        d = new DwarfBean();
+
+        return d;
+    }
+
+    public static Dwarf newSleepy() throws Exception
+    {
+        Dwarf d = new DwarfBean();
+
         d.setWeight(76.11);
         d.setHeight(87.78);
         d.setAge(121);
         d.setHomePage(new URI("http://snowwhite.tale/~sleepy"));
         d.setHomeDir("/home/sleepy");
         d.setFortuneNumber(new int[] { 99 });
-        dwarfs.setSleepy(d);
-        d = new DwarfBean();
+
+        return d;
+    }
+
+    public static Dwarf newSneezy() throws Exception
+    {
+        Dwarf d = new DwarfBean();
+
         d.setWeight(69.7);
         d.setHeight(76.88);
         d.setAge(64);
-        d.setHomePage(new URI(dwarfs.getHappy().getHomePage().toString() + "/~sneezy"));
+        d.setHomePage(new URI("http://happy.smurf" + "/~sneezy"));
         d.setHomeDir("/home/sneezy");
         d.setFortuneNumber(new int[] { 11, 22, 33, 44 });
-        dwarfs.setSneezy(d);
 
-        return dwarfs;
+        return d;
     }
 
     private static void assertHasProperties(Dwarf dwarf)

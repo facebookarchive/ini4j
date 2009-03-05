@@ -209,7 +209,7 @@ public class ConfigParserTest
     {
         Ini ini = new Ini();
 
-        ini.add(SECTION).from(Helper.newDwarfs().getDopey());
+        ini.add(SECTION).from(Helper.newDopey());
         Ini.Section section = ini.get(SECTION);
         Ini.Section dopey = ini.add(Dwarfs.PROP_DOPEY);
 

@@ -95,7 +95,7 @@ public class OptionsTest
         Options o2 = new Options(Helper.getResourceURL(Helper.DWARFS_OPT).openStream());
         Options o3 = new Options(new InputStreamReader(Helper.getResourceURL(Helper.DWARFS_OPT).openStream()));
         Options o4 = new Options(Helper.getResourceURL(Helper.DWARFS_OPT));
-        Dwarf dopey = Helper.newDwarfs().getDopey();
+        Dwarf dopey = Helper.newDopey();
 
         Helper.assertEquals(dopey, o1);
         Helper.assertEquals(dopey, o2);
@@ -179,7 +179,7 @@ public class OptionsTest
 
     @Test public void testResolve() throws Exception
     {
-        Dwarf dopey = Helper.newDwarfs().getDopey();
+        Dwarf dopey = Helper.newDopey();
         Options opts = Helper.loadDwarfsOpt();
         StringBuilder buffer;
         String input;

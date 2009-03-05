@@ -159,7 +159,7 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>            
-            
+
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>

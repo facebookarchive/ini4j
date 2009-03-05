@@ -30,7 +30,7 @@ public class IniPreferencesTest
      */
     @Test public void testConstructor() throws Exception
     {
-        Ini ini = Helper.loadDwarfsIni();
+        Ini ini = Helper.newDwarfsIni();
         IniPreferences prefs = new IniPreferences(ini);
 
         assertSame(ini, prefs.getIni());

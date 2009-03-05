@@ -15,14 +15,19 @@
  */
 package org.ini4j;
 
+import org.junit.AfterClass;
+
 import static org.junit.Assert.*;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+
+import java.util.Properties;
 
 /**
  * JUnit test of Ini class.
@@ -32,6 +37,18 @@ public class IniTest
     private static final String UNICODE_STRING = "áÁéÉíÍóÓöÖőŐúÚüÜűŰ-ÄÖÜäöü";
     private static final String DOC_HOME_DIR = "c:\\Documents and Settings\\doc";
     private static final String DOPEY_HOME_DIR = "c:\\\\Documents and Settings\\\\dopey";
+    private static Properties _origSystemProperties;
+
+    @BeforeClass public static void setUpClass() throws Exception
+    {
+        _origSystemProperties = (Properties) System.getProperties().clone();
+    }
+
+    @AfterClass public static void tearDownClass()
+    {
+        Config.getGlobal().reset();
+        System.setProperties(_origSystemProperties);
+    }
 
     /**
      * Test of bean related methods.
@@ -42,7 +59,7 @@ public class IniTest
     @Test public void testBeanInterface() throws Exception
     {
         Dwarfs exp = Helper.newDwarfs();
-        Ini ini = Helper.loadDwarfsIni();
+        Ini ini = Helper.newDwarfsIni();
         Ini.Section sec = ini.get(Dwarfs.PROP_DOC);
         Dwarf bean = Helper.newDwarf();
 
@@ -84,7 +101,7 @@ public class IniTest
 
     @Test public void testEscape() throws Exception
     {
-        Config config = Config.getGlobal().clone();
+        Config config = new Config();
 
         config.setEscape(false);
         Ini ini = Helper.loadDwarfsIni(config);
@@ -134,7 +151,7 @@ public class IniTest
      */
     @Test public void testRemove() throws Exception
     {
-        Ini ini = Helper.loadDwarfsIni();
+        Ini ini = Helper.newDwarfsIni();
 
         ini.remove(ini.get(Dwarfs.PROP_DOC));
         assertNull(ini.get(Dwarfs.PROP_DOC));
@@ -147,7 +164,7 @@ public class IniTest
      */
     @Test public void testResolve() throws Exception
     {
-        Ini ini = Helper.loadDwarfsIni();
+        Ini ini = Helper.newDwarfsIni();
         Ini.Section doc = ini.get(Dwarfs.PROP_DOC);
         Dwarfs dwarfs = ini.as(Dwarfs.class);
         StringBuilder buffer;
@@ -248,7 +265,7 @@ public class IniTest
      */
     @Test public void testStore() throws Exception
     {
-        Ini ini = Helper.loadDwarfsIni();
+        Ini ini = Helper.newDwarfsIni();
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
         ini.store(buffer);
@@ -270,7 +287,7 @@ public class IniTest
      */
     @Test public void testStoreToXML() throws Exception
     {
-        Ini ini = Helper.loadDwarfsIni();
+        Ini ini = Helper.newDwarfsIni();
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
         ini.storeToXML(buffer);
@@ -287,7 +304,7 @@ public class IniTest
 
     @Test public void testToBean() throws Exception
     {
-        Ini ini = Helper.loadDwarfsIni();
+        Ini ini = Helper.newDwarfsIni();
         Ini.Section sec = ini.get(Dwarfs.PROP_DOC);
         Dwarf doc = sec.as(Dwarf.class);
     }

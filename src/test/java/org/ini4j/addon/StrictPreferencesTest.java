@@ -45,7 +45,7 @@ public class StrictPreferencesTest
     @Test public void testGets() throws Exception
     {
         String value;
-        Preferences root = new IniPreferences(Helper.loadDwarfsIni());
+        Preferences root = new IniPreferences(Helper.newDwarfsIni());
         Preferences peer = root.node(DOC);
         StrictPreferences pref = new StrictPreferences(peer);
 
