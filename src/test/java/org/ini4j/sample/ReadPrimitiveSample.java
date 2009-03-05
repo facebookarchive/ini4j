@@ -15,6 +15,8 @@
  */
 package org.ini4j.sample;
 
+//<editor-fold defaultstate="collapsed" desc="apt documentation">
+//|
 //|                          -------------------
 //|                          ReadPrimitiveSample
 //|
@@ -23,10 +25,10 @@ package org.ini4j.sample;
 //| Reading some Java primitive type values.
 //|
 //| This sample program expect the .ini file as a command line argument.
-//| If there is no such argument, it use the {{{dwarfs.html}dwarfs.ini}} file.
+//| If there is no such argument, it use the {{{dwarfs.ini.html}dwarfs.ini}} file.
 //|
-//|+---------------------------------------------------------------------------+
 //{
+//</editor-fold>
 import org.ini4j.IniFile;
 
 import java.io.File;
@@ -50,4 +52,3 @@ public class ReadPrimitiveSample
     }
 }
 //}
-//|+---------------------------------------------------------------------------+

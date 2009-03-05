@@ -25,6 +25,8 @@ import java.io.IOException;
 
 import java.util.Set;
 
+//<editor-fold defaultstate="collapsed" desc="apt documentation">
+//|
 //|                -------------
 //|                Ini Tutorial
 //|
@@ -35,8 +37,9 @@ import java.util.Set;
 //| necessary code portions and explanation for a given function.
 //|
 //| Code sniplets in this tutorial tested with the following .ini file:
-//| {{{dwarfs.html}dwarfs.ini}}
+//| {{{../sample/dwarfs.ini.html}dwarfs.ini}}
 //|
+//</editor-fold>
 public class IniTutorial extends AbstractTutorial
 {
     public static void main(String[] args) throws Exception
@@ -59,8 +62,6 @@ public class IniTutorial extends AbstractTutorial
 //| constructor, to simplify loading data. These constructors simply call
 //| the <<<load()>>> method on newly created instance. Ofcource these
 //| constructors are throws IOException.
-//|
-//|+---------------------------------------------------------------------------+
 //{
     void sample01(File file) throws IOException
     {
@@ -72,17 +73,11 @@ public class IniTutorial extends AbstractTutorial
         ini = new Ini(new FileReader(file));
 
 //}
-//|       .
-//|       .
-//|+---------------------------------------------------------------------------+
-//|
         assertEquals(7, ini.keySet().size());
     }
 
 //|
 //|* Map of maps
-//|
-//|+---------------------------------------------------------------------------+
 //{
     void sample02(Ini ini)
     {
@@ -98,9 +93,6 @@ public class IniTutorial extends AbstractTutorial
         String height = dopey.fetch("height");
 
 //}
-//|       .
-//|       .
-//|+---------------------------------------------------------------------------+
 //|
 //| The Ini object is a MultiMap\<String,Ini.Section\>, that is, a map that
 //| assigns Ini.Section objects to String keys.

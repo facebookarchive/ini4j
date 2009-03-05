@@ -19,7 +19,7 @@ import java.io.File;
 
 public abstract class AbstractTutorial
 {
-    public static final String FILENAME = "dwarfs.ini";
+    public static final String FILENAME = "../sample/dwarfs.ini";
     protected File _argument;
 
     public void run(String[] args) throws Exception

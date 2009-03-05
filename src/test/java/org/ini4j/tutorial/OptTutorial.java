@@ -25,6 +25,8 @@ import java.io.IOException;
 
 import java.util.Set;
 
+//<editor-fold defaultstate="collapsed" desc="apt documentation">
+//|
 //|                ----------------
 //|                Options Tutorial
 //|
@@ -93,11 +95,12 @@ import java.util.Set;
 //| replacement for java.util.Properties.
 //|
 //| Code sniplets in this tutorial tested with the following .opt file:
-//| {{{dwarfs.html}dwarfs.opt}}
+//| {{{../sample/dwarfs.opt.html}dwarfs.opt}}
 //|
+//</editor-fold>
 public class OptTutorial extends AbstractTutorial
 {
-    public static final String FILENAME = "dwarfs.opt";
+    public static final String FILENAME = "../sample/dwarfs.opt";
 
     public static void main(String[] args) throws Exception
     {
@@ -119,8 +122,6 @@ public class OptTutorial extends AbstractTutorial
 //| few constructor, to simplify loading data. These constructors simply call
 //| the <<<load()>>> method on newly created instance. Ofcource these
 //| constructors are throws IOException.
-//|
-//|+---------------------------------------------------------------------------+
 //{
     void sample01(File file) throws IOException
     {
@@ -132,17 +133,11 @@ public class OptTutorial extends AbstractTutorial
         opt = new Options(new FileReader(file));
 
 //}
-//|       .
-//|       .
-//|+---------------------------------------------------------------------------+
-//|
         assertFalse(opt.keySet().isEmpty());
     }
 
 //|
 //|* Map of String
-//|
-//|+---------------------------------------------------------------------------+
 //{
     void sample02(Options opt)
     {
@@ -154,9 +149,6 @@ public class OptTutorial extends AbstractTutorial
         String height = opt.fetch("height");
 
 //}
-//|       .
-//|       .
-//|+---------------------------------------------------------------------------+
 //|
 //| The Options is a MultiMap\<String,String\>, that is, a map that assigns
 //| String values to String keys. So the <<<get>>> method is used to get values

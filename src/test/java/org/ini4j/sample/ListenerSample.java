@@ -15,6 +15,8 @@
  */
 package org.ini4j.sample;
 
+//<editor-fold defaultstate="collapsed" desc="apt documentation">
+//|
 //|                             --------------
 //|                             ListenerSample
 //|
@@ -24,9 +26,9 @@ package org.ini4j.sample;
 //| library fully supports the events defined in Preferences API.
 //|
 //| This sample program expect the .ini file as a command line argument.
-//| If there is no such argument, it use the {{{dwarfs.html}dwarfs.ini}} file.
+//| If there is no such argument, it use the {{{dwarfs.ini.html}dwarfs.ini}} file.
 //|
-//|+---------------------------------------------------------------------------+
+//</editor-fold>
 //{
 import org.ini4j.IniPreferences;
 
@@ -72,4 +74,3 @@ public class ListenerSample
     }
 }
 //}
-//|+---------------------------------------------------------------------------+

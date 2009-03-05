@@ -44,10 +44,10 @@
         <menu name="[ini4j]">
             <item name="Overview" href="index.html"/>
             <item name="Tutorials" href="tutorials.html">
-                <item name="Ini" href="tutorial/IniTutorial.html"/>
-                <item name="Bean" href="tutorial/BeanTutorial.html"/>
-                <item name="Options" href="tutorial/OptTutorial.html"/>
-                <item name="Preferences" href="tutorial/PrefsTutorial.html"/>
+                <item name="Ini" href="tutorial/IniTutorial.java.html"/>
+                <item name="Bean" href="tutorial/BeanTutorial.java.html"/>
+                <item name="Options" href="tutorial/OptTutorial.java.html"/>
+                <item name="Preferences" href="tutorial/PrefsTutorial.java.html"/>
             </item>
             <item name="Samples" href="samples.html" />
             <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=129580"/>

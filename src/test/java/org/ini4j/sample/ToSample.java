@@ -15,6 +15,8 @@
  */
 package org.ini4j.sample;
 
+//<editor-fold defaultstate="collapsed" desc="apt documentation">
+//|
 //|                                 --------
 //|                                 ToSample
 //|
@@ -23,9 +25,9 @@ package org.ini4j.sample;
 //| Unmarshall Java Beans from Ini.Section.
 //|
 //| This sample program expect the .ini file as a command line argument.
-//| If there is no such argument, it use the {{{dwarfs.html}dwarfs.ini}} file.
+//| If there is no such argument, it use the {{{dwarfs.ini.html}dwarfs.ini}} file.
 //|
-//|+---------------------------------------------------------------------------+
+//</editor-fold>
 //{
 import org.ini4j.Ini;
 
@@ -97,4 +99,3 @@ public class ToSample
     }
 }
 //}
-//|+---------------------------------------------------------------------------+

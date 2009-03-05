@@ -9,14 +9,14 @@ Tutorials
  The build process of [ini4j] guarantees compilability and runability, since no
  distribution may be created without compiling and running the tutorial codes.
 
- * {{{tutorial/IniTutorial.html}Ini Tutorial}}
+ * {{{tutorial/IniTutorial.java.html}Ini Tutorial}}
  Introduce [ini4j] library's natural interface.
 
- * {{{tutorial/BeanTutorial.html}Bean Tutorial}}
+ * {{{tutorial/BeanTutorial.java.html}Bean Tutorial}}
  Introduce [ini4j] library's Java Beans interface.
 
- * {{{tutorial/PrefsTutorial.html}Preferences Tutorial}}
+ * {{{tutorial/PrefsTutorial.java.html}Preferences Tutorial}}
  Introduce [ini4j] library's Preferences interface.
 
- * {{{tutorial/dwarfs.html}dwarfs.ini}}
+ * {{{tutorial/dwarfs.ini.html}dwarfs.ini}}
  Sample .ini file used in tutorials.

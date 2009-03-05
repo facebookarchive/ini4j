@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
+//<editor-fold defaultstate="collapsed" desc="apt documentation">
+//|
 //|                -------------
 //|                Bean Tutorial
 //|
@@ -40,8 +42,9 @@ import java.net.URL;
 //| class used in code sniplets.
 //|
 //| Code sniplets in this tutorial tested with the following .ini file:
-//| {{{dwarfs.html}dwarfs.ini}}
+//| {{{../sample/dwarfs.ini.html}dwarfs.ini}}
 //|
+//</editor-fold>
 public class BeanTutorial extends AbstractTutorial
 {
     public static void main(String[] args) throws Exception
@@ -79,8 +82,6 @@ public class BeanTutorial extends AbstractTutorial
 //|
 //| Ofcourse you may use setters as well, not just getters. In this way you can
 //| change values type safe way.
-//|
-//|+---------------------------------------------------------------------------+
 //{
     void sample01(Ini ini)
     {
@@ -92,9 +93,6 @@ public class BeanTutorial extends AbstractTutorial
         happy.setHeight(45.55);
 
 //}
-//|       .
-//|       .
-//|+---------------------------------------------------------------------------+
 //|
 //| The <<<happy instanceof Dwarf>>> relation is of course fulfilled in the
 //| example above.
@@ -104,6 +102,7 @@ public class BeanTutorial extends AbstractTutorial
         assertEquals(45.55, happy.getHeight(), 0.01);
     }
 
+//|
 //|* Marshalling beans
 //|
 //| Sometimes we want to store existing java beans in text file. This operation
@@ -111,8 +110,6 @@ public class BeanTutorial extends AbstractTutorial
 //|
 //| With [ini4j] it is easy to store bean properties in a section. You simply
 //| create a section, and call the sections's <<<from()>>> method. Thats it.
-//|
-//|+---------------------------------------------------------------------------+
 //{
     void sample02(Ini ini)
     {
@@ -125,14 +122,12 @@ public class BeanTutorial extends AbstractTutorial
         sec.from(sleepy);
 
 //}
-//|       .
-//|       .
-//|+---------------------------------------------------------------------------+
 //|
         assertTrue(sec.containsKey("age"));
         assertTrue(sec.containsKey("height"));
     }
 
+//|
 //|* Unmarshalling beans
 //|
 //| If you have a marshalled bean in text file then you may want to read it
@@ -140,8 +135,6 @@ public class BeanTutorial extends AbstractTutorial
 //|
 //| With [ini4j] it is easy to load bean properties from a section. You simply
 //| instantiate a bean, and call the sections's <<<to()>>> method. Thats it.
-//|
-//|+---------------------------------------------------------------------------+
 //{
     void sample03(Ini ini)
     {
@@ -150,22 +143,18 @@ public class BeanTutorial extends AbstractTutorial
         ini.get("grumpy").to(grumpy);
 
 //}
-//|       .
-//|       .
-//|+---------------------------------------------------------------------------+
 //|
         assertEquals(76, grumpy.getAge());
         assertEquals("/home/grumpy", grumpy.getHomeDir());
     }
 
+//|
 //|* Indexed properties
 //|
 //| For handling indexed properties, you should allow mulpti option value
 //| handling in configuration. After enabling this feature, option may contains
 //| multiply values (multi line in file). These values can mapped to indexed
 //| bean property.
-//|
-//|+---------------------------------------------------------------------------+
 //{
     void sample04(URL location) throws IOException
     {
@@ -189,22 +178,17 @@ public class BeanTutorial extends AbstractTutorial
         numbers = sneezyBean.getFortuneNumber();
 
 //}
-//|       .
-//|       .
-//|+---------------------------------------------------------------------------+
-//|
         assertEquals(4, sec.length("fortuneNumber"));
         assertEquals(4, sneezy.getFortuneNumber().length);
         assertEquals(4, sneezyBean.getFortuneNumber().length);
     }
 
+//|
 //|* Options
 //|
 //| Not only Ini and Ini.Section has bean interface. There is a bean interface
 //| for OptionMap class and each derived class for example for Options.
 //| Options is an improved java.util.Properties replacement.
-//|
-//|+---------------------------------------------------------------------------+
 //{
     void sample05(Options opts)
     {
@@ -220,9 +204,6 @@ public class BeanTutorial extends AbstractTutorial
         age = dwarfBean.getAge();
 
 //}
-//|       .
-//|       .
-//|+---------------------------------------------------------------------------+
 //|
 //| In sample above the top level properties (like "age") mapped to bean
 //| properties.
@@ -231,13 +212,12 @@ public class BeanTutorial extends AbstractTutorial
         assertEquals(67, dwarfBean.getAge());
     }
 
+//|
 //|* Prefixed mapping
 //|
 //| Both Ini.Section and Options has possibility to add a prefix to property
 //| names while mapping from bean property name to Ini.Section or Options
 //| key.
-//|
-//|+---------------------------------------------------------------------------+
 //{
     void sample06(URL optPath) throws IOException
     {
@@ -248,9 +228,6 @@ public class BeanTutorial extends AbstractTutorial
         opt.to(bean, "dopey.");
 
 //}
-//|       .
-//|       .
-//|+---------------------------------------------------------------------------+
 //|
 //| In the above example, <<<dwarf>>> bean will contain properties starts with
 //| <<<happy.>>> while <<<bean>>> will contain properties starts with
@@ -269,8 +246,6 @@ public class BeanTutorial extends AbstractTutorial
 //| required type conversion automatically between java.lang.String and the tpye
 //| of the given property. The <<<fortuneNumber>>> property is indexed, just to
 //| show you may use indexed properties as well.
-//|
-//|+---------------------------------------------------------------------------+
 //{
     public interface Dwarf
     {
@@ -300,15 +275,12 @@ public class BeanTutorial extends AbstractTutorial
     }
 
 //}
-//|+---------------------------------------------------------------------------+
 //|
     static  //
 //|
 //|* Bean class used in tutorial
 //|
 //| This is a very simple bean. There is no bound or constrained properties.
-//|
-//|+---------------------------------------------------------------------------+
 //{
     public class DwarfBean implements Dwarf
     {
@@ -381,5 +353,4 @@ public class BeanTutorial extends AbstractTutorial
     }
 
 //}
-//|+---------------------------------------------------------------------------+
 }

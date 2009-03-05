@@ -64,6 +64,8 @@ public class SampleRunnerTest
     private static final File _baseDir = new File(System.getProperty("basedir"));
     private static final String JAVA_SUFFIX = ".java";
     private static final String APT_SUFFIX = ".apt";
+    private static final String CODE_BEGIN = "\n+----+\n";
+    private static final String CODE_END = "+----+\n\n";
     private static File _sourceDir;
     private static File _documentDir;
     private final Class _clazz;
@@ -139,7 +141,8 @@ public class SampleRunnerTest
     {
         PrintWriter writer = new PrintWriter(new FileWriter(source2document(_sourceFile), true));
 
-        writer.println("\n Standard output:\n\n+----+\n");
+        writer.println("\n Standard output:\n");
+        writer.println(CODE_BEGIN);
         LineNumberReader reader = new LineNumberReader(new FileReader(stdout));
 
         for (String line = reader.readLine(); line != null; line = reader.readLine())
@@ -147,7 +150,7 @@ public class SampleRunnerTest
             writer.println(line);
         }
 
-        writer.println("+----+\n");
+        writer.println(CODE_END);
         reader.close();
         writer.close();
     }
@@ -155,8 +158,8 @@ public class SampleRunnerTest
     private void document(File src, String comment) throws Exception
     {
         Pattern docPattern = Pattern.compile(String.format("^\\s*%s\\|(.*)$", comment));
-        Pattern beginPattern = Pattern.compile(String.format("^\\s*%s\\{\\s*$", comment));
-        Pattern endPattern = Pattern.compile(String.format("^\\s*%s\\}\\s*$", comment));
+        Pattern beginPattern = Pattern.compile(String.format("^\\s*%s\\{.*$", comment));
+        Pattern endPattern = Pattern.compile(String.format("^\\s*%s\\}.*$", comment));
         LineNumberReader reader = new LineNumberReader(new FileReader(src));
         PrintWriter writer = new PrintWriter(new FileWriter(source2document(src)));
         boolean in = false;
@@ -168,6 +171,7 @@ public class SampleRunnerTest
                 if (endPattern.matcher(line).matches())
                 {
                     in = false;
+                    writer.println(CODE_END);
                 }
                 else
                 {
@@ -179,6 +183,7 @@ public class SampleRunnerTest
                 if (beginPattern.matcher(line).matches())
                 {
                     in = true;
+                    writer.println(CODE_BEGIN);
                 }
                 else
                 {
@@ -220,12 +225,6 @@ public class SampleRunnerTest
     private File source2document(File sourceFile) throws Exception
     {
         String name = sourceFile.getName();
-
-        if (name.lastIndexOf('.') >= 0)
-        {
-            name = name.substring(0, name.lastIndexOf('.'));
-        }
-
         File dir = new File(_documentDir, sourceFile.getParentFile().getName());
 
         dir.mkdir();

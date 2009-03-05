@@ -15,6 +15,8 @@
  */
 package org.ini4j.sample;
 
+//<editor-fold defaultstate="collapsed" desc="apt documentation">
+//|
 //|                               --------------
 //|                               NoImportSample
 //|
@@ -25,9 +27,9 @@ package org.ini4j.sample;
 //| root.
 //|
 //| This sample program expect the .ini file as a command line argument.
-//| If there is no such argument, it use the {{{dwarfs.html}dwarfs.ini}} file.
+//| If there is no such argument, it use the {{{dwarfs.ini.html}dwarfs.ini}} file.
 //|
-//|+---------------------------------------------------------------------------+
+//</editor-fold>
 //{
 import java.util.prefs.Preferences;
 
@@ -39,7 +41,7 @@ public class NoImportSample
         System.setProperty("java.util.prefs.PreferencesFactory", "org.ini4j.IniPreferencesFactory");
 
         // you should set file:///... like URL as property value to work
-        System.setProperty("org.ini4j.prefs.user", "org/ini4j/dwarfs.ini");
+        System.setProperty("org.ini4j.prefs.user", "org/ini4j/sample/dwarfs.ini");
     }
 
     public static void main(String[] args) throws Exception
@@ -51,4 +53,3 @@ public class NoImportSample
     }
 }
 //}
-//|+---------------------------------------------------------------------------+

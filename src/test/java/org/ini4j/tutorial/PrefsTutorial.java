@@ -24,6 +24,8 @@ import java.io.IOException;
 
 import java.util.prefs.Preferences;
 
+//<editor-fold defaultstate="collapsed" desc="apt documentation">
+//|
 //|                -------------
 //|                Preferences Tutorial
 //|
@@ -34,7 +36,7 @@ import java.util.prefs.Preferences;
 //| necessary code portions and explanation for a given function.
 //|
 //| Code sniplets in this tutorial tested with the following .ini file:
-//| {{{dwarfs.html}dwarfs.ini}}
+//| {{{../sample/dwarfs.ini.html}dwarfs.ini}}
 //|
 //| As soon as the Preferences object is created it functions as a standard Preferences node, and should be
 //| used as such. Implicitly only new nodes can be created in the root node (these will be the sections).
@@ -44,6 +46,7 @@ import java.util.prefs.Preferences;
 //| This happens if we try to set a value at the root node or to create a node on the second level,
 //| since these operations cannot be interpreted on the whole .ini file under Preferences.
 //|
+//</editor-fold>
 public class PrefsTutorial extends AbstractTutorial
 {
     public static void main(String[] args) throws Exception
@@ -63,8 +66,6 @@ public class PrefsTutorial extends AbstractTutorial
 //|
 //| Values can read and write like any other Preferences node, there is no
 //| differences.
-//|
-//|+---------------------------------------------------------------------------+
 //{
     void sample01(Ini ini) throws IOException
     {
@@ -76,10 +77,6 @@ public class PrefsTutorial extends AbstractTutorial
         bashful.putDouble("weight", 55.6);
 
 //}
-//|       .
-//|       .
-//|+---------------------------------------------------------------------------+
-//|
         assertEquals("/home/bashful", bashful.get("homeDir", null));
         assertEquals(67, bashful.getInt("age", -1));
         assertEquals(55.6, bashful.getDouble("weight", -1), 0.001);
