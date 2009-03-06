@@ -15,6 +15,8 @@
  */
 package org.ini4j;
 
+import org.ini4j.spi.EscapeTool;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

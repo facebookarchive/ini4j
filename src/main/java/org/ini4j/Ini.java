@@ -15,6 +15,10 @@
  */
 package org.ini4j;
 
+import org.ini4j.spi.AbstractBeanInvocationHandler;
+import org.ini4j.spi.IniFormatter;
+import org.ini4j.spi.XMLFormatter;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,7 +38,6 @@ import java.util.regex.Pattern;
 
 public class Ini extends MultiMapImpl<String, Ini.Section>
 {
-    private static final char SUBST_CHAR = '$';
     private static final String SECTION_SYSTEM_PROPERTIES = "@prop";
     private static final String SECTION_ENVIRONMENT = "@env";
     private static final Pattern expr = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?/)?([^\\[]+)(\\[(([0-9]+))\\])?\\}");

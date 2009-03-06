@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j;
+package org.ini4j.spi;
 
-import org.ini4j.OptionMapImpl.Access;
+import org.ini4j.Helper;
+import org.ini4j.OptionMapImpl;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.DwarfBean;
@@ -149,9 +150,9 @@ public class BeanToolTest
 
         bean.setHomeDir(dir);
         bean.setFortuneNumber(new int[] { 1, 2, 3 });
-        OptionMapImpl map = new OptionMapImpl();
+        TestMap map = new TestMap();
 
-        instance.inject(map.new Access(prefix), bean);
+        instance.inject(map.newBeanAccess(prefix), bean);
         assertEquals(6, map.size());
         assertEquals("23", map.get(p + Dwarf.PROP_AGE));
         assertEquals("5.3", map.get(p + Dwarf.PROP_HEIGHT));
@@ -164,7 +165,7 @@ public class BeanToolTest
         bean.setAge(0);
         bean.setHeight(0);
         bean.setHomePage(null);
-        instance.inject(bean, map.new Access(prefix));
+        instance.inject(bean, map.newBeanAccess(prefix));
         assertEquals(23, bean.getAge());
         assertEquals(5.3, bean.getHeight(), Helper.DELTA);
         assertEquals(uri, bean.getHomePage());
@@ -181,5 +182,18 @@ public class BeanToolTest
         assertEquals(uri, proxy.getHomePage());
         assertEquals(dir, proxy.getHomeDir());
         assertArrayEquals(new int[] { 1, 2, 3 }, proxy.getFortuneNumber());
+    }
+
+    static class TestMap extends OptionMapImpl
+    {
+        @Override protected BeanAccess newBeanAccess()
+        {
+            return super.newBeanAccess();
+        }
+
+        @Override protected BeanAccess newBeanAccess(String prefix)
+        {
+            return super.newBeanAccess(prefix);
+        }
     }
 }

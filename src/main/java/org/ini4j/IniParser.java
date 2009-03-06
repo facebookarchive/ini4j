@@ -15,6 +15,9 @@
  */
 package org.ini4j;
 
+import org.ini4j.spi.EscapeTool;
+import org.ini4j.spi.ServiceFinder;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

@@ -18,8 +18,9 @@ package org.ini4j.addon;
 import org.ini4j.Config;
 import org.ini4j.Helper;
 import org.ini4j.Ini;
-import org.ini4j.IniFormatter;
 import org.ini4j.IniHandler;
+
+import org.ini4j.spi.IniFormatter;
 
 import org.junit.AfterClass;
 
@@ -41,7 +42,7 @@ public class FancyIniFormatterTest
     private static final String WITHDUMMY = "[section]\noption=value\ndummy=\n\n";
     public static final String DUMMY = "dummy";
     public static final String SECTION = "section";
-    private FancyIniFormatter formatter;
+    private IniFormatter formatter;
     private StringWriter output;
 
     @AfterClass public static void tearDownClass() throws Exception
@@ -58,14 +59,14 @@ public class FancyIniFormatterTest
 
     @Test public void testDefaults() throws Exception
     {
-        formatter.setConfig(new Config());
-        assertTrue(formatter.isAllowStrictOperator());
-        assertTrue(formatter.isAllowEmptyOption());
+        ((FancyIniFormatter) formatter).setConfig(new Config());
+        assertTrue(((FancyIniFormatter) formatter).isAllowStrictOperator());
+        assertTrue(((FancyIniFormatter) formatter).isAllowEmptyOption());
     }
 
     @Test public void testEmptyOption() throws Exception
     {
-        formatter.setAllowEmptyOption(true);
+        ((FancyIniFormatter) formatter).setAllowEmptyOption(true);
         IniHelper ini = new IniHelper(new StringReader(STRICTOPERATOR));
 
         ini.get(SECTION).put(DUMMY, null);
@@ -75,7 +76,7 @@ public class FancyIniFormatterTest
 
     @Test public void testNoEmptyOption() throws Exception
     {
-        formatter.setAllowEmptyOption(false);
+        ((FancyIniFormatter) formatter).setAllowEmptyOption(false);
         IniHelper ini = new IniHelper(new StringReader(STRICTOPERATOR));
 
         ini.get(SECTION).put(DUMMY, null);
@@ -86,7 +87,7 @@ public class FancyIniFormatterTest
 
     @Test public void testNoStrictOperator() throws Exception
     {
-        formatter.setAllowStrictOperator(false);
+        ((FancyIniFormatter) formatter).setAllowStrictOperator(false);
         IniHelper ini = new IniHelper(new StringReader(NORMALOPERATOR));
 
         ini.store(formatter);
@@ -95,7 +96,7 @@ public class FancyIniFormatterTest
 
     @Test public void testStrictOperator() throws Exception
     {
-        formatter.setAllowStrictOperator(true);
+        ((FancyIniFormatter) formatter).setAllowStrictOperator(true);
         IniHelper ini = new IniHelper(new StringReader(STRICTOPERATOR));
 
         ini.store(formatter);

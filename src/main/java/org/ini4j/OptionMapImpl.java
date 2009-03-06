@@ -15,6 +15,9 @@
  */
 package org.ini4j;
 
+import org.ini4j.spi.BeanAccess;
+import org.ini4j.spi.BeanTool;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -133,16 +136,16 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
         }
     }
 
-    class Access implements BeanAccess
+    protected class Access implements BeanAccess
     {
         private final String _prefix;
 
-        Access()
+        protected Access()
         {
             this(null);
         }
 
-        Access(String prefix)
+        protected Access(String prefix)
         {
             _prefix = prefix;
         }

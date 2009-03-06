@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j;
+package org.ini4j.spi;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j;
+package org.ini4j.spi;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -25,8 +25,11 @@ import java.io.InputStreamReader;
  * @author Szkiba Iv�n
  * @version $Name:  $
  */
-class ServiceFinder
+public class ServiceFinder
 {
+    private ServiceFinder()
+    {
+    }
 
     /**
      * Service objektum keres�s �s p�ld�nyos�t�s
@@ -42,11 +45,12 @@ class ServiceFinder
      * <CODE>defaultService</CODE> lesz az oszt�ly neve.</p><p>
      * A fenti keres�st k�vet�en t�rt�nik a p�ld�ny k�pz�s. A visszat�r�si
      * �rt�k mindig egy val�di objektum, l�v�n minden hiba exception-t gener�l.
+     * @param <T> type
      * @param clazz keresett oszt�ly/service neve
      * @throws IllegalArgumentException keres�si vagy p�ld�nyos�t�si hiba eset�n
      * @return a keresett oszt�ly implement�l� objektum
      */
-    protected static <T> T findService(Class<T> clazz)
+    public static <T> T findService(Class<T> clazz)
     {
         try
         {
@@ -60,24 +64,8 @@ class ServiceFinder
         }
     }
 
-    /**
-     * Service oszt�ly keres�s
-     *
-     * a JDK JAR specifik�ci�ban defini�lt <B>Services API</B>-nak
-     * megfelel�en service oszt�ly keres�s.</p><p>
-     * Az implement�l� oszt�ly n�v keres�se a <CODE>serviceId</CODE> nev�
-     * system property vizsg�lat�val kezd�dik. Amennyiben nincs ilyen
-     * property, �gy a keres�s a
-     * <CODE>/META-INF/services/<I>serviceId</I></CODE> nev� file tartalm�val
-     * folytat�dik. Amennyiben nincs ilyen nev� file, �gy a param�terk�nt �tadott
-     * <CODE>defaultService</CODE> lesz az oszt�ly neve.</p><p>
-     * @param serviceId keresett oszt�ly/service neve
-     * @param defaultService alap�rtelmezett implement�l� oszt�ly neve
-     * @throws IllegalArgumentException keres�si vagy p�ld�nyos�t�si hiba eset�n
-     * @return a keresett oszt�ly objektum
-     */
     @SuppressWarnings("unchecked")
-    protected static <T> Class<? extends T> findServiceClass(Class<T> clazz) throws IllegalArgumentException
+    static <T> Class<? extends T> findServiceClass(Class<T> clazz) throws IllegalArgumentException
     {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String serviceClassName = findServiceClassName(clazz.getName(), clazz.getName());
@@ -92,24 +80,8 @@ class ServiceFinder
         }
     }
 
-    /**
-     * Service oszt�ly nev�nek keres�se
-     *
-     * a JDK JAR specifik�ci�ban defini�lt <B>Services API</B>-nak
-     * megfelel�en service oszt�ly keres�s.</p><p>
-     * Az implement�l� oszt�ly n�v keres�se a <CODE>serviceId</CODE> nev�
-     * system property vizsg�lat�val kezd�dik. Amennyiben nincs ilyen
-     * property, �gy a keres�s a
-     * <CODE>/META-INF/services/<I>serviceId</I></CODE> nev� file tartalm�val
-     * folytat�dik. Amennyiben nincs ilyen nev� file, �gy a param�terk�nt �tadott
-     * <CODE>defaultService</CODE> lesz az oszt�ly neve.</p><p>
-     * @param serviceId keresett oszt�ly/service neve
-     * @param defaultService alap�rtelmezett implement�l� oszt�ly neve
-     * @throws IllegalArgumentException keres�si vagy p�ld�nyos�t�si hiba eset�n
-     * @return a keresett oszt�ly neve
-     */
     @SuppressWarnings("empty-statement")
-    protected static String findServiceClassName(String serviceId, String defaultService) throws IllegalArgumentException
+    static String findServiceClassName(String serviceId, String defaultService) throws IllegalArgumentException
     {
         if (defaultService == null)
         {

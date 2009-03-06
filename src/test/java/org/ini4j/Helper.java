@@ -20,6 +20,8 @@ import org.ini4j.sample.DwarfBean;
 import org.ini4j.sample.Dwarfs;
 import org.ini4j.sample.DwarfsBean;
 
+import org.ini4j.spi.IniFormatter;
+
 import org.junit.Assert;
 
 import java.io.File;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j;
+package org.ini4j.spi;
 
 import java.beans.Introspector;
 import java.beans.PropertyChangeListener;
@@ -26,7 +26,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-abstract class AbstractBeanInvocationHandler implements InvocationHandler
+public abstract class AbstractBeanInvocationHandler implements InvocationHandler
 {
     private static final String ADD_PREFIX = "add";
     private static final int ADD_PREFIX_LEN = ADD_PREFIX.length();

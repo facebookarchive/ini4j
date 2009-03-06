@@ -4,6 +4,7 @@
 TODO list
 
   * Improve documentation
+
   * Improve BeanTool (handle constructor with String arg as converter from String)
 
 
