@@ -15,6 +15,8 @@
  */
 package org.ini4j;
 
+import org.junit.AfterClass;
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -26,6 +28,11 @@ public class ServiceFinderTest
     static final String BAD_CONFIG_SERVICE = "org.ini4j.BadConfig";
     static final String EMPTY_CONFIG_SERVICE = "org.ini4j.EmptyConfig";
     static final String DUMMY_IMPL = "DummyImpl";
+
+    @AfterClass public static void tearDownClass() throws Exception
+    {
+        Helper.resetConfig();
+    }
 
     @Test public void testFindService() throws Exception
     {

@@ -36,6 +36,9 @@ public class Helper
     public static final String DWARFS_OPT = RESOURCE_PREFIX + "dwarfs.opt";
     public static final String DWARFS_XML = RESOURCE_PREFIX + "dwarfs.xml";
     public static final float DELTA = 0.00000001f;
+    private static final String[] CONFIG_PROPERTIES =
+        { Config.PROP_EMPTY_OPTION, Config.PROP_GLOBAL_SECTION, Config.PROP_GLOBAL_SECTION_NAME, Config.PROP_INCLUDE, Config.PROP_LOWER_CASE_OPTION, Config.PROP_LOWER_CASE_SECTION, Config.PROP_MULTI_OPTION, Config.PROP_MULTI_SECTION, Config.PROP_STRICT_OPERATOR, Config.PROP_UNNAMED_SECTION, Config.PROP_ESCAPE };
+    private static final String[] FACTORY_PROPERTIES = { IniFormatter.class.getName(), IniParser.class.getName() };
 
     public static File getBuildDirectory()
     {
@@ -334,6 +337,19 @@ public class Helper
         d.setFortuneNumber(new int[] { 11, 22, 33, 44 });
 
         return d;
+    }
+
+    public static void resetConfig() throws Exception
+    {
+        for (String name : CONFIG_PROPERTIES)
+        {
+            System.clearProperty(Config.KEY_PREFIX + name);
+        }
+
+        for (String name : FACTORY_PROPERTIES)
+        {
+            System.clearProperty(name);
+        }
     }
 
     private static void assertHasProperties(Dwarf dwarf)

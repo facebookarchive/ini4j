@@ -163,10 +163,23 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <forkMode>pertest</forkMode>
+                    <systemProperties>
+                        <property>
+                            <name>java.util.prefs.PreferencesFactory</name>
+                            <value>org.ini4j.IniPreferencesFactory</value>
+                        </property>
+                        <property>
+                            <name>org.ini4j.prefs.user</name>
+                            <value>org/ini4j/sample/dwarfs.ini</value>
+                        </property>
+                        <property>
+                            <name>org.ini4j.prefs.system</name>
+                            <value>org/ini4j/sample/dwarfs.ini</value>
+                        </property>
+                    </systemProperties>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>retrotranslator-maven-plugin</artifactId>

@@ -19,15 +19,12 @@ import org.junit.AfterClass;
 
 import static org.junit.Assert.*;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-
-import java.util.Properties;
 
 /**
  * JUnit test of Ini class.
@@ -37,17 +34,10 @@ public class IniTest
     private static final String UNICODE_STRING = "áÁéÉíÍóÓöÖőŐúÚüÜűŰ-ÄÖÜäöü";
     private static final String DOC_HOME_DIR = "c:\\Documents and Settings\\doc";
     private static final String DOPEY_HOME_DIR = "c:\\\\Documents and Settings\\\\dopey";
-    private static Properties _origSystemProperties;
 
-    @BeforeClass public static void setUpClass() throws Exception
+    @AfterClass public static void tearDownClass() throws Exception
     {
-        _origSystemProperties = (Properties) System.getProperties().clone();
-    }
-
-    @AfterClass public static void tearDownClass()
-    {
-        Config.getGlobal().reset();
-        System.setProperties(_origSystemProperties);
+        Helper.resetConfig();
     }
 
     /**

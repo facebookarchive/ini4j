@@ -17,24 +17,13 @@ package org.ini4j;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.Properties;
 
 public class ConfigTest
 {
-    private static Properties _origSystemProperties;
-
-    @BeforeClass public static void setUpClass() throws Exception
+    @AfterClass public static void tearDownClass() throws Exception
     {
-        _origSystemProperties = (Properties) System.getProperties().clone();
-    }
-
-    @AfterClass public static void tearDownClass()
-    {
-        Config.getGlobal().reset();
-        System.setProperties(_origSystemProperties);
+        Helper.resetConfig();
     }
 
     @Test public void testDefaults()

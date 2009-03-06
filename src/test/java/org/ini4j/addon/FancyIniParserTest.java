@@ -25,6 +25,8 @@ import org.ini4j.IniHandler;
 import org.ini4j.IniParser;
 import org.ini4j.InvalidIniFormatException;
 
+import org.junit.AfterClass;
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -45,6 +47,11 @@ public class FancyIniParserTest
     private static final String EMPTY = "";
     private static final String INCLUDE = "org/ini4j/addon/dwarfs-include.ini";
     private static final String NESTED = "org/ini4j/addon/dwarfs-nested.ini";
+
+    @AfterClass public static void tearDownClass() throws Exception
+    {
+        Helper.resetConfig();
+    }
 
     @Test public void testConvertCase() throws Exception
     {

@@ -16,9 +16,12 @@
 package org.ini4j.addon;
 
 import org.ini4j.Config;
+import org.ini4j.Helper;
 import org.ini4j.Ini;
 import org.ini4j.IniFormatter;
 import org.ini4j.IniHandler;
+
+import org.junit.AfterClass;
 
 import static org.junit.Assert.*;
 
@@ -40,6 +43,11 @@ public class FancyIniFormatterTest
     public static final String SECTION = "section";
     private FancyIniFormatter formatter;
     private StringWriter output;
+
+    @AfterClass public static void tearDownClass() throws Exception
+    {
+        Helper.resetConfig();
+    }
 
     @Before public void setUp() throws Exception
     {
