@@ -17,6 +17,9 @@ package org.ini4j;
 
 import org.ini4j.OptionMapImpl.Access;
 
+import org.ini4j.sample.Dwarf;
+import org.ini4j.sample.DwarfBean;
+
 import static org.junit.Assert.*;
 
 import org.junit.Before;

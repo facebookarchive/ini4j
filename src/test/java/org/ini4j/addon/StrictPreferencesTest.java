@@ -15,10 +15,11 @@
  */
 package org.ini4j.addon;
 
-import org.ini4j.Dwarf;
-import org.ini4j.Dwarfs;
 import org.ini4j.Helper;
 import org.ini4j.IniPreferences;
+
+import org.ini4j.sample.Dwarf;
+import org.ini4j.sample.Dwarfs;
 
 import static org.junit.Assert.*;
 

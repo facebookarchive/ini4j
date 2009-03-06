@@ -27,18 +27,16 @@ package org.ini4j.sample;
 //| This sample program expect the .ini file as a command line argument.
 //| If there is no such argument, it use the {{{dwarfs.ini.html}dwarfs.ini}} file.
 //|
+//| Source code for bean: {{{Dwarf.java.html}Dwarf}},
+//|
 //</editor-fold>
 //{
 import org.ini4j.Ini;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeListener;
 
 import java.io.FileInputStream;
-
-import java.net.URI;
 
 public class BeanEventSample
 {
@@ -61,33 +59,6 @@ public class BeanEventSample
         System.out.println("Sneezy's age: " + sneezy.getAge());
         sneezy.setAge(44);
         System.out.println("Sneezy's age: " + sneezy.getAge());
-    }
-
-    static interface Dwarf
-    {
-        int getAge();
-
-        void setAge(int age);
-
-        double getHeight();
-
-        void setHeight(double height) throws PropertyVetoException;
-
-        URI getHomePage();
-
-        void setHomePage(URI location);
-
-        double getWeight();
-
-        void setWeight(double weight);
-
-        void addPropertyChangeListener(String property, PropertyChangeListener listener);
-
-        void addVetoableChangeListener(String property, VetoableChangeListener listener);
-
-        void removePropertyChangeListener(String property, PropertyChangeListener listener);
-
-        void removeVetoableChangeListener(String property, VetoableChangeListener listener);
     }
 }
 //}

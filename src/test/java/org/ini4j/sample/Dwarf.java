@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j;
+package org.ini4j.sample;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
@@ -21,6 +21,22 @@ import java.beans.VetoableChangeListener;
 
 import java.net.URI;
 
+//<editor-fold defaultstate="collapsed" desc="apt documentation">
+//|
+//|                ---------------
+//|                Dwarf interface
+//|
+//|Dwarf interface
+//|
+//| This is a very simple bean interface with a few getter and setter. Some of
+//| the properties are java primitive types. The <<<homePage>>> property has a
+//| complex type (java.net.URI). It is not a problem for \[ini4j\] to do the
+//| required type conversion automatically between java.lang.String and the tpye
+//| of the given property. The <<<fortuneNumber>>> property is indexed, just to
+//| show you may use indexed properties as well.
+//|
+//</editor-fold>
+//{
 public interface Dwarf
 {
     String PROP_AGE = "age";
@@ -70,3 +86,4 @@ public interface Dwarf
 
     void removeVetoableChangeListener(String property, VetoableChangeListener listener);
 }
+//}

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j;
+package org.ini4j.sample;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -23,6 +23,15 @@ import java.beans.VetoableChangeSupport;
 
 import java.net.URI;
 
+//<editor-fold defaultstate="collapsed" desc="apt documentation">
+//|
+//|                ---------------
+//|                DwarfBean class
+//|
+//|DwarfBean class
+//|
+//</editor-fold>
+//{
 public class DwarfBean implements Dwarf
 {
     private int _age;
@@ -161,3 +170,4 @@ public class DwarfBean implements Dwarf
         _vcSupport.removeVetoableChangeListener(property, listener);
     }
 }
+//}

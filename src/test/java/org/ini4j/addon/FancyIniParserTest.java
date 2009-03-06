@@ -18,12 +18,13 @@ package org.ini4j.addon;
 import org.easymock.EasyMock;
 
 import org.ini4j.Config;
-import org.ini4j.Dwarfs;
 import org.ini4j.Helper;
 import org.ini4j.Ini;
 import org.ini4j.IniHandler;
 import org.ini4j.IniParser;
 import org.ini4j.InvalidIniFormatException;
+
+import org.ini4j.sample.Dwarfs;
 
 import org.junit.AfterClass;
 

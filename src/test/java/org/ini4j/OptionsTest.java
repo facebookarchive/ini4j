@@ -15,6 +15,10 @@
  */
 package org.ini4j;
 
+import org.ini4j.sample.Dwarf;
+import org.ini4j.sample.DwarfBean;
+import org.ini4j.sample.Dwarfs;
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;

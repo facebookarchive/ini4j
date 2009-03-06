@@ -19,6 +19,9 @@ import org.ini4j.Config;
 import org.ini4j.Ini;
 import org.ini4j.Options;
 
+import org.ini4j.sample.Dwarf;
+import org.ini4j.sample.DwarfBean;
+
 import static org.junit.Assert.*;
 
 import java.io.File;
@@ -40,6 +43,9 @@ import java.net.URL;
 //|
 //| At the end of this document, you may find the sample bean interface and bean
 //| class used in code sniplets.
+//|
+//| Source code for beans: {{{../sample/Dwarf.java.html}Dwarf}},
+//| {{{../sample/DwarfBean.java.html}DwarfBean}}
 //|
 //| Code sniplets in this tutorial tested with the following .ini file:
 //| {{{../sample/dwarfs.ini.html}dwarfs.ini}}
@@ -90,7 +96,7 @@ public class BeanTutorial extends AbstractTutorial
         int age = happy.getAge();
         URI homePage = happy.getHomePage();
 
-        happy.setHeight(45.55);
+        happy.setWeight(45.55);
 
 //}
 //|
@@ -99,7 +105,7 @@ public class BeanTutorial extends AbstractTutorial
 //|
         assertEquals("http://happy.smurf", homePage.toString());
         assertEquals(99, age);
-        assertEquals(45.55, happy.getHeight(), 0.01);
+        assertEquals(45.55, happy.getWeight(), 0.01);
     }
 
 //|
@@ -116,7 +122,7 @@ public class BeanTutorial extends AbstractTutorial
         DwarfBean sleepy = new DwarfBean();
 
         sleepy.setAge(87);
-        sleepy.setHeight(44.3);
+        sleepy.setWeight(44.3);
         Ini.Section sec = ini.add("sleepy");
 
         sec.from(sleepy);
@@ -124,7 +130,7 @@ public class BeanTutorial extends AbstractTutorial
 //}
 //|
         assertTrue(sec.containsKey("age"));
-        assertTrue(sec.containsKey("height"));
+        assertTrue(sec.containsKey("weight"));
     }
 
 //|
@@ -235,122 +241,5 @@ public class BeanTutorial extends AbstractTutorial
         assertEquals(99, dwarf.getAge());
         assertEquals(23, bean.getAge());
     }
-
-    static  //
-//|
-//|* Bean interface used in tutorial
-//|
-//| This is a very simple bean interface with a few getter and setter. Some of
-//| the properties are java primitive types. The <<<homePage>>> property has a
-//| complex type (java.net.URI). It is not a problem for \[ini4j\] to do the
-//| required type conversion automatically between java.lang.String and the tpye
-//| of the given property. The <<<fortuneNumber>>> property is indexed, just to
-//| show you may use indexed properties as well.
-//{
-    public interface Dwarf
-    {
-        int getAge();
-
-        void setAge(int age);
-
-        int[] getFortuneNumber();
-
-        void setFortuneNumber(int[] value);
-
-        double getHeight();
-
-        void setHeight(double height);
-
-        String getHomeDir();
-
-        void setHomeDir(String dir);
-
-        URI getHomePage();
-
-        void setHomePage(URI location);
-
-        double getWeight();
-
-        void setWeight(double weight);
-    }
-
-//}
-//|
-    static  //
-//|
-//|* Bean class used in tutorial
-//|
-//| This is a very simple bean. There is no bound or constrained properties.
-//{
-    public class DwarfBean implements Dwarf
-    {
-        private int _age;
-        private int[] _fortuneNumber;
-        private double _height;
-        private String _homeDir;
-        private URI _homePage;
-        private double _weight;
-
-        @Override public int getAge()
-        {
-            return _age;
-        }
-
-        @Override public void setAge(int value)
-        {
-            _age = value;
-        }
-
-        @Override public int[] getFortuneNumber()
-        {
-            return _fortuneNumber;
-        }
-
-        @Override public void setFortuneNumber(int[] value)
-        {
-            _fortuneNumber = value;
-        }
-
-        @Override public double getHeight()
-        {
-            return _height;
-        }
-
-        @Override public void setHeight(double value)
-        {
-            _height = value;
-        }
-
-        @Override public String getHomeDir()
-        {
-            return _homeDir;
-        }
-
-        @Override public void setHomeDir(String value)
-        {
-            _homeDir = value;
-        }
-
-        @Override public URI getHomePage()
-        {
-            return _homePage;
-        }
-
-        @Override public void setHomePage(URI value)
-        {
-            _homePage = value;
-        }
-
-        @Override public double getWeight()
-        {
-            return _weight;
-        }
-
-        @Override public void setWeight(double value)
-        {
-            _weight = value;
-        }
-    }
-
 //}
 }

@@ -18,6 +18,10 @@ package org.ini4j;
 import org.ini4j.sample.BeanEventSample;
 import org.ini4j.sample.BeanSample;
 import org.ini4j.sample.DumpSample;
+import org.ini4j.sample.Dwarf;
+import org.ini4j.sample.DwarfBean;
+import org.ini4j.sample.Dwarfs;
+import org.ini4j.sample.DwarfsBean;
 import org.ini4j.sample.FromSample;
 import org.ini4j.sample.IniSample;
 import org.ini4j.sample.ListenerSample;
@@ -71,7 +75,7 @@ public class SampleRunnerTest
     public SampleRunnerTest(Class sampleClass) throws Exception
     {
         _clazz = sampleClass;
-        _sourceFile = Helper.getSourceFile(_clazz.getName().replaceAll("\\.", "/") + JAVA_SUFFIX);
+        _sourceFile = sourceFile(_clazz);
     }
 
     @BeforeClass public static void setUpClass() throws Exception
@@ -79,6 +83,10 @@ public class SampleRunnerTest
         System.setProperty("java.util.prefs.PreferencesFactory", "org.ini4j.IniPreferencesFactory");
         _documentDir = new File(Helper.getBuildDirectory(), DOC_PATH);
         _documentDir.mkdirs();
+        document(sourceFile(Dwarf.class), "//");
+        document(sourceFile(DwarfBean.class), "//");
+        document(sourceFile(Dwarfs.class), "//");
+        document(sourceFile(DwarfsBean.class), "//");
     }
 
     @Parameters public static Collection data()
@@ -132,25 +140,7 @@ public class SampleRunnerTest
         tmp.delete();
     }
 
-    private void append(File stdout) throws Exception
-    {
-        PrintWriter writer = new PrintWriter(new FileWriter(source2document(_sourceFile), true));
-
-        writer.println("\n Standard output:\n");
-        writer.println(CODE_BEGIN);
-        LineNumberReader reader = new LineNumberReader(new FileReader(stdout));
-
-        for (String line = reader.readLine(); line != null; line = reader.readLine())
-        {
-            writer.println(line);
-        }
-
-        writer.println(CODE_END);
-        reader.close();
-        writer.close();
-    }
-
-    private void document(File src, String comment) throws Exception
+    private static void document(File src, String comment) throws Exception
     {
         Pattern docPattern = Pattern.compile(String.format("^\\s*%s\\|(.*)$", comment));
         Pattern beginPattern = Pattern.compile(String.format("^\\s*%s\\{.*$", comment));
@@ -196,6 +186,39 @@ public class SampleRunnerTest
         writer.close();
     }
 
+    private static File source2document(File sourceFile) throws Exception
+    {
+        String name = sourceFile.getName();
+        File dir = new File(_documentDir, sourceFile.getParentFile().getName());
+
+        dir.mkdir();
+
+        return new File(dir, name + APT_SUFFIX);
+    }
+
+    private static File sourceFile(Class clazz) throws Exception
+    {
+        return Helper.getSourceFile(clazz.getName().replaceAll("\\.", "/") + JAVA_SUFFIX);
+    }
+
+    private void append(File stdout) throws Exception
+    {
+        PrintWriter writer = new PrintWriter(new FileWriter(source2document(_sourceFile), true));
+
+        writer.println("\n Standard output:\n");
+        writer.println(CODE_BEGIN);
+        LineNumberReader reader = new LineNumberReader(new FileReader(stdout));
+
+        for (String line = reader.readLine(); line != null; line = reader.readLine())
+        {
+            writer.println(line);
+        }
+
+        writer.println(CODE_END);
+        reader.close();
+        writer.close();
+    }
+
     @SuppressWarnings("unchecked")
     private void execute() throws Exception
     {
@@ -215,15 +238,5 @@ public class SampleRunnerTest
         }
 
         main.invoke(null, (Object) args);
-    }
-
-    private File source2document(File sourceFile) throws Exception
-    {
-        String name = sourceFile.getName();
-        File dir = new File(_documentDir, sourceFile.getParentFile().getName());
-
-        dir.mkdir();
-
-        return new File(dir, name + APT_SUFFIX);
     }
 }

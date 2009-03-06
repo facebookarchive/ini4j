@@ -15,6 +15,11 @@
  */
 package org.ini4j;
 
+import org.ini4j.sample.Dwarf;
+import org.ini4j.sample.DwarfBean;
+import org.ini4j.sample.Dwarfs;
+import org.ini4j.sample.DwarfsBean;
+
 import org.junit.Assert;
 
 import java.io.File;
@@ -39,6 +44,10 @@ public class Helper
     private static final String[] CONFIG_PROPERTIES =
         { Config.PROP_EMPTY_OPTION, Config.PROP_GLOBAL_SECTION, Config.PROP_GLOBAL_SECTION_NAME, Config.PROP_INCLUDE, Config.PROP_LOWER_CASE_OPTION, Config.PROP_LOWER_CASE_SECTION, Config.PROP_MULTI_OPTION, Config.PROP_MULTI_SECTION, Config.PROP_STRICT_OPERATOR, Config.PROP_UNNAMED_SECTION, Config.PROP_ESCAPE };
     private static final String[] FACTORY_PROPERTIES = { IniFormatter.class.getName(), IniParser.class.getName() };
+
+    private Helper()
+    {
+    }
 
     public static File getBuildDirectory()
     {

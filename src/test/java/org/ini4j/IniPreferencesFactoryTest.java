@@ -15,6 +15,8 @@
  */
 package org.ini4j;
 
+import org.ini4j.sample.Dwarfs;
+
 import org.junit.AfterClass;
 
 import static org.junit.Assert.*;
@@ -28,9 +30,21 @@ import java.util.prefs.Preferences;
  */
 public class IniPreferencesFactoryTest
 {
+    private static final String DUMMY = "dummy";
+
     @AfterClass public static void tearDownClass() throws Exception
     {
         Helper.resetConfig();
+    }
+
+    @Test public void testGetIniLocation() throws Exception
+    {
+        IniPreferencesFactory factory = new IniPreferencesFactory();
+
+        System.setProperty(DUMMY, DUMMY);
+        assertEquals(DUMMY, factory.getIniLocation(DUMMY));
+        System.clearProperty(DUMMY);
+        assertNull(factory.getIniLocation(DUMMY));
     }
 
     /**
@@ -60,6 +74,20 @@ public class IniPreferencesFactoryTest
         catch (IllegalArgumentException x)
         {
             ;
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewIniPreferences()
+    {
+        System.setProperty(DUMMY, DUMMY);
+        try
+        {
+            new IniPreferencesFactory().newIniPreferences(DUMMY);
+        }
+        finally
+        {
+            System.clearProperty(DUMMY);
         }
     }
 

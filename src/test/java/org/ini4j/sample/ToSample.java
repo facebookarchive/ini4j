@@ -27,13 +27,14 @@ package org.ini4j.sample;
 //| This sample program expect the .ini file as a command line argument.
 //| If there is no such argument, it use the {{{dwarfs.ini.html}dwarfs.ini}} file.
 //|
+//| Source code for beans: {{{Dwarf.java.html}Dwarf}},
+//| {{{DwarfBean.java.html}DwarfBean}}
+//|
 //</editor-fold>
 //{
 import org.ini4j.Ini;
 
 import java.io.FileInputStream;
-
-import java.net.URI;
 
 public class ToSample
 {
@@ -48,54 +49,6 @@ public class ToSample
         ini.get("happy").to(happy);
         System.out.println("Happy's age: " + happy.getAge());
         System.out.println("Happy's homePage: " + happy.getHomePage());
-    }
-
-    public static class DwarfBean
-    {
-        private int _age;
-        private double _height;
-        private URI _homePage;
-        private double _weight;
-
-        public int getAge()
-        {
-            return _age;
-        }
-
-        public void setAge(int value)
-        {
-            _age = value;
-        }
-
-        public double getHeight()
-        {
-            return _height;
-        }
-
-        public void setHeight(double value)
-        {
-            _height = value;
-        }
-
-        public URI getHomePage()
-        {
-            return _homePage;
-        }
-
-        public void setHomePage(URI value)
-        {
-            _homePage = value;
-        }
-
-        public double getWeight()
-        {
-            return _weight;
-        }
-
-        public void setWeight(double value)
-        {
-            _weight = value;
-        }
     }
 }
 //}
