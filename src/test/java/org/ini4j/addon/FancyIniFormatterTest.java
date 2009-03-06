@@ -37,9 +37,10 @@ import java.io.StringWriter;
 @SuppressWarnings("deprecation")
 public class FancyIniFormatterTest
 {
-    private static final String STRICTOPERATOR = "[section]\noption=value\n\n";
-    private static final String NORMALOPERATOR = "[section]\noption = value\n\n";
-    private static final String WITHDUMMY = "[section]\noption=value\ndummy=\n\n";
+    private static final String NL = System.getProperty("line.separator");
+    private static final String STRICTOPERATOR = "[section]" + NL + "option=value" + NL + NL;
+    private static final String NORMALOPERATOR = "[section]" + NL + "option = value" + NL + NL;
+    private static final String WITHDUMMY = "[section]" + NL + "option=value" + NL + "dummy=" + NL + NL;
     public static final String DUMMY = "dummy";
     public static final String SECTION = "section";
     private IniFormatter formatter;
