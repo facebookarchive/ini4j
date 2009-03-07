@@ -97,7 +97,12 @@ public class BeanTool
                             {
                                 Object v = Array.get(value, i);
 
-                                props.propAdd(pd.getName(), (v == null) ? null : v.toString());
+                                if ((v != null) && !v.getClass().equals(String.class))
+                                {
+                                    v = v.toString();
+                                }
+
+                                props.propAdd(pd.getName(), (String) v);
                             }
                         }
                         else
@@ -190,7 +195,8 @@ public class BeanTool
 
     public <T> T proxy(Class<T> clazz, BeanAccess props)
     {
-        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler(props)));
+        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz },
+                    new BeanInvocationHandler(props)));
     }
 
     public Object zero(Class clazz)
@@ -205,7 +211,7 @@ public class BeanTool
             }
             else if (clazz == Byte.TYPE)
             {
-                o = new Byte((byte) 0);
+                o = Byte.valueOf((byte) 0);
             }
             else if (clazz == Character.TYPE)
             {
@@ -221,15 +227,15 @@ public class BeanTool
             }
             else if (clazz == Integer.TYPE)
             {
-                o = new Integer(0);
+                o = Integer.valueOf(0);
             }
             else if (clazz == Long.TYPE)
             {
-                o = new Long(0L);
+                o = Long.valueOf(0L);
             }
             else if (clazz == Short.TYPE)
             {
-                o = new Short((short) 0);
+                o = Short.valueOf((short) 0);
             }
         }
 
@@ -303,22 +309,23 @@ public class BeanTool
 
         @Override protected Object getPropertySpi(String property, Class<?> clazz)
         {
-            Object ret;
+            Object ret = null;
 
             if (clazz.isArray())
             {
                 int length = _backend.propLength(property);
-                String[] all = (length == 0) ? null : new String[length];
 
-                if (all != null)
+                if (length != 0)
                 {
+                    String[] all = new String[length];
+
                     for (int i = 0; i < all.length; i++)
                     {
                         all[i] = _backend.propGet(property, i);
                     }
-                }
 
-                ret = all;
+                    ret = all;
+                }
             }
             else
             {

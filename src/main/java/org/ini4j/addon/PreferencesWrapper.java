@@ -1,239 +1,204 @@
 /**
  * Copyright 2005,2009 Ivan SZKIBA
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.ini4j.addon;
 
 import java.io.IOException;
 import java.io.OutputStream;
+
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.NodeChangeListener;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 
-
 public class PreferencesWrapper extends Preferences
 {
     protected Preferences peer;
-    
-    public PreferencesWrapper(Preferences peer)
+
+    public PreferencesWrapper(Preferences impl)
     {
-	this.peer = peer;
+        peer = impl;
     }
-    
-    @Override
-    public void put(String key, String value)
+
+    @Override public boolean getBoolean(String key, boolean def)
     {
-	peer.put(key, value);
+        return peer.getBoolean(key, def);
     }
-    
-    @Override
-    public String get(String key, String def)
+
+    @Override public byte[] getByteArray(String key, byte[] def)
     {
-	return peer.get(key, def);
+        return peer.getByteArray(key, def);
     }
-    
-    @Override
-    public void remove(String key)
+
+    @Override public double getDouble(String key, double def)
     {
-	peer.remove(key);
+        return peer.getDouble(key, def);
     }
-    
-    @Override
-    public void clear() throws BackingStoreException
+
+    @Override public boolean isUserNode()
     {
-	peer.clear();
+        return peer.isUserNode();
     }
-    
-    @Override
-    public void putInt(String key, int value)
+
+    @Override public float getFloat(String key, float def)
     {
-	peer.putInt(key, value);
+        return peer.getFloat(key, def);
     }
-    
-    @Override
-    public int getInt(String key, int def)
+
+    @Override public int getInt(String key, int def)
     {
-	return peer.getInt(key, def);
+        return peer.getInt(key, def);
     }
-    
-    @Override
-    public void putLong(String key, long value)
+
+    @Override public long getLong(String key, long def)
     {
-	peer.putLong(key, value);
+        return peer.getLong(key, def);
     }
-    
-    @Override
-    public long getLong(String key, long def)
+
+    @Override public String absolutePath()
     {
-	return peer.getLong(key, def);
+        return peer.absolutePath();
     }
-    
-    @Override
-    public void putBoolean(String key,  boolean value)
+
+    @Override public void addNodeChangeListener(NodeChangeListener ncl)
     {
-	peer.putBoolean(key, value);
+        peer.addNodeChangeListener(ncl);
     }
-    
-    @Override
-    public boolean getBoolean(String key,  boolean def)
+
+    @Override public void addPreferenceChangeListener(PreferenceChangeListener pcl)
     {
-	return peer.getBoolean(key, def);
+        peer.addPreferenceChangeListener(pcl);
     }
-    
-    @Override
-    public void putFloat(String key, float value)
+
+    @Override public String[] childrenNames() throws BackingStoreException
     {
-	peer.putFloat(key, value);
+        return peer.childrenNames();
     }
-    
-    @Override
-    public float getFloat(String key, float def)
+
+    @Override public void clear() throws BackingStoreException
     {
-	return peer.getFloat(key, def);
+        peer.clear();
     }
-    
-    @Override
-    public void putDouble(String key, double value)
+
+    @Override public void exportNode(OutputStream os) throws IOException, BackingStoreException
     {
-	peer.putDouble(key, value);
+        peer.exportNode(os);
     }
-    
-    @Override
-    public double getDouble(String key, double def)
+
+    @Override public void exportSubtree(OutputStream os) throws IOException, BackingStoreException
     {
-	return peer.getDouble(key, def);
+        peer.exportSubtree(os);
     }
-    
-    @Override
-    public void putByteArray(String key,  byte[] value)
+
+    @Override public void flush() throws BackingStoreException
     {
-	peer.putByteArray(key, value);
+        peer.flush();
     }
-    
-    @Override
-    public byte[] getByteArray(String key,  byte[] def)
+
+    @Override public String get(String key, String def)
     {
-	return peer.getByteArray(key, def);
+        return peer.get(key, def);
     }
-    
-    @Override
-    public String[] keys() throws BackingStoreException
+
+    @Override public String[] keys() throws BackingStoreException
     {
-	return peer.keys();
+        return peer.keys();
     }
-    
-    @Override
-    public String[] childrenNames() throws BackingStoreException
+
+    @Override public String name()
     {
-	return peer.childrenNames();
+        return peer.name();
     }
-    
-    @Override
-    public Preferences parent()
+
+    @Override public Preferences node(String pathName)
     {
-	return peer.parent();
+        return peer.node(pathName);
     }
-    
-    @Override
-    public Preferences node(String pathName)
+
+    @Override public boolean nodeExists(String pathName) throws BackingStoreException
     {
-	return peer.node(pathName);
+        return peer.nodeExists(pathName);
     }
-    
-    @Override
-    public boolean nodeExists(String pathName) throws BackingStoreException
+
+    @Override public Preferences parent()
     {
-	return peer.nodeExists(pathName);
+        return peer.parent();
     }
-    
-    @Override
-    public void removeNode() throws BackingStoreException
+
+    @Override public void put(String key, String value)
     {
-	peer.removeNode();
+        peer.put(key, value);
     }
-    
-    @Override
-    public String name()
+
+    @Override public void putBoolean(String key, boolean value)
     {
-	return peer.name();
+        peer.putBoolean(key, value);
     }
-    
-    @Override
-    public String absolutePath()
+
+    @Override public void putByteArray(String key, byte[] value)
     {
-	return peer.absolutePath();
+        peer.putByteArray(key, value);
     }
-    
-    @Override
-    public boolean isUserNode()
+
+    @Override public void putDouble(String key, double value)
     {
-	return peer.isUserNode();
+        peer.putDouble(key, value);
     }
-    
-    @Override
-    public String toString()
+
+    @Override public void putFloat(String key, float value)
     {
-	return peer.toString();
+        peer.putFloat(key, value);
     }
-    
-    @Override
-    public void flush() throws BackingStoreException
+
+    @Override public void putInt(String key, int value)
     {
-	peer.flush();
+        peer.putInt(key, value);
     }
-    
-    @Override
-    public void sync() throws BackingStoreException
+
+    @Override public void putLong(String key, long value)
     {
-	peer.sync();
+        peer.putLong(key, value);
     }
-    
-    @Override
-    public void addPreferenceChangeListener(PreferenceChangeListener pcl)
+
+    @Override public void remove(String key)
     {
-	peer.addPreferenceChangeListener(pcl);
+        peer.remove(key);
     }
-    
-    @Override
-    public void removePreferenceChangeListener(PreferenceChangeListener pcl)
+
+    @Override public void removeNode() throws BackingStoreException
     {
-	peer.removePreferenceChangeListener(pcl);
+        peer.removeNode();
     }
-    
-    @Override
-    public void addNodeChangeListener(NodeChangeListener ncl)
+
+    @Override public void removeNodeChangeListener(NodeChangeListener ncl)
     {
-	peer.addNodeChangeListener(ncl);
+        peer.removeNodeChangeListener(ncl);
     }
-    
-    @Override
-    public void removeNodeChangeListener(NodeChangeListener ncl)
+
+    @Override public void removePreferenceChangeListener(PreferenceChangeListener pcl)
     {
-	peer.removeNodeChangeListener(ncl);
+        peer.removePreferenceChangeListener(pcl);
     }
-    
-    @Override
-    public void exportNode(OutputStream os) throws IOException, BackingStoreException
+
+    @Override public void sync() throws BackingStoreException
     {
-	peer.exportNode(os);
+        peer.sync();
     }
-    
-    @Override
-    public void exportSubtree(OutputStream os) throws IOException, BackingStoreException
+
+    @Override public String toString()
     {
-	peer.exportSubtree(os);
+        return peer.toString();
     }
 }

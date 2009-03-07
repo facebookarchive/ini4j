@@ -19,6 +19,14 @@ public class EscapeTool
 {
     private static final char[] HEX = "0123456789abcdef".toCharArray();
     private static final EscapeTool _instance = ServiceFinder.findService(EscapeTool.class);
+    private static final char ASCII_MIN = 0x20;
+    private static final char ASCII_MAX = 0x7e;
+    private static final int HEX_DIGIT_MASK = 0x0f;
+    private static final int DIGIT_3_OFFSET = 4;
+    private static final int DIGIT_2_OFFSET = 8;
+    private static final int DIGIT_1_OFFSET = 12;
+    private static final int HEX_RADIX = 16;
+    private static final int UNICODE_HEX_DIGITS = 4;
 
     public static EscapeTool getInstance()
     {
@@ -42,13 +50,13 @@ public class EscapeTool
             }
             else
             {
-                if ((c < 0x0020) || (c > 0x007e))
+                if ((c < ASCII_MIN) || (c > ASCII_MAX))
                 {
                     buffer.append("\\u");
-                    buffer.append(HEX[(c >>> 12) & 0x0f]);
-                    buffer.append(HEX[(c >>> 8) & 0x0f]);
-                    buffer.append(HEX[(c >>> 4) & 0x0f]);
-                    buffer.append(HEX[c & 0x0f]);
+                    buffer.append(HEX[(c >>> DIGIT_1_OFFSET) & HEX_DIGIT_MASK]);
+                    buffer.append(HEX[(c >>> DIGIT_2_OFFSET) & HEX_DIGIT_MASK]);
+                    buffer.append(HEX[(c >>> DIGIT_3_OFFSET) & HEX_DIGIT_MASK]);
+                    buffer.append(HEX[c & HEX_DIGIT_MASK]);
                 }
                 else
                 {
@@ -64,8 +72,9 @@ public class EscapeTool
     {
         int n = line.length();
         StringBuilder buffer = new StringBuilder(n);
+        int i = 0;
 
-        for (int i = 0; i < n;)
+        while (i < n)
         {
             char c = line.charAt(i++);
 
@@ -76,7 +85,8 @@ public class EscapeTool
                 {
                     try
                     {
-                        c = (char) Integer.parseInt(line.substring(i, i += 4), 16);
+                        c = (char) Integer.parseInt(line.substring(i, i + UNICODE_HEX_DIGITS), HEX_RADIX);
+                        i += UNICODE_HEX_DIGITS;
                     }
                     catch (RuntimeException x)
                     {

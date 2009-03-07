@@ -125,12 +125,11 @@ public class MultiMapImpl<K, V> implements MultiMap<K, V>
 
     @Override public V put(K key, V value)
     {
-        V ret;
+        V ret = null;
         List<V> values = getList(key, true);
 
         if (values.isEmpty())
         {
-            ret = null;
             values.add(value);
         }
         else
@@ -185,17 +184,13 @@ public class MultiMapImpl<K, V> implements MultiMap<K, V>
 
     @Override public V remove(Object key, int index)
     {
-        V ret;
+        V ret = null;
         List<V> values = getList(key, false);
 
-        if (values == null)
-        {
-            ret = null;
-        }
-        else
+        if (values != null)
         {
             ret = values.remove(index);
-            if (values.size() == 0)
+            if (values.isEmpty())
             {
                 _impl.remove(key);
             }

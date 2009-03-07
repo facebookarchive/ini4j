@@ -21,7 +21,7 @@ import java.lang.reflect.Proxy;
 
 import java.util.prefs.Preferences;
 
-public class PreferencesBean
+public final class PreferencesBean
 {
     private PreferencesBean()
     {

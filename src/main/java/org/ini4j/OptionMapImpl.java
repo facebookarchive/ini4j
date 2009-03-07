@@ -28,7 +28,7 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
     private static final String ENVIRONMENT_PREFIX = "@env/";
     private static final int SYSTEM_PROPERTY_PREFIX_LEN = SYSTEM_PROPERTY_PREFIX.length();
     private static final int ENVIRONMENT_PREFIX_LEN = ENVIRONMENT_PREFIX.length();
-    private static final Pattern expr = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?)\\}");
+    private static final Pattern EXPRESSION = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?)\\}");
     private static final int G_OPTION = 2;
     private static final int G_INDEX = 4;
     private BeanAccess _defaultBeanAccess;
@@ -107,7 +107,7 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
 
     protected void resolve(StringBuilder buffer)
     {
-        Matcher m = expr.matcher(buffer);
+        Matcher m = EXPRESSION.matcher(buffer);
 
         while (m.find())
         {

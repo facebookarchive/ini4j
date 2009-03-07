@@ -24,7 +24,7 @@ import java.io.Writer;
 
 public class XMLFormatter implements IniHandler
 {
-    private PrintWriter output;
+    private PrintWriter _output;
 
     public static XMLFormatter newInstance(Writer out)
     {
@@ -79,11 +79,11 @@ public class XMLFormatter implements IniHandler
 
     protected PrintWriter getOutput()
     {
-        return output;
+        return _output;
     }
 
     protected void setOutput(PrintWriter value)
     {
-        output = value;
+        _output = value;
     }
 }

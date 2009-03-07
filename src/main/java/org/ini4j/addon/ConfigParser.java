@@ -126,7 +126,8 @@ public class ConfigParser
         return get(section, option, raw, Collections.EMPTY_MAP);
     }
 
-    public String get(String sectionName, String optionName, boolean raw, Map<String, String> variables) throws NoSectionException, NoOptionException, InterpolationException
+    public String get(String sectionName, String optionName, boolean raw, Map<String, String> variables) throws NoSectionException, NoOptionException,
+        InterpolationException
     {
         String value = requireOption(sectionName, optionName);
 
@@ -162,7 +163,8 @@ public class ConfigParser
         return items(sectionName, raw, Collections.EMPTY_MAP);
     }
 
-    public List<Map.Entry<String, String>> items(String sectionName, boolean raw, Map<String, String> variables) throws NoSectionException, InterpolationMissingOptionException
+    public List<Map.Entry<String, String>> items(String sectionName, boolean raw, Map<String, String> variables) throws NoSectionException,
+        InterpolationMissingOptionException
     {
         Ini.Section section = requireSection(sectionName);
         Map<String, String> ret;
@@ -331,14 +333,20 @@ public class ConfigParser
 
     public static class ConfigParserException extends Exception
     {
+
+        /** Use serialVersionUID for interoperability. */ private static final long serialVersionUID = -6845546313519392093L;
+
         public ConfigParserException(String message)
         {
             super(message);
         }
     }
 
-    public static class DuplicateSectionException extends ConfigParserException
+    public static final class DuplicateSectionException extends ConfigParserException
     {
+
+        /** Use serialVersionUID for interoperability. */ private static final long serialVersionUID = -5244008445735700699L;
+
         private DuplicateSectionException(String message)
         {
             super(message);
@@ -347,38 +355,53 @@ public class ConfigParser
 
     public static class InterpolationException extends ConfigParserException
     {
-        private InterpolationException(String message)
+
+        /** Use serialVersionUID for interoperability. */ private static final long serialVersionUID = 8924443303158546939L;
+
+        protected InterpolationException(String message)
         {
             super(message);
         }
     }
 
-    public static class InterpolationMissingOptionException extends InterpolationException
+    public static final class InterpolationMissingOptionException extends InterpolationException
     {
+
+        /** Use serialVersionUID for interoperability. */ private static final long serialVersionUID = 2903136975820447879L;
+
         private InterpolationMissingOptionException(String message)
         {
             super(message);
         }
     }
 
-    public static class NoOptionException extends ConfigParserException
+    public static final class NoOptionException extends ConfigParserException
     {
+
+        /** Use serialVersionUID for interoperability. */ private static final long serialVersionUID = 8460082078809425858L;
+
         private NoOptionException(String message)
         {
             super(message);
         }
     }
 
-    public static class NoSectionException extends ConfigParserException
+    public static final class NoSectionException extends ConfigParserException
     {
+
+        /** Use serialVersionUID for interoperability. */ private static final long serialVersionUID = 8553627727493146118L;
+
         private NoSectionException(String message)
         {
             super(message);
         }
     }
 
-    public static class ParsingException extends IOException
+    public static final class ParsingException extends IOException
     {
+
+        /** Use serialVersionUID for interoperability. */ private static final long serialVersionUID = -5395990242007205038L;
+
         private ParsingException(String message)
         {
             super(message);
@@ -388,10 +411,10 @@ public class ConfigParser
     protected static class PyIni extends Ini
     {
         private static final char SUBST_CHAR = '%';
-        private static final Pattern expr = Pattern.compile("(?<!\\\\)\\%\\(([^\\)]+)\\)");
+        private static final Pattern EXPRESSION = Pattern.compile("(?<!\\\\)\\%\\(([^\\)]+)\\)");
         private static final int G_OPTION = 1;
         protected static final String DEFAULT_SECTION_NAME = "DEFAULT";
-        private Map<String, String> _defaults;
+        private final Map<String, String> _defaults;
         private Ini.Section _defaultSection;
 
         public PyIni(Map<String, String> defaults)
@@ -407,8 +430,7 @@ public class ConfigParser
             super.setConfig(cfg);
         }
 
-        @Deprecated @Override
-        @SuppressWarnings("empty-statement")
+        @Deprecated @Override @SuppressWarnings("empty-statement")
         public void setConfig(Config value)
         {
             ;
@@ -467,7 +489,7 @@ public class ConfigParser
 
         protected void resolve(StringBuilder buffer, Ini.Section owner, Map<String, String> vars) throws InterpolationMissingOptionException
         {
-            Matcher m = expr.matcher(buffer);
+            Matcher m = EXPRESSION.matcher(buffer);
 
             while (m.find())
             {

@@ -159,31 +159,25 @@ public abstract class AbstractBeanInvocationHandler implements InvocationHandler
     @SuppressWarnings("empty-statement")
     protected synchronized void setProperty(String property, Object value, Class<?> clazz) throws PropertyVetoException
     {
-        try
+        boolean pc = (_pcSupport != null) && _pcSupport.hasListeners(property);
+        boolean vc = (_vcSupport != null) && _vcSupport.hasListeners(property);
+        Object oldVal = null;
+        Object newVal = ((value != null) && clazz.equals(String.class) && !(value instanceof String)) ? value.toString() : value;
+
+        if (pc || vc)
         {
-            boolean pc = (_pcSupport != null) && _pcSupport.hasListeners(property);
-            boolean vc = (_vcSupport != null) && _vcSupport.hasListeners(property);
-            Object old = (pc || vc) ? getProperty(property, clazz) : null;
-
-            if (vc)
-            {
-                fireVetoableChange(property, old, value);
-            }
-
-            if (clazz.equals(String.class) && !(value instanceof String))
-            {
-                value = value.toString();
-            }
-
-            setPropertySpi(property, value, clazz);
-            if (pc)
-            {
-                firePropertyChange(property, old, value);
-            }
+            oldVal = getProperty(property, clazz);
         }
-        catch (PropertyVetoException x)
+
+        if (vc)
         {
-            throw x;
+            fireVetoableChange(property, oldVal, value);
+        }
+
+        setPropertySpi(property, newVal, clazz);
+        if (pc)
+        {
+            firePropertyChange(property, oldVal, value);
         }
     }
 

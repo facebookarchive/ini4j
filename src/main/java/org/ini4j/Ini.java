@@ -40,7 +40,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 {
     private static final String SECTION_SYSTEM_PROPERTIES = "@prop";
     private static final String SECTION_ENVIRONMENT = "@env";
-    private static final Pattern expr = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?/)?([^\\[]+)(\\[(([0-9]+))\\])?\\}");
+    private static final Pattern EXPRESSION = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?/)?([^\\[]+)(\\[(([0-9]+))\\])?\\}");
     private static final int G_SECTION = 2;
     private static final int G_SECTION_IDX = 4;
     private static final int G_OPTION = 5;
@@ -165,12 +165,11 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 
     @Deprecated public synchronized <T> T to(Class<T> clazz)
     {
-        Object bean;
+        Object bean = null;
 
         if (_beans == null)
         {
             _beans = new HashMap<Class, Object>();
-            bean = null;
         }
         else
         {
@@ -193,7 +192,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 
     protected void resolve(StringBuilder buffer, Section owner)
     {
-        Matcher m = expr.matcher(buffer);
+        Matcher m = EXPRESSION.matcher(buffer);
 
         while (m.find())
         {
@@ -207,7 +206,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
             int sectionIndex = (m.group(G_SECTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_SECTION_IDX));
             int optionIndex = (m.group(G_OPTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_OPTION_IDX));
             Section section = (sectionName == null) ? owner : ((sectionIndex == -1) ? get(sectionName) : get(sectionName, sectionIndex));
-            String value;
+            String value = null;
 
             if (SECTION_ENVIRONMENT.equals(sectionName))
             {
@@ -217,9 +216,9 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
             {
                 value = System.getProperty(optionName);
             }
-            else
+            else if (section != null)
             {
-                value = (section == null) ? null : ((optionIndex == -1) ? section.fetch(optionName) : section.fetch(optionName, optionIndex));
+                value = (optionIndex == -1) ? section.fetch(optionName) : section.fetch(optionName, optionIndex);
             }
 
             if (value != null)
@@ -255,7 +254,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
     public class Section extends OptionMapImpl
     {
         private Map<Class, Object> _beans;
-        private String _name;
+        private final String _name;
 
         public Section(String name)
         {
@@ -270,12 +269,11 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 
         @Deprecated public synchronized <T> T to(Class<T> clazz)
         {
-            Object bean;
+            Object bean = null;
 
             if (_beans == null)
             {
                 _beans = new HashMap<Class, Object>();
-                bean = null;
             }
             else
             {
@@ -297,13 +295,13 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         }
     }
 
-    class BeanInvocationHandler extends AbstractBeanInvocationHandler
+    private class BeanInvocationHandler extends AbstractBeanInvocationHandler
     {
-        private MultiMap<String, Object> _sectionBeans = new MultiMapImpl<String, Object>();
+        private final MultiMap<String, Object> _sectionBeans = new MultiMapImpl<String, Object>();
 
         @Override protected Object getPropertySpi(String property, Class<?> clazz)
         {
-            Object o;
+            Object o = null;
 
             if (clazz.isArray())
             {
@@ -325,10 +323,6 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
                     {
                         Array.set(o, i, _sectionBeans.get(property, i));
                     }
-                }
-                else
-                {
-                    o = null;
                 }
             }
             else
@@ -378,9 +372,9 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         }
     }
 
-    class Builder implements IniHandler
+    private class Builder implements IniHandler
     {
-        private Section currentSection;
+        private Section _currentSection;
 
         @SuppressWarnings("empty-statement")
         @Override public void endIni()
@@ -390,18 +384,18 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 
         @Override public void endSection()
         {
-            currentSection = null;
+            _currentSection = null;
         }
 
         @Override public void handleOption(String name, String value)
         {
             if (getConfig().isMultiOption())
             {
-                currentSection.add(name, value);
+                _currentSection.add(name, value);
             }
             else
             {
-                currentSection.put(name, value);
+                _currentSection.put(name, value);
             }
         }
 
@@ -415,13 +409,13 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         {
             if (getConfig().isMultiSection())
             {
-                currentSection = add(sectionName);
+                _currentSection = add(sectionName);
             }
             else
             {
                 Section s = get(sectionName);
 
-                currentSection = (s != null) ? s : add(sectionName);
+                _currentSection = (s == null) ? add(sectionName) : s;
             }
         }
     }

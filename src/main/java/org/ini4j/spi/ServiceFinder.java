@@ -25,7 +25,7 @@ import java.io.InputStreamReader;
  * @author Szkiba Iv�n
  * @version $Name:  $
  */
-public class ServiceFinder
+public final class ServiceFinder
 {
     private ServiceFinder()
     {
@@ -60,7 +60,8 @@ public class ServiceFinder
         }
         catch (Exception x)
         {
-            throw (IllegalArgumentException) new IllegalArgumentException("Provider " + clazz.getName() + " could not be instantiated: " + x).initCause(x);
+            throw (IllegalArgumentException) new IllegalArgumentException("Provider " + clazz.getName() + " could not be instantiated: " + x)
+              .initCause(x);
         }
     }
 

@@ -31,7 +31,7 @@ class IniSource
     protected boolean allowInclude;
     private URL _base;
     private IniSource _chain;
-    private LineNumberReader _reader;
+    private final LineNumberReader _reader;
 
     protected IniSource(InputStream input, boolean includeFlag)
     {
@@ -67,16 +67,7 @@ class IniSource
     {
         String line;
 
-        if (_chain != null)
-        {
-            line = _chain.readLine();
-            if (line == null)
-            {
-                _chain = null;
-                line = readLine();
-            }
-        }
-        else
+        if (_chain == null)
         {
             line = _reader.readLine();
             if (line == null)
@@ -120,6 +111,15 @@ class IniSource
                         line = readLine();
                     }
                 }
+            }
+        }
+        else
+        {
+            line = _chain.readLine();
+            if (line == null)
+            {
+                _chain = null;
+                line = readLine();
             }
         }
 

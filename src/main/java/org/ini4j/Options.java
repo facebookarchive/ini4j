@@ -142,9 +142,10 @@ public class Options extends OptionMapImpl
     {
         boolean multi = getConfig().isMultiOption();
 
-        for (String line = source.readLine(); line != null; line = source.readLine())
+        for (String srcline = source.readLine(); srcline != null; srcline = source.readLine())
         {
-            line = line.trim();
+            String line = srcline.trim();
+
             if ((line.length() == 0) || (COMMENTS.indexOf(line.charAt(0)) >= 0))
             {
                 continue;

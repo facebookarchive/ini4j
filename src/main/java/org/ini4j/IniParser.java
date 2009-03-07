@@ -83,15 +83,15 @@ public class IniParser
 
     public void parseXML(Reader input, final IniHandler handler) throws IOException, InvalidIniFormatException
     {
-        class XML2Ini extends DefaultHandler
+        class XmlToIni extends DefaultHandler
         {
-            static final String TAG_SECTION = "section";
-            static final String TAG_OPTION = "option";
-            static final String TAG_INI = "ini";
-            static final String ATTR_KEY = "key";
-            static final String ATTR_VALUE = "value";
-            static final String ATTR_VERSION = "version";
-            static final String CURRENT_VERSION = "1.0";
+            private static final String TAG_SECTION = "section";
+            private static final String TAG_OPTION = "option";
+            private static final String TAG_INI = "ini";
+            private static final String ATTR_KEY = "key";
+            private static final String ATTR_VALUE = "value";
+            private static final String ATTR_VERSION = "version";
+            private static final String CURRENT_VERSION = "1.0";
 
             @Override public void startElement(String uri, String localName, String qname, Attributes attrs) throws SAXException
             {
@@ -143,11 +143,11 @@ public class IniParser
             }
         }
 
-        XML2Ini xml2ini = new XML2Ini();
+        XmlToIni xmlToini = new XmlToIni();
 
         try
         {
-            SAXParserFactory.newInstance().newSAXParser().parse(new InputSource(input), xml2ini);
+            SAXParserFactory.newInstance().newSAXParser().parse(new InputSource(input), xmlToini);
         }
         catch (Exception x)
         {
@@ -180,9 +180,9 @@ public class IniParser
         handler.startIni();
         String sectionName = null;
 
-        for (String line = source.readLine(); line != null; line = source.readLine())
+        for (String srcline = source.readLine(); srcline != null; srcline = source.readLine())
         {
-            line = line.trim();
+            String line = srcline.trim();
             if ((line.length() == 0) || (COMMENTS.indexOf(line.charAt(0)) >= 0))
             {
                 continue;

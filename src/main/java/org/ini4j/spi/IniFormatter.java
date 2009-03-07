@@ -28,7 +28,7 @@ public class IniFormatter implements IniHandler
 {
     private static final String OPERATOR = " " + IniParser.OPERATOR + " ";
     private Config _config = Config.getGlobal();
-    private PrintWriter output;
+    private PrintWriter _output;
 
     public static IniFormatter newInstance(Writer out)
     {
@@ -131,12 +131,12 @@ public class IniFormatter implements IniHandler
 
     protected PrintWriter getOutput()
     {
-        return output;
+        return _output;
     }
 
     protected void setOutput(PrintWriter value)
     {
-        output = value;
+        _output = value;
     }
 
     protected String escape(String input)
