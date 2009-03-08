@@ -229,7 +229,7 @@ public class SampleRunnerTest
         {
             File argument = new File(_sourceFile.getParentFile(), (String) _clazz.getField("FILENAME").get(null));
 
-            document(argument, "#");
+            document(argument, "[#;!]");
             args = new String[] { argument.getCanonicalPath() };
         }
         catch (NoSuchFieldException x)
