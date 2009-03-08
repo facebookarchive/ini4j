@@ -26,7 +26,8 @@ import java.io.Writer;
 
 public class IniFormatter implements IniHandler
 {
-    private static final String OPERATOR = " " + IniParser.OPERATOR + " ";
+    private static final char OPERATOR = '=';
+    private static final char SPACE = ' ';
     private Config _config = Config.getGlobal();
     private PrintWriter _output;
 
@@ -80,7 +81,7 @@ public class IniFormatter implements IniHandler
             if (getConfig().isEmptyOption() || (optionValue != null))
             {
                 getOutput().print(escape(optionName));
-                getOutput().print(IniParser.OPERATOR);
+                getOutput().print(OPERATOR);
             }
 
             if (optionValue != null)
@@ -100,7 +101,9 @@ public class IniFormatter implements IniHandler
             if (value != null)
             {
                 getOutput().print(escape(optionName));
+                getOutput().print(SPACE);
                 getOutput().print(OPERATOR);
+                getOutput().print(SPACE);
                 getOutput().println(escape(value));
             }
         }

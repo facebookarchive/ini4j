@@ -1,11 +1,11 @@
-;|                        ----------
-;|                        dwarfs.opt
-;|
-;|dwarfs.opt
-;|
-;| Common .opt file for tutorials
-;|
-;{
+#|                        ----------
+#|                        dwarfs.opt
+#|
+#|dwarfs.opt
+#|
+#| Common .opt file for tutorials
+#|
+#{
 ! Dopey properties without prefix
 !
 weight = ${bashful.weight}
@@ -76,4 +76,4 @@ sneezy.fortuneNumber = 44
 ! Happy again
 happy.homePage = http://happy.smurf
 
-;}
+#}

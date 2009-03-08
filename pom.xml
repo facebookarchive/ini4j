@@ -268,6 +268,12 @@
                             <exclude>**/*.ini</exclude>
                             <exclude>**/*.opt</exclude>
                         </excludes>
+<!--
+                        <mapping>
+                            <java>SLASHSTAR_STYLE</java>
+                        </mapping>
+                        <useDefaultMapping>true</useDefaultMapping>
+-->
                     </configuration>
                     <executions>
                         <execution>
@@ -321,7 +327,7 @@
                         <phase>verify</phase>
                         <goals>
                           <goal>check</goal>
-<!--                          <goal>cpd-check</goal>-->
+                          <goal>cpd-check</goal>
                         </goals>
                     </execution>
                 </executions>

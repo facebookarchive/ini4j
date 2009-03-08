@@ -15,13 +15,7 @@
  */
 package org.ini4j;
 
-public interface IniHandler extends OptionHandler
+public interface OptionHandler
 {
-    void endIni();
-
-    void endSection();
-
-    void startIni();
-
-    void startSection(String sectionName);
+    void handleOption(String optionName, String optionValue);
 }

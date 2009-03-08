@@ -99,23 +99,17 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 
     public void load(InputStream input) throws IOException, InvalidIniFormatException
     {
-        Builder builder = new Builder();
-
-        IniParser.newInstance(getConfig()).parse(input, builder);
+        IniParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
     public void load(Reader input) throws IOException, InvalidIniFormatException
     {
-        Builder builder = new Builder();
-
-        IniParser.newInstance(getConfig()).parse(input, builder);
+        IniParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
     public void load(URL input) throws IOException, InvalidIniFormatException
     {
-        Builder builder = new Builder();
-
-        IniParser.newInstance(getConfig()).parse(input, builder);
+        IniParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
     public void loadFromXML(InputStream input) throws IOException, InvalidIniFormatException

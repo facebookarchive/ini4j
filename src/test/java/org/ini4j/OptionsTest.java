@@ -80,17 +80,15 @@ public class OptionsTest
         Helper.assertEquals(dwarfs.getHappy(), dup);
     }
 
-    @Test public void testEscapeUnescape() throws Exception
+    @Test public void testEscape() throws Exception
     {
         Options opts = new Options();
         Config cfg = new Config();
 
         assertEquals("c:\\\\dummy", opts.escape("c:\\dummy"));
-        assertEquals("c:\\dummy", opts.unescape("c:\\\\dummy"));
         cfg.setEscape(false);
         opts.setConfig(cfg);
         assertEquals("c:\\dummy", opts.escape("c:\\dummy"));
-        assertEquals("c:\\\\dummy", opts.unescape("c:\\\\dummy"));
     }
 
     @Test public void testLoad() throws Exception
@@ -149,8 +147,7 @@ public class OptionsTest
         opts.load(new StringReader("foo\n"));
     }
 
-    @Test
-    @SuppressWarnings("empty-statement")
+    @Test @SuppressWarnings("empty-statement")
     public void testParseError() throws Exception
     {
         for (String s : _badOptions)

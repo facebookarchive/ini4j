@@ -15,7 +15,6 @@
  */
 package org.ini4j;
 
-import org.ini4j.spi.EscapeTool;
 import org.ini4j.spi.ServiceFinder;
 
 import org.xml.sax.Attributes;
@@ -34,13 +33,18 @@ import java.util.Locale;
 
 import javax.xml.parsers.SAXParserFactory;
 
-public class IniParser
+public class IniParser extends AbstractParser
 {
-    public static final String COMMENTS = ";#";
-    public static final char OPERATOR = '=';
+    private static final String COMMENTS = ";#";
+    private static final String OPERATORS = ":=";
+
     public static final char SECTION_BEGIN = '[';
     public static final char SECTION_END = ']';
-    private Config _config = Config.getGlobal();
+
+    public IniParser()
+    {
+        super(OPERATORS, COMMENTS);
+    }
 
     public static IniParser newInstance()
     {
@@ -56,24 +60,19 @@ public class IniParser
         return instance;
     }
 
-    public void setConfig(Config value)
-    {
-        _config = value;
-    }
-
     public void parse(InputStream input, IniHandler handler) throws IOException, InvalidIniFormatException
     {
-        parse(new IniSource(input, getConfig().isInclude(), COMMENTS), handler);
+        parse(newIniSource(input), handler);
     }
 
     public void parse(Reader input, IniHandler handler) throws IOException, InvalidIniFormatException
     {
-        parse(new IniSource(input, getConfig().isInclude(), COMMENTS), handler);
+        parse(newIniSource(input), handler);
     }
 
     public void parse(URL input, IniHandler handler) throws IOException, InvalidIniFormatException
     {
-        parse(new IniSource(input, getConfig().isInclude(), COMMENTS), handler);
+        parse(newIniSource(input), handler);
     }
 
     public void parseXML(InputStream input, IniHandler handler) throws IOException, InvalidIniFormatException
@@ -160,23 +159,7 @@ public class IniParser
         parseXML(input.openStream(), handler);
     }
 
-    protected Config getConfig()
-    {
-        return _config;
-    }
-
-    protected void parseError(String line, int lineNumber) throws InvalidIniFormatException
-    {
-        throw new InvalidIniFormatException("parse error (at line: " + lineNumber + "): " + line);
-    }
-
-    protected String unescape(String line)
-    {
-        return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
-    }
-
-
-    private String handleSectionLine(String line, IniSource source, IniHandler handler) throws InvalidIniFormatException
+    private String parseSectionLine(String line, IniSource source, IniHandler handler) throws InvalidIniFormatException
     {
         String sectionName;
 
@@ -201,43 +184,6 @@ public class IniParser
         return sectionName;
     }
 
-    private void handleOptionLine(String line, IniSource source, IniHandler handler) throws InvalidIniFormatException
-    {
-        int idx = line.indexOf(OPERATOR);
-        String name = null;
-        String value = null;
-
-        if (idx < 0)
-        {
-            if (getConfig().isEmptyOption())
-            {
-                name = line;
-            }
-            else
-            {
-                parseError(line, source.getLineNumber());
-            }
-        }
-        else
-        {
-            name = unescape(line.substring(0, idx)).trim();
-            value = unescape(line.substring(idx + 1)).trim();
-        }
-
-        if (name.length() == 0)
-        {
-            parseError(line, source.getLineNumber());
-        }
-
-        if (getConfig().isLowerCaseOption())
-        {
-            name = name.toLowerCase(Locale.getDefault());
-        }
-
-        handler.handleOption(name, value);
-
-    }
-
     private void parse(IniSource source, IniHandler handler) throws IOException, InvalidIniFormatException
     {
         handler.startIni();
@@ -253,7 +199,7 @@ public class IniParser
                     handler.endSection();
                 }
 
-                sectionName = handleSectionLine(line, source, handler);
+                sectionName = parseSectionLine(line, source, handler);
 
             }
             else
@@ -271,7 +217,7 @@ public class IniParser
                     }
                 }
 
-                handleOptionLine(line, source, handler);
+                parseOptionLine(line, handler, source.getLineNumber());
 
             }
         }

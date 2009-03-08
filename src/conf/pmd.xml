@@ -28,7 +28,7 @@
     </description>
 
 
-    <rule ref="rulesets/design.xml/AbstractClassWithoutAbstractMethod"/>
+<!--    <rule ref="rulesets/design.xml/AbstractClassWithoutAbstractMethod"/> -->
     <rule ref="rulesets/design.xml/AbstractClassWithoutAnyMethod"/>
     <rule ref="rulesets/naming.xml/AbstractNaming"/>
 <!--    <rule ref="rulesets/design.xml/AccessorClassGeneration"/> -->

@@ -26,15 +26,10 @@ import java.io.Writer;
 
 import java.net.URL;
 
-import java.util.Locale;
-
 public class Options extends OptionMapImpl
 {
     private static final char OPERATOR = '=';
-    private static final char COMMENT = '#';
     private static final String NEWLINE = "\n";
-    public static final String COMMENTS = "!;" + COMMENT;
-    public static final String OPERATORS = ":" + OPERATOR;
     private Config _config;
 
     public Options()
@@ -68,17 +63,17 @@ public class Options extends OptionMapImpl
 
     public void load(InputStream input) throws IOException, InvalidIniFormatException
     {
-        parse(new IniSource(input, getConfig().isInclude(), COMMENTS));
+        OptionParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
     public void load(Reader input) throws IOException, InvalidIniFormatException
     {
-        parse(new IniSource(input, getConfig().isInclude(), COMMENTS));
+        OptionParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
     public void load(URL input) throws IOException, InvalidIniFormatException
     {
-        parse(new IniSource(input, getConfig().isInclude(), COMMENTS));
+        OptionParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
     public void store(OutputStream output) throws IOException
@@ -128,71 +123,11 @@ public class Options extends OptionMapImpl
         output.flush();
     }
 
-    protected void parseError(String line, int lineNumber) throws InvalidIniFormatException
+    private class Builder implements OptionHandler
     {
-        throw new InvalidIniFormatException("parse error (at line: " + lineNumber + "): " + line);
-    }
-
-    protected String unescape(String line)
-    {
-        return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
-    }
-
-    private int indexOfOperator(String line)
-    {
-        int idx = -1;
-
-        for (char c : OPERATORS.toCharArray())
+        @Override public void handleOption(String name, String value)
         {
-            int index = line.indexOf(c);
-
-            if ((index >= 0) && ((idx == -1) || (index < idx)))
-            {
-                idx = index;
-            }
-        }
-
-        return idx;
-    }
-
-    private void parse(IniSource source) throws IOException, InvalidIniFormatException
-    {
-        boolean multi = getConfig().isMultiOption();
-
-        for (String line = source.readLine(); line != null; line = source.readLine())
-        {
-            int idx = indexOfOperator(line);
-            String name = null;
-            String value = null;
-
-            if (idx < 0)
-            {
-                if (getConfig().isEmptyOption())
-                {
-                    name = line;
-                }
-                else
-                {
-                    parseError(line, source.getLineNumber());
-                }
-            }
-            else
-            {
-                name = unescape(line.substring(0, idx)).trim();
-                value = unescape(line.substring(idx + 1)).trim();
-            }
-
-            if (name.length() == 0)
-            {
-                parseError(line, source.getLineNumber());
-            }
-
-            if (getConfig().isLowerCaseOption())
-            {
-                name = name.toLowerCase(Locale.getDefault());
-            }
-
-            if (multi)
+            if (getConfig().isMultiOption())
             {
                 add(name, value);
             }
