@@ -53,11 +53,13 @@
                 <item name="Preferences" href="tutorial/PrefsTutorial.java.html"/>
             </item>
             <item name="Samples" href="samples.html" />
-            <item name="Download" href="http://sourceforge.net/project/showfiles.php?group_id=129580"/>
+            <item name="Quick Download" href="http://sourceforge.net/project/showfiles.php?group_id=129580"/>
             <item name="Goals" href="design.html"/>
             <item name="TODO" href="todo.html"/>
             <item name="Project" href="http://sourceforge.net/projects/ini4j"/>
+            <item name="Who using" href="using.html" />
             <item name="Links" href="links.html" />
+            <item name="Download" href="download.html"/>
         </menu>    
         <menu ref="reports" />
     </body>

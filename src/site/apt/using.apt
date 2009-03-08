@@ -1,0 +1,23 @@
+                ----------------------
+                Projects using [ini4j]
+
+Projects using [ini4j]
+
+ It is not easy to track which projects are using [ini4j], becasue it is a free
+ project, and accessible from several channels such as Maven Central repository,
+ SourceForge download, various Linux package repositories.
+
+ If you have a project using [ini4j] let me known and I'll put on this page.
+
+ * Projects using [ini4j]
+
+  * {{{http://www.netbeans.org/about/legal/code_dependency_matrix.html}Netbeans IDE}}
+
+  * {{{https://admin.fedoraproject.org/pkgdb/packages/name/ini4j}Fedora Linux}}
+
+  * {{{http://packages.ubuntu.com/intrepid/libini4j-java}Ubuntu Linux}}
+
+ * Other links
+
+  * {{{http://directory.google.com/Top/Computers/Programming/Languages/Java/Class_Libraries/Data_Formats/}Google Directory}}
+

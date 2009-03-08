@@ -39,7 +39,7 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
-    </licenses>    
+    </licenses>
     <developers>
         <developer>
             <id>ivan</id>
@@ -51,7 +51,7 @@
             </roles>
             <timezone>-1</timezone>
         </developer>
-    </developers>    
+    </developers>
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -87,73 +87,132 @@
     <properties>
         <upload.url>scp://shell.sourceforge.net/incoming/s/sz/szkiba/uploads</upload.url>
     </properties>
+    <profiles>
+        <profile>
+            <id>release-candidate</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <configuration>
+                            <configLocation>${basedir}/src/conf/checkstyle.xml</configLocation>
+                            <failOnViolation>true</failOnViolation>
+                            <consoleOutput>true</consoleOutput>
+                            <encoding>UTF-8</encoding>
+                            <skip>${check.skip}</skip>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>pmd</groupId>
+                                <artifactId>pmd-jdk14</artifactId>
+                                <version>4.2.5</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <failOnViolation>true</failOnViolation>
+                            <rulesets>
+                                <ruleset>${basedir}/src/conf/pmd.xml</ruleset>
+                            </rulesets>
+                            <skip>${check.skip}</skip>
+                            <verbose>true</verbose>
+                            <sourceEncoding>UTF-8</sourceEncoding>
+                            <targetJdk>1.5</targetJdk>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                    <goal>cpd-check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <build>
         <plugins>
-          <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>wagon-maven-plugin</artifactId>
-              <executions>
-                  <execution>
-                      <id>upload</id>
-                      <goals>
-                          <goal>upload</goal>
-                      </goals>
-                      <phase>deploy</phase>
-                      <configuration>
-                          <serverId>ini4j-upload</serverId>
-                          <fromDir>${project.build.directory}</fromDir>
-                          <includes>${project.build.finalName}-src*,${project.build.finalName}-bin*,${project.build.finalName}-all*</includes>
-                          <url>${upload.url}</url>
-                      </configuration>
-                  </execution>
-              </executions>
-          </plugin>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-changes-plugin</artifactId>
-              <inherited>false</inherited>
-              <executions>
-                <execution>
-                    <id>releasenotes</id>
-                    <goals>
-                        <goal>announcement-generate</goal>
-                    </goals>
-                    <phase>generate-resources</phase>
-                    <configuration>
-                      <template>ReleaseNotes.vm</template>
-                      <templateDirectory>src/changes</templateDirectory>
-                      <templateEncoding>UTF-8</templateEncoding>
-                      <outputDirectory>${project.build.directory}</outputDirectory>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>changelog</id>
-                    <goals>
-                        <goal>announcement-generate</goal>
-                    </goals>
-                    <phase>generate-resources</phase>
-                    <configuration>
-                      <template>ChangeLog.vm</template>
-                      <templateDirectory>src/changes</templateDirectory>
-                      <templateEncoding>UTF-8</templateEncoding>
-                      <outputDirectory>${project.build.directory}</outputDirectory>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>sitemap-create</id>
-                    <goals>
-                        <goal>announcement-generate</goal>
-                    </goals>
-                    <phase>pre-site</phase>
-                    <configuration>
-                      <template>sitemap.vm</template>
-                      <templateDirectory>src/changes</templateDirectory>
-                      <templateEncoding>UTF-8</templateEncoding>
-                      <outputDirectory>${project.build.directory}</outputDirectory>
-                    </configuration>
-                </execution>
-              </executions>
-              <configuration></configuration>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wagon-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>upload</id>
+                        <goals>
+                            <goal>upload</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <serverId>ini4j-upload</serverId>
+                            <fromDir>${project.build.directory}</fromDir>
+                            <includes>${project.build.finalName}-src*,${project.build.finalName}-bin*,${project.build.finalName}-all*</includes>
+                            <url>${upload.url}</url>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>releasenotes</id>
+                        <goals>
+                            <goal>announcement-generate</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <template>ReleaseNotes.vm</template>
+                            <templateDirectory>src/changes</templateDirectory>
+                            <templateEncoding>UTF-8</templateEncoding>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>changelog</id>
+                        <goals>
+                            <goal>announcement-generate</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <template>ChangeLog.vm</template>
+                            <templateDirectory>src/changes</templateDirectory>
+                            <templateEncoding>UTF-8</templateEncoding>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sitemap-create</id>
+                        <goals>
+                            <goal>announcement-generate</goal>
+                        </goals>
+                        <phase>pre-site</phase>
+                        <configuration>
+                            <template>sitemap.vm</template>
+                            <templateDirectory>src/changes</templateDirectory>
+                            <templateEncoding>UTF-8</templateEncoding>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration></configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -191,7 +250,7 @@
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
-            </plugin>            
+            </plugin>
 
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -218,6 +277,7 @@
                 <artifactId>retrotranslator-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>translate-project</goal>
                         </goals>
@@ -256,7 +316,7 @@
                 </executions>
             </plugin>
             
-           <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
@@ -268,101 +328,51 @@
                         </goals>
                         <configuration>
                             <descriptors>
-                              <descriptor>src/main/assembly/src.xml</descriptor>
-                              <descriptor>src/main/assembly/bin.xml</descriptor>
-                              <descriptor>src/main/assembly/all.xml</descriptor>
+                                <descriptor>src/main/assembly/src.xml</descriptor>
+                                <descriptor>src/main/assembly/bin.xml</descriptor>
+                                <descriptor>src/main/assembly/all.xml</descriptor>
                             </descriptors>
                             <attach>false</attach>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-      <plugin>
-       <groupId>org.apache.maven.plugins</groupId>
-       <artifactId>maven-site-plugin</artifactId>
-       <configuration>
-         <generatedSiteDirectory>${basedir}/target/generated-site</generatedSiteDirectory>
-       </configuration>
-      </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <configuration>
+                    <generatedSiteDirectory>${basedir}/target/generated-site</generatedSiteDirectory>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>com.google.code.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
                 <version>1.4.0</version>
                 <inherited>true</inherited>
-                    <configuration>
-                        <aggregate>true</aggregate>
-                        <encoding>UTF-8</encoding>
-                        <useDefaultExcludes>true</useDefaultExcludes>
-                        <header>NOTICE.txt</header>
-                        <excludes>
-                            <exclude>**/META-INF/services/**</exclude>
-                            <exclude>**/*.txt</exclude>
-                            <exclude>**/*.apt</exclude>
-                        </excludes>
-                        <mapping>
-                            <java>SLASHSTAR_STYLE</java>
-                            <css>SLASHSTAR_STYLE</css>
-                            <js>SLASHSTAR_STYLE</js>
-                            <ini>SEMICOLON_STYLE</ini>
-                            <opt>SCRIPT_STYLE</opt>
-                        </mapping>
-                        <useDefaultMapping>true</useDefaultMapping>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>initialize</phase>
-                            <goals>
-                              <goal>format</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
-                    <configLocation>${basedir}/src/conf/checkstyle.xml</configLocation>
-                    <failOnViolation>true</failOnViolation>
-                    <consoleOutput>true</consoleOutput>
+                    <aggregate>true</aggregate>
                     <encoding>UTF-8</encoding>
-                    <skip>${check.skip}</skip>
+                    <useDefaultExcludes>true</useDefaultExcludes>
+                    <header>NOTICE.txt</header>
+                    <excludes>
+                        <exclude>**/META-INF/services/**</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.apt</exclude>
+                    </excludes>
+                    <mapping>
+                        <java>SLASHSTAR_STYLE</java>
+                        <css>SLASHSTAR_STYLE</css>
+                        <js>SLASHSTAR_STYLE</js>
+                        <ini>SEMICOLON_STYLE</ini>
+                        <opt>SCRIPT_STYLE</opt>
+                    </mapping>
+                    <useDefaultMapping>true</useDefaultMapping>
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>verify</phase>
+                        <phase>initialize</phase>
                         <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>pmd</groupId>
-                        <artifactId>pmd-jdk14</artifactId>
-                        <version>4.2.5</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <failOnViolation>true</failOnViolation>
-                    <rulesets>
-                        <ruleset>${basedir}/src/conf/pmd.xml</ruleset>
-                    </rulesets>
-                    <skip>${check.skip}</skip>
-                    <verbose>true</verbose>
-                    <sourceEncoding>UTF-8</sourceEncoding>
-                    <targetJdk>1.5</targetJdk>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                          <goal>check</goal>
-                          <goal>cpd-check</goal>
+                            <goal>format</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -398,7 +408,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
-            </plugin>       
+            </plugin>
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -419,7 +429,7 @@
                         <tag>FIXME</tag>
                         <tag>XXX</tag>
                     </tags>
-                </configuration>        
+                </configuration>
             </plugin>
             
             <plugin>
@@ -431,7 +441,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
                 <configuration>
-                  <issueLinkTemplate>http://sourceforge.net/tracker2/?func=detail&amp;atid=715133&amp;group_id=129580&amp;aid=%ISSUE%</issueLinkTemplate>
+                    <issueLinkTemplate>http://sourceforge.net/tracker2/?func=detail&amp;atid=715133&amp;group_id=129580&amp;aid=%ISSUE%</issueLinkTemplate>
                 </configuration>
             </plugin>
 
@@ -450,9 +460,9 @@
                         </reports>
                     </reportSet>
                 </reportSets>
-            </plugin>      
+            </plugin>
             
-        </plugins>      
+        </plugins>
     </reporting>
     
 </project>

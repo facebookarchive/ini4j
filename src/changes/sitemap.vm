@@ -39,6 +39,13 @@
     </url>
 
     <url>
+        <loc>http://ini4j.sourceforge.net/download.html</loc>
+        <lastmod>$release.dateRelease</lastmod>
+        <priority>0.8</priority>
+        <changefreq>monthly</changefreq>
+    </url>
+
+    <url>
         <loc>http://ini4j.sourceforge.net/apidocs/index.html</loc>
         <lastmod>$release.dateRelease</lastmod>
         <priority>0.7</priority>
