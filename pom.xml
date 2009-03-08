@@ -139,8 +139,41 @@
                       <outputDirectory>${project.build.directory}</outputDirectory>
                     </configuration>
                 </execution>
+                <execution>
+                    <id>sitemap-create</id>
+                    <goals>
+                        <goal>announcement-generate</goal>
+                    </goals>
+                    <phase>pre-site</phase>
+                    <configuration>
+                      <template>sitemap.vm</template>
+                      <templateDirectory>src/changes</templateDirectory>
+                      <templateEncoding>UTF-8</templateEncoding>
+                      <outputDirectory>${project.build.directory}</outputDirectory>
+                    </configuration>
+                </execution>
               </executions>
               <configuration></configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sitemap-copy</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>pre-site</phase>
+                        <configuration>
+                            <tasks>
+                                <property name="dir" value="${basedir}/target/generated-site/resources"/>
+                                <mkdir dir="${dir}"/>
+                                <copy file="target/sitemap.vm" tofile="${dir}/sitemap.xml"/>
+                                <gzip src="${dir}/sitemap.xml" destfile="${dir}/sitemap.xml.gz"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

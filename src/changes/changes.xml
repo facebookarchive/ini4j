@@ -30,6 +30,9 @@
       <action type="add" dev="szkiba">
       Python ConfigParser interface for .ini files.
       </action>
+      <action type="update" dev="szkiba">
+      Cleanup code, use PMD+checkstyle.
+      </action>
       <action type="fix" dev="szkiba">
       Cleanup deprecated warnings from test code.
       </action>
