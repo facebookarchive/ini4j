@@ -33,11 +33,11 @@ import java.util.TimeZone;
 public class BeanTool
 {
     protected static final String PARSE_METHOD = "valueOf";
-    private static final BeanTool _instance = ServiceFinder.findService(BeanTool.class);
+    private static final BeanTool INSTANCE = ServiceFinder.findService(BeanTool.class);
 
     public static final BeanTool getInstance()
     {
-        return _instance;
+        return INSTANCE;
     }
 
     public void inject(Object bean, BeanAccess props)
@@ -72,7 +72,7 @@ public class BeanTool
             }
             catch (Exception x)
             {
-                throw new IllegalArgumentException("Failed to set property: " + pd.getDisplayName());
+                throw new IllegalArgumentException("Failed to set property: " + pd.getDisplayName(), x);
             }
         }
     }
@@ -114,7 +114,7 @@ public class BeanTool
             }
             catch (Exception x)
             {
-                throw new IllegalArgumentException("Failed to set property: " + pd.getDisplayName());
+                throw new IllegalArgumentException("Failed to set property: " + pd.getDisplayName(), x);
             }
         }
     }
@@ -134,45 +134,7 @@ public class BeanTool
         }
         else if (clazz.isPrimitive())
         {
-            try
-            {
-                if (clazz == Boolean.TYPE)
-                {
-                    o = Boolean.valueOf(value);
-                }
-                else if (clazz == Byte.TYPE)
-                {
-                    o = Byte.valueOf(value);
-                }
-                else if (clazz == Character.TYPE)
-                {
-                    o = new Character(value.charAt(0));
-                }
-                else if (clazz == Double.TYPE)
-                {
-                    o = Double.valueOf(value);
-                }
-                else if (clazz == Float.TYPE)
-                {
-                    o = Float.valueOf(value);
-                }
-                else if (clazz == Integer.TYPE)
-                {
-                    o = Integer.valueOf(value);
-                }
-                else if (clazz == Long.TYPE)
-                {
-                    o = Long.valueOf(value);
-                }
-                else if (clazz == Short.TYPE)
-                {
-                    o = Short.valueOf(value);
-                }
-            }
-            catch (Exception x)
-            {
-                throw (IllegalArgumentException) new IllegalArgumentException().initCause(x);
-            }
+            o = parsePrimitiveValue(value, clazz);
         }
         else
         {
@@ -242,7 +204,7 @@ public class BeanTool
         return o;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(Warnings.UNCHECKED)
     protected Object parseSpecialValue(String value, Class clazz) throws IllegalArgumentException
     {
         Object o;
@@ -296,6 +258,53 @@ public class BeanTool
         {
             throw new IllegalArgumentException(x);
         }
+    }
+
+    private Object parsePrimitiveValue(String value, Class clazz) throws IllegalArgumentException
+    {
+        Object o = null;
+
+        try
+        {
+            if (clazz == Boolean.TYPE)
+            {
+                o = Boolean.valueOf(value);
+            }
+            else if (clazz == Byte.TYPE)
+            {
+                o = Byte.valueOf(value);
+            }
+            else if (clazz == Character.TYPE)
+            {
+                o = new Character(value.charAt(0));
+            }
+            else if (clazz == Double.TYPE)
+            {
+                o = Double.valueOf(value);
+            }
+            else if (clazz == Float.TYPE)
+            {
+                o = Float.valueOf(value);
+            }
+            else if (clazz == Integer.TYPE)
+            {
+                o = Integer.valueOf(value);
+            }
+            else if (clazz == Long.TYPE)
+            {
+                o = Long.valueOf(value);
+            }
+            else if (clazz == Short.TYPE)
+            {
+                o = Short.valueOf(value);
+            }
+        }
+        catch (Exception x)
+        {
+            throw (IllegalArgumentException) new IllegalArgumentException().initCause(x);
+        }
+
+        return o;
     }
 
     static class BeanInvocationHandler extends AbstractBeanInvocationHandler

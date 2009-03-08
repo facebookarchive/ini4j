@@ -48,10 +48,9 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
     private Map<Class, Object> _beans;
     private Config _config = Config.getGlobal();
 
-    @SuppressWarnings("empty-statement")
     public Ini()
     {
-        ;
+        assert true;
     }
 
     public Ini(Reader input) throws IOException, InvalidIniFormatException
@@ -196,16 +195,10 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 
         while (m.find())
         {
-            if (m.groupCount() < G_OPTION_IDX)
-            {
-                continue;
-            }
-
             String sectionName = m.group(G_SECTION);
             String optionName = m.group(G_OPTION);
-            int sectionIndex = (m.group(G_SECTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_SECTION_IDX));
-            int optionIndex = (m.group(G_OPTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_OPTION_IDX));
-            Section section = (sectionName == null) ? owner : ((sectionIndex == -1) ? get(sectionName) : get(sectionName, sectionIndex));
+            int optionIndex = parseOptionIndex(m);
+            Section section = parseSection(m, owner);
             String value = null;
 
             if (SECTION_ENVIRONMENT.equals(sectionName))
@@ -249,6 +242,24 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         }
 
         formatter.endIni();
+    }
+
+    private int parseOptionIndex(Matcher m)
+    {
+        return (m.group(G_OPTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_OPTION_IDX));
+    }
+
+    private Section parseSection(Matcher m, Section owner)
+    {
+        String sectionName = m.group(G_SECTION);
+        int sectionIndex = parseSectionIndex(m);
+
+        return (sectionName == null) ? owner : ((sectionIndex == -1) ? get(sectionName) : get(sectionName, sectionIndex));
+    }
+
+    private int parseSectionIndex(Matcher m)
+    {
+        return (m.group(G_SECTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_SECTION_IDX));
     }
 
     public class Section extends OptionMapImpl
@@ -305,14 +316,11 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
 
             if (clazz.isArray())
             {
-                if (!_sectionBeans.containsKey(property))
+                if (!_sectionBeans.containsKey(property) && containsKey(property))
                 {
-                    if (containsKey(property))
+                    for (int i = 0; i < length(property); i++)
                     {
-                        for (int i = 0; i < length(property); i++)
-                        {
-                            _sectionBeans.add(property, get(property, i).as(clazz.getComponentType()));
-                        }
+                        _sectionBeans.add(property, get(property, i).as(clazz.getComponentType()));
                     }
                 }
 
@@ -376,10 +384,9 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
     {
         private Section _currentSection;
 
-        @SuppressWarnings("empty-statement")
-        @Override public void endIni()
+        public void endIni()
         {
-            ;
+            assert true;
         }
 
         @Override public void endSection()
@@ -399,10 +406,9 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
             }
         }
 
-        @SuppressWarnings("empty-statement")
-        @Override public void startIni()
+        public void startIni()
         {
-            ;
+            assert true;
         }
 
         @Override public void startSection(String sectionName)

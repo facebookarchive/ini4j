@@ -73,16 +73,16 @@ public class AbstractBeanInvocationHandlerTest
         dummy.dummy();
         dummy.addDummy();
         dummy.removeDummy();
-        assertSame(dummy, handler.getProxy());
 
         // boolean invoke
         map.put("dummy", "true");
         assertTrue(dummy.isDummy());
+        assertSame(dummy, handler.getProxy());
 
         // subclass should call fire methods any time
         // so null support reference should be not a problem
-        handler.firePropertyChange(PROP_AGE, new Integer(1), new Integer(2));
-        handler.fireVetoableChange(PROP_AGE, new Integer(1), new Integer(2));
+        handler.firePropertyChange(PROP_AGE, Integer.valueOf(1), Integer.valueOf(2));
+        handler.fireVetoableChange(PROP_AGE, Integer.valueOf(1), Integer.valueOf(2));
     }
 
     /**

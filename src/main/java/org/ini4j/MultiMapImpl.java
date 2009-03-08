@@ -15,6 +15,8 @@
  */
 package org.ini4j;
 
+import org.ini4j.spi.Warnings;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -145,7 +147,7 @@ public class MultiMapImpl<K, V> implements MultiMap<K, V>
         return getList(key, false).set(index, value);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(Warnings.UNCHECKED)
     @Override public void putAll(Map<? extends K, ? extends V> map)
     {
         if (map instanceof MultiMap)
@@ -206,7 +208,7 @@ public class MultiMapImpl<K, V> implements MultiMap<K, V>
 
     @Override public Collection<V> values()
     {
-        ArrayList<V> all = new ArrayList<V>(_impl.size());
+        List<V> all = new ArrayList<V>(_impl.size());
 
         for (List<V> values : _impl.values())
         {
@@ -216,7 +218,7 @@ public class MultiMapImpl<K, V> implements MultiMap<K, V>
         return all;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(Warnings.UNCHECKED)
     private List<V> getList(Object key, boolean create)
     {
         List<V> values = _impl.get(key);

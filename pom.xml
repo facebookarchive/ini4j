@@ -285,7 +285,8 @@
                     <configLocation>${basedir}/src/conf/checkstyle.xml</configLocation>
                     <failOnViolation>true</failOnViolation>
                     <consoleOutput>true</consoleOutput>
-                    <skip>true</skip>
+                    <encoding>UTF-8</encoding>
+                    <skip>false</skip>
                 </configuration>
                 <executions>
                     <execution>
@@ -300,6 +301,21 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>pmd</groupId>
+                        <artifactId>pmd-jdk14</artifactId>
+                        <version>4.2.5</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <failOnViolation>true</failOnViolation>
+                    <rulesets>
+                        <ruleset>${basedir}/src/conf/pmd.xml</ruleset>
+                    </rulesets>
+                    <skip>false</skip>
+                    <verbose>true</verbose>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>verify</phase>
@@ -307,13 +323,6 @@
                           <goal>check</goal>
 <!--                          <goal>cpd-check</goal>-->
                         </goals>
-                        <configuration>
-                            <failOnViolation>true</failOnViolation>
-                            <rulesets>
-                                <ruleset>${basedir}/src/conf/pmd.xml</ruleset>
-                            </rulesets>
-                            <skip>true</skip>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

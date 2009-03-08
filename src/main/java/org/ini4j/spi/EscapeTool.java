@@ -18,7 +18,7 @@ package org.ini4j.spi;
 public class EscapeTool
 {
     private static final char[] HEX = "0123456789abcdef".toCharArray();
-    private static final EscapeTool _instance = ServiceFinder.findService(EscapeTool.class);
+    private static final EscapeTool INSTANCE = ServiceFinder.findService(EscapeTool.class);
     private static final char ASCII_MIN = 0x20;
     private static final char ASCII_MAX = 0x7e;
     private static final int HEX_DIGIT_MASK = 0x0f;
@@ -30,7 +30,7 @@ public class EscapeTool
 
     public static EscapeTool getInstance()
     {
-        return _instance;
+        return INSTANCE;
     }
 
     public String escape(String line)
@@ -88,9 +88,9 @@ public class EscapeTool
                         c = (char) Integer.parseInt(line.substring(i, i + UNICODE_HEX_DIGITS), HEX_RADIX);
                         i += UNICODE_HEX_DIGITS;
                     }
-                    catch (RuntimeException x)
+                    catch (Exception x)
                     {
-                        throw new IllegalArgumentException("Malformed \\uxxxx encoding.");
+                        throw new IllegalArgumentException("Malformed \\uxxxx encoding.", x);
                     }
                 }
                 else

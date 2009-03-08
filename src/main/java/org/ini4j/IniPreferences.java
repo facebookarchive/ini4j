@@ -134,7 +134,7 @@ public class IniPreferences extends AbstractPreferences
      * @param name child name
      * @return child node
      */
-    @Override protected AbstractPreferences childSpi(String name)
+    @Override protected SectionPreferences childSpi(String name)
     {
         Ini.Section sec = _ini.get(name);
         boolean isNew = sec == null;
@@ -155,10 +155,9 @@ public class IniPreferences extends AbstractPreferences
      *
      * @throws BackingStoreException if this operation cannot be completed due to a failure in the backing store, or inability to communicate with it.
      */
-    @Override @SuppressWarnings("empty-statement")
-    protected void flushSpi() throws BackingStoreException
+    @Override protected void flushSpi() throws BackingStoreException
     {
-        ;
+        assert true;
     }
 
     /**
@@ -222,10 +221,9 @@ public class IniPreferences extends AbstractPreferences
      *
      * @throws BackingStoreException if this operation cannot be completed due to a failure in the backing store, or inability to communicate with it.
      */
-    @Override @SuppressWarnings("empty-statement")
-    protected void syncSpi() throws BackingStoreException
+    @Override protected void syncSpi() throws BackingStoreException
     {
-        ;
+        assert true;
     }
 
     protected class SectionPreferences extends AbstractPreferences
@@ -322,10 +320,9 @@ public class IniPreferences extends AbstractPreferences
          *
          * @throws BackingStoreException if this operation cannot be completed due to a failure in the backing store, or inability to communicate with it.
          */
-        @Override @SuppressWarnings("empty-statement")
-        protected void flushSpi() throws BackingStoreException
+        @Override protected void flushSpi() throws BackingStoreException
         {
-            ;
+            assert true;
         }
 
         /**
@@ -381,10 +378,9 @@ public class IniPreferences extends AbstractPreferences
          *
          * @throws BackingStoreException if this operation cannot be completed due to a failure in the backing store, or inability to communicate with it.
          */
-        @Override @SuppressWarnings("empty-statement")
-        protected void syncSpi() throws BackingStoreException
+        @Override protected void syncSpi() throws BackingStoreException
         {
-            ;
+            assert true;
         }
     }
 }

@@ -24,261 +24,268 @@
          xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
     
     <description>
-        This ruleset checks my code for bad stuff (^^)
+        Coding checks for [ini4j]
     </description>
-    
-    <rule ref="rulesets/controversial.xml">
-        <exclude name="AtLeastOneConstructor"/>
-        <exclude name="AvoidAccessibilityAlteration"/>
-        <exclude name="AvoidFinalLocalVariable"/>
-        <exclude name="AvoidUsingNativeCode"/>
-        <exclude name="AvoidUsingShortType"/>
-        <exclude name="AvoidUsingVolatile"/>
-        <exclude name="DataflowAnomalyAnalysis"/>
-    </rule>
-    <rule ref="rulesets/design.xml">
-        <exclude name="AvoidSynchronizedAtMethodLevel"/>
-        <exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal"/>
-        <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
-    </rule>
-    <rule ref="rulesets/basic.xml">
-        <exclude name="AvoidUsingHardCodedIP"/>
-        <exclude name="CheckResultSet"/>
-        <exclude name="EmptyStatementNotInLoop"/>
-    </rule>
 
-    <rule ref="rulesets/migrating_to_15.xml">
-        <exclude name="ByteInstantiation"/>
-        <exclude name="LongInstantiation"/>
-        <exclude name="ShortInstantiation"/>
-    </rule>
 
-    <rule ref="rulesets/migrating_to_junit4.xml">
-        <exclude name="JUnit4SuitesShouldUseSuiteAnnotation"/>
-        <exclude name="JUnit4TestShouldUseAfterAnnotation"/>
-        <exclude name="JUnit4TestShouldUseBeforeAnnotation"/>
-        <exclude name="JUnit4TestShouldUseTestAnnotation"/>
-        <exclude name="JUnitUseExpected"/>
+    <rule ref="rulesets/design.xml/AbstractClassWithoutAbstractMethod"/>
+    <rule ref="rulesets/design.xml/AbstractClassWithoutAnyMethod"/>
+    <rule ref="rulesets/naming.xml/AbstractNaming"/>
+<!--    <rule ref="rulesets/design.xml/AccessorClassGeneration"/> -->
+    <rule ref="rulesets/optimizations.xml/AddEmptyString"/>
+    <rule ref="rulesets/strings.xml/AppendCharacterWithChar"/>
+    <rule ref="rulesets/sunsecure.xml/ArrayIsStoredDirectly"/>
+    <rule ref="rulesets/controversial.xml/AssignmentInOperand"/>
+    <rule ref="rulesets/design.xml/AssignmentToNonFinalStatic"/>
+    <rule ref="rulesets/controversial.xml/AtLeastOneConstructor"/>
+    <rule ref="rulesets/controversial.xml/AvoidAccessibilityAlteration"/>
+    <rule ref="rulesets/optimizations.xml/AvoidArrayLoops"/>
+    <rule ref="rulesets/migrating.xml/AvoidAssertAsIdentifier"/>
+    <rule ref="rulesets/finalizers.xml/AvoidCallingFinalize"/>
+    <rule ref="rulesets/strictexception.xml/AvoidCatchingNPE"/>
+    <rule ref="rulesets/strictexception.xml/AvoidCatchingThrowable"/>
+    <rule ref="rulesets/design.xml/AvoidConstantsInterface"/>
+    <rule ref="rulesets/basic.xml/AvoidDecimalLiteralsInBigDecimalConstructor"/>
+    <rule ref="rulesets/design.xml/AvoidDeeplyNestedIfStmts"/>
+    <rule ref="rulesets/naming.xml/AvoidDollarSigns"/>
+    <rule ref="rulesets/strings.xml/AvoidDuplicateLiterals"/>
+    <rule ref="rulesets/migrating.xml/AvoidEnumAsIdentifier"/>
+    <rule ref="rulesets/naming.xml/AvoidFieldNameMatchingMethodName"/>
+    <rule ref="rulesets/naming.xml/AvoidFieldNameMatchingTypeName"/>
+    <rule ref="rulesets/controversial.xml/AvoidFinalLocalVariable"/>
+    <rule ref="rulesets/design.xml/AvoidInstanceofChecksInCatchClause"/>
+<!-- some case it is really needed  <rule ref="rulesets/optimizations.xml/AvoidInstantiatingObjectsInLoops"/> -->
+    <rule ref="rulesets/basic.xml/AvoidMultipleUnaryOperators"/>
+    <rule ref="rulesets/logging-java.xml/AvoidPrintStackTrace"/>
+    <rule ref="rulesets/design.xml/AvoidProtectedFieldInFinalClass"/>
+    <rule ref="rulesets/design.xml/AvoidReassigningParameters"/>
+    <rule ref="rulesets/strictexception.xml/AvoidRethrowingException"/>
+    <rule ref="rulesets/strings.xml/AvoidStringBufferField"/>
+<!--    <rule ref="rulesets/design.xml/AvoidSynchronizedAtMethodLevel"/> -->
+    <rule ref="rulesets/basic.xml/AvoidThreadGroup"/>
+    <rule ref="rulesets/strictexception.xml/AvoidThrowingNewInstanceOfSameException"/>
+    <rule ref="rulesets/strictexception.xml/AvoidThrowingNullPointerException"/>
+    <rule ref="rulesets/strictexception.xml/AvoidThrowingRawExceptionTypes"/>
+    <rule ref="rulesets/basic.xml/AvoidUsingHardCodedIP"/>
+    <rule ref="rulesets/controversial.xml/AvoidUsingNativeCode"/>
+    <rule ref="rulesets/basic.xml/AvoidUsingOctalValues"/>
+<!--    <rule ref="rulesets/controversial.xml/AvoidUsingShortType"/> -->
+    <rule ref="rulesets/controversial.xml/AvoidUsingVolatile"/>
+    <rule ref="rulesets/design.xml/BadComparison"/>
+<!-- bug for logical properties: isXXX not recognized as accessor  <rule ref="rulesets/javabeans.xml/BeanMembersShouldSerialize"/> -->
+    <rule ref="rulesets/basic.xml/BigIntegerInstantiation"/>
+    <rule ref="rulesets/naming.xml/BooleanGetMethodName"/>
+    <rule ref="rulesets/basic.xml/BooleanInstantiation"/>
+    <rule ref="rulesets/controversial.xml/BooleanInversion"/>
+    <rule ref="rulesets/basic.xml/BrokenNullCheck"/>
+    <rule ref="rulesets/migrating.xml/ByteInstantiation"/>
+    <rule ref="rulesets/android.xml/CallSuperFirst"/>
+<!--    <rule ref="rulesets/controversial.xml/CallSuperInConstructor"/> -->
+    <rule ref="rulesets/android.xml/CallSuperLast"/>
+    <rule ref="rulesets/basic.xml/CheckResultSet"/>
+    <rule ref="rulesets/basic.xml/ClassCastExceptionWithToArray"/>
+    <rule ref="rulesets/naming.xml/ClassNamingConventions"/>
+    <rule ref="rulesets/design.xml/ClassWithOnlyPrivateConstructorsShouldBeFinal"/>
+    <rule ref="rulesets/clone.xml/CloneMethodMustImplementCloneable"/>
+    <rule ref="rulesets/typeresolution.xml/CloneMethodMustImplementCloneable"/>
+<!--    <rule ref="rulesets/clone.xml/CloneThrowsCloneNotSupportedException"/> -->
+    <rule ref="rulesets/design.xml/CloseResource"/>
+    <rule ref="rulesets/basic.xml/CollapsibleIfStatements"/>
+    <rule ref="rulesets/design.xml/CompareObjectsWithEquals"/>
+    <rule ref="rulesets/design.xml/ConfusingTernary"/>
+    <rule ref="rulesets/strings.xml/ConsecutiveLiteralAppends"/>
+<!--    <rule ref="rulesets/design.xml/ConstructorCallsOverridableMethod"/> -->
+    <rule ref="rulesets/coupling.xml/CouplingBetweenObjects"/>
+    <rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+        <properties>
+            <property name="reportLevel" value="11"/>
+        </properties>
     </rule>
-    
-    <rule ref="rulesets/j2ee.xml">
-        <exclude name="DoNotUseThreads"/>
-        <exclude name="LocalHomeNamingConvention"/>
-        <exclude name="LocalInterfaceSessionNamingConvention"/>
-        <exclude name="MDBAndSessionBeanNamingConvention"/>
-        <exclude name="RemoteInterfaceNamingConvention"/>
-        <exclude name="RemoteSessionInterfaceNamingConvention"/>
-        <exclude name="StaticEJBFieldShouldBeFinal"/>
+<!--    <rule ref="rulesets/controversial.xml/DataflowAnomalyAnalysis"/> -->
+    <rule ref="rulesets/design.xml/DefaultLabelNotLastInSwitchStmt"/>
+<!--  used for junit testing  <rule ref="rulesets/controversial.xml/DefaultPackage"/> -->
+    <rule ref="rulesets/controversial.xml/DoNotCallGarbageCollectionExplicitly"/>
+    <rule ref="rulesets/j2ee.xml/DoNotCallSystemExit"/>
+    <rule ref="rulesets/strictexception.xml/DoNotExtendJavaLangError"/>
+    <rule ref="rulesets/strictexception.xml/DoNotThrowExceptionInFinally"/>
+    <rule ref="rulesets/j2ee.xml/DoNotUseThreads"/>
+    <rule ref="rulesets/imports.xml/DontImportJavaLang"/>
+    <rule ref="rulesets/controversial.xml/DontImportSun"/>
+    <rule ref="rulesets/basic-jsf.xml/DontNestJsfInJstlIteration"/>
+    <rule ref="rulesets/basic.xml/DoubleCheckedLocking"/>
+    <rule ref="rulesets/imports.xml/DuplicateImports"/>
+    <rule ref="rulesets/basic.xml/EmptyCatchBlock"/>
+    <rule ref="rulesets/finalizers.xml/EmptyFinalizer"/>
+    <rule ref="rulesets/basic.xml/EmptyFinallyBlock"/>
+    <rule ref="rulesets/basic.xml/EmptyIfStmt"/>
+    <rule ref="rulesets/basic.xml/EmptyInitializer"/>
+    <rule ref="rulesets/design.xml/EmptyMethodInAbstractClassShouldBeAbstract"/>
+    <rule ref="rulesets/basic.xml/EmptyStatementNotInLoop"/>
+    <rule ref="rulesets/basic.xml/EmptyStaticInitializer"/>
+    <rule ref="rulesets/basic.xml/EmptySwitchStatements"/>
+    <rule ref="rulesets/basic.xml/EmptySynchronizedBlock"/>
+    <rule ref="rulesets/basic.xml/EmptyTryBlock"/>
+    <rule ref="rulesets/basic.xml/EmptyWhileStmt"/>
+    <rule ref="rulesets/design.xml/EqualsNull"/>
+    <rule ref="rulesets/strictexception.xml/ExceptionAsFlowControl"/>
+    <rule ref="rulesets/codesize.xml/ExcessiveClassLength"/>
+    <rule ref="rulesets/coupling.xml/ExcessiveImports"/>
+    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength"/>
+    <rule ref="rulesets/codesize.xml/ExcessiveParameterList"/>
+    <rule ref="rulesets/codesize.xml/ExcessivePublicCount"/>
+    <rule ref="rulesets/design.xml/FinalFieldCouldBeStatic"/>
+    <rule ref="rulesets/finalizers.xml/FinalizeDoesNotCallSuperFinalize"/>
+    <rule ref="rulesets/finalizers.xml/FinalizeOnlyCallsSuperFinalize"/>
+    <rule ref="rulesets/finalizers.xml/FinalizeOverloaded"/>
+    <rule ref="rulesets/finalizers.xml/FinalizeShouldBeProtected"/>
+    <rule ref="rulesets/basic.xml/ForLoopShouldBeWhileLoop"/>
+    <rule ref="rulesets/braces.xml/ForLoopsMustUseBraces"/>
+    <rule ref="rulesets/design.xml/IdempotentOperations"/>
+    <rule ref="rulesets/braces.xml/IfElseStmtsMustUseBraces"/>
+    <rule ref="rulesets/braces.xml/IfStmtsMustUseBraces"/>
+    <rule ref="rulesets/design.xml/ImmutableField"/>
+    <rule ref="rulesets/imports.xml/ImportFromSamePackage"/>
+    <rule ref="rulesets/strings.xml/InefficientEmptyStringCheck"/>
+    <rule ref="rulesets/strings.xml/InefficientStringBuffering"/>
+    <rule ref="rulesets/design.xml/InstantiationToGetClass"/>
+    <rule ref="rulesets/strings.xml/InsufficientStringBufferDeclaration"/>
+    <rule ref="rulesets/migrating.xml/IntegerInstantiation"/>
+    <rule ref="rulesets/basic.xml/JumbledIncrementer"/>
+    <rule ref="rulesets/migrating.xml/JUnit4SuitesShouldUseSuiteAnnotation"/>
+    <rule ref="rulesets/migrating.xml/JUnit4TestShouldUseAfterAnnotation"/>
+    <rule ref="rulesets/migrating.xml/JUnit4TestShouldUseBeforeAnnotation"/>
+    <rule ref="rulesets/migrating.xml/JUnit4TestShouldUseTestAnnotation"/>
+    <rule ref="rulesets/junit.xml/JUnitAssertionsShouldIncludeMessage"/>
+    <rule ref="rulesets/junit.xml/JUnitSpelling"/>
+    <rule ref="rulesets/junit.xml/JUnitStaticSuite"/>
+    <rule ref="rulesets/junit.xml/JUnitTestsShouldIncludeAssert"/>
+    <rule ref="rulesets/migrating.xml/JUnitUseExpected"/>
+    <rule ref="rulesets/j2ee.xml/LocalHomeNamingConvention"/>
+    <rule ref="rulesets/j2ee.xml/LocalInterfaceSessionNamingConvention"/>
+<!--    <rule ref="rulesets/optimizations.xml/LocalVariableCouldBeFinal"/> -->
+    <rule ref="rulesets/logging-java.xml/LoggerIsNotStaticFinal"/>
+    <rule ref="rulesets/migrating.xml/LongInstantiation"/>
+    <rule ref="rulesets/naming.xml/LongVariable">
+        <properties>
+            <property name="minimum" value="32"/>
+        </properties>
     </rule>
-
-    <rule ref="rulesets/junit.xml">
-        <exclude name="JUnitAssertionsShouldIncludeMessage"/>
-        <exclude name="JUnitTestsShouldIncludeAssert"/>
+    <rule ref="rulesets/coupling.xml/LooseCoupling"/>
+    <rule ref="rulesets/typeresolution.xml/LooseCoupling"/>
+    <rule ref="rulesets/j2ee.xml/MDBAndSessionBeanNamingConvention"/>
+<!--    <rule ref="rulesets/optimizations.xml/MethodArgumentCouldBeFinal"/> -->
+    <rule ref="rulesets/naming.xml/MethodNamingConventions"/>
+<!--  static final empty array is a problem ? hmmm  <rule ref="rulesets/sunsecure.xml/MethodReturnsInternalArray"/> -->
+    <rule ref="rulesets/naming.xml/MethodWithSameNameAsEnclosingClass"/>
+    <rule ref="rulesets/naming.xml/MisleadingVariableName"/>
+    <rule ref="rulesets/basic.xml/MisplacedNullCheck"/>
+    <rule ref="rulesets/design.xml/MissingBreakInSwitch"/>
+    <rule ref="rulesets/javabeans.xml/MissingSerialVersionUID"/>
+    <rule ref="rulesets/design.xml/MissingStaticMethodInNonInstantiatableClass"/>
+    <rule ref="rulesets/logging-java.xml/MoreThanOneLogger"/>
+    <rule ref="rulesets/codesize.xml/NcssConstructorCount"/>
+    <rule ref="rulesets/codesize.xml/NcssMethodCount"/>
+    <rule ref="rulesets/codesize.xml/NcssTypeCount"/>
+    <rule ref="rulesets/design.xml/NonCaseLabelInSwitchStatement"/>
+    <rule ref="rulesets/design.xml/NonStaticInitializer"/>
+    <rule ref="rulesets/design.xml/NonThreadSafeSingleton"/>
+    <rule ref="rulesets/naming.xml/NoPackage"/>
+    <rule ref="rulesets/codesize.xml/NPathComplexity"/>
+<!--     <rule ref="rulesets/controversial.xml/NullAssignment"/> -->
+    <rule ref="rulesets/controversial.xml/OnlyOneReturn"/>
+    <rule ref="rulesets/design.xml/OptimizableToArrayCall"/>
+    <rule ref="rulesets/basic.xml/OverrideBothEqualsAndHashcode"/>
+    <rule ref="rulesets/naming.xml/PackageCase"/>
+    <rule ref="rulesets/design.xml/PositionLiteralsFirstInComparisons"/>
+    <rule ref="rulesets/design.xml/PreserveStackTrace"/>
+    <rule ref="rulesets/clone.xml/ProperCloneImplementation"/>
+    <rule ref="rulesets/logging-jakarta-commons.xml/ProperLogger"/>
+    <rule ref="rulesets/android.xml/ProtectLogD"/>
+    <rule ref="rulesets/android.xml/ProtectLogV"/>
+    <rule ref="rulesets/j2ee.xml/RemoteInterfaceNamingConvention"/>
+    <rule ref="rulesets/j2ee.xml/RemoteSessionInterfaceNamingConvention"/>
+    <rule ref="rulesets/migrating.xml/ReplaceEnumerationWithIterator"/>
+    <rule ref="rulesets/migrating.xml/ReplaceHashtableWithMap"/>
+    <rule ref="rulesets/migrating.xml/ReplaceVectorWithList"/>
+    <rule ref="rulesets/design.xml/ReturnEmptyArrayRatherThanNull"/>
+    <rule ref="rulesets/basic.xml/ReturnFromFinallyBlock"/>
+    <rule ref="rulesets/migrating.xml/ShortInstantiation"/>
+<!--    <rule ref="rulesets/naming.xml/ShortMethodName"/>
+    <rule ref="rulesets/naming.xml/ShortVariable"/> -->
+    <rule ref="rulesets/strictexception.xml/SignatureDeclareThrowsException"/>
+    <rule ref="rulesets/typeresolution.xml/SignatureDeclareThrowsException"/>
+    <rule ref="rulesets/design.xml/SimpleDateFormatNeedsLocale"/>
+    <rule ref="rulesets/junit.xml/SimplifyBooleanAssertion"/>
+    <rule ref="rulesets/design.xml/SimplifyBooleanExpressions"/>
+    <rule ref="rulesets/design.xml/SimplifyBooleanReturns"/>
+    <rule ref="rulesets/design.xml/SimplifyConditional"/>
+    <rule ref="rulesets/optimizations.xml/SimplifyStartsWith"/>
+    <rule ref="rulesets/design.xml/SingularField"/>
+    <rule ref="rulesets/j2ee.xml/StaticEJBFieldShouldBeFinal"/>
+    <rule ref="rulesets/strings.xml/StringBufferInstantiationWithChar"/>
+    <rule ref="rulesets/strings.xml/StringInstantiation"/>
+    <rule ref="rulesets/strings.xml/StringToString"/>
+    <rule ref="rulesets/naming.xml/SuspiciousConstantFieldName"/>
+    <rule ref="rulesets/naming.xml/SuspiciousEqualsMethodName"/>
+    <rule ref="rulesets/naming.xml/SuspiciousHashcodeMethodName"/>
+    <rule ref="rulesets/controversial.xml/SuspiciousOctalEscape"/>
+    <rule ref="rulesets/design.xml/SwitchDensity"/>
+    <rule ref="rulesets/design.xml/SwitchStmtsShouldHaveDefault"/>
+    <rule ref="rulesets/logging-java.xml/SystemPrintln"/>
+    <rule ref="rulesets/junit.xml/TestClassWithoutTestCases"/>
+    <rule ref="rulesets/design.xml/TooFewBranchesForASwitchStatement"/>
+    <rule ref="rulesets/codesize.xml/TooManyFields"/>
+    <rule ref="rulesets/codesize.xml/TooManyMethods">
+        <properties>
+            <property name="maxmethods" value="32"/>
+        </properties>
     </rule>
-
-    <rule ref="rulesets/optimizations.xml">
-        <exclude name="AddEmptyString"/>
-        <exclude name="LocalVariableCouldBeFinal"/>
-        <exclude name="MethodArgumentCouldBeFinal"/>
-    </rule>
-
-    <rule ref="rulesets/naming.xml">
-        <exclude name="AbstractNaming"/>
-        <exclude name="ShortVariable"/>
-        <exclude name="LongVariable"/>
-    </rule>
-
-    <rule ref="rulesets/imports.xml">
-        <exclude name="TooManyStaticImports"/>
-    </rule>
-    
-    <rule ref="rulesets/basic.xml/AvoidUsingOctalValues">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/BigIntegerInstantiation">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/EmptyCatchBlock">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/EmptyFinallyBlock">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/EmptyIfStmt">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/EmptyStaticInitializer">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/EmptySynchronizedBlock">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/EmptyWhileStmt">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/JumbledIncrementer">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/MisplacedNullCheck">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/OverrideBothEqualsAndHashcode">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/ReturnFromFinallyBlock">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/UnconditionalIfStatement">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/UnnecessaryReturn">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/basic.xml/UselessOperationOnImmutable">
-        <priority>1</priority>
-    </rule>
-    <!-- ha majd figyelembe veszi az annotációkat is, 2-es prioritás -->
-    <rule ref="rulesets/basic.xml/UselessOverridingMethod">
-        <priority>4</priority>
-    </rule>
-    
-    <rule ref="rulesets/naming.xml/AvoidDollarSigns">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/naming.xml/AvoidFieldNameMatchingMethodName">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/naming.xml/AvoidFieldNameMatchingTypeName">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/naming.xml/BooleanGetMethodName">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/naming.xml/MethodWithSameNameAsEnclosingClass">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/naming.xml/NoPackage">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/naming.xml/SuspiciousHashcodeMethodName">
-        <priority>2</priority>
-    </rule>
+    <rule ref="rulesets/imports.xml/TooManyStaticImports"/>
+    <rule ref="rulesets/design.xml/UncommentedEmptyConstructor"/>
+    <rule ref="rulesets/design.xml/UncommentedEmptyMethod"/>
+    <rule ref="rulesets/basic.xml/UnconditionalIfStatement"/>
+    <rule ref="rulesets/junit.xml/UnnecessaryBooleanAssertion"/>
+    <rule ref="rulesets/strings.xml/UnnecessaryCaseChange"/>
+    <rule ref="rulesets/controversial.xml/UnnecessaryConstructor"/>
+    <rule ref="rulesets/basic.xml/UnnecessaryConversionTemporary"/>
+    <rule ref="rulesets/basic.xml/UnnecessaryFinalModifier"/>
+    <rule ref="rulesets/design.xml/UnnecessaryLocalBeforeReturn"/>
+    <rule ref="rulesets/controversial.xml/UnnecessaryParentheses"/>
+    <rule ref="rulesets/basic.xml/UnnecessaryReturn"/>
+    <rule ref="rulesets/optimizations.xml/UnnecessaryWrapperObjectCreation"/>
+    <rule ref="rulesets/design.xml/UnsynchronizedStaticDateFormatter"/>
+    <rule ref="rulesets/unusedcode.xml/UnusedFormalParameter"/>
+    <rule ref="rulesets/imports.xml/UnusedImports"/>
+    <rule ref="rulesets/typeresolution.xml/UnusedImports"/>
+    <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable"/>
+    <rule ref="rulesets/controversial.xml/UnusedModifier"/>
+    <rule ref="rulesets/basic.xml/UnusedNullCheckInEquals"/>
+    <rule ref="rulesets/unusedcode.xml/UnusedPrivateField"/>
+    <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod"/>
+    <rule ref="rulesets/optimizations.xml/UseArrayListInsteadOfVector"/>
+    <rule ref="rulesets/optimizations.xml/UseArraysAsList"/>
+    <rule ref="rulesets/junit.xml/UseAssertEqualsInsteadOfAssertTrue"/>
+    <rule ref="rulesets/junit.xml/UseAssertNullInsteadOfAssertTrue"/>
+    <rule ref="rulesets/junit.xml/UseAssertSameInsteadOfAssertTrue"/>
+    <rule ref="rulesets/design.xml/UseCollectionIsEmpty"/>
+    <rule ref="rulesets/logging-jakarta-commons.xml/UseCorrectExceptionLogging"/>
+    <rule ref="rulesets/strings.xml/UseEqualsToCompareStrings"/>
+    <rule ref="rulesets/strings.xml/UseIndexOfChar"/>
+    <rule ref="rulesets/basic.xml/UselessOperationOnImmutable"/>
+    <rule ref="rulesets/basic.xml/UselessOverridingMethod"/>
+    <rule ref="rulesets/strings.xml/UselessStringValueOf"/>
+    <rule ref="rulesets/design.xml/UseLocaleWithCaseConversions"/>
+    <rule ref="rulesets/design.xml/UseNotifyAllInsteadOfNotify"/>
+    <rule ref="rulesets/j2ee.xml/UseProperClassLoader"/>
+    <rule ref="rulesets/design.xml/UseSingleton"/>
+    <rule ref="rulesets/optimizations.xml/UseStringBufferForStringAppends"/>
+    <rule ref="rulesets/strings.xml/UseStringBufferLength"/>
     <rule ref="rulesets/naming.xml/VariableNamingConventions">
         <properties>
             <property name="memberPrefix" value="_"/>
             <property name="staticPrefix" value="_"/>
         </properties>
     </rule>
+    <rule ref="rulesets/braces.xml/WhileLoopsMustUseBraces"/>
 
-    <rule ref="rulesets/controversial.xml/AssignmentInOperand">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/controversial.xml/DefaultPackage">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/controversial.xml/UnusedModifier">
-        <priority>2</priority>
-    </rule>
-    
-    <rule ref="rulesets/optimizations.xml/AvoidArrayLoops">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/optimizations.xml/AvoidInstantiatingObjectsInLoops">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/optimizations.xml/UseStringBufferForStringAppends">
-        <priority>2</priority>
-    </rule>
-    
-    <rule ref="rulesets/design.xml/AvoidDeeplyNestedIfStmts">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/AvoidInstanceofChecksInCatchClause">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/AvoidProtectedFieldInFinalClass">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/AvoidReassigningParameters">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/CloseResource">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/CompareObjectsWithEquals">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/ConfusingTernary">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/ImmutableField">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/MissingStaticMethodInNonInstantiatableClass">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/NonCaseLabelInSwitchStatement">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/NonThreadSafeSingleton">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/PositionLiteralsFirstInComparisons">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/SimplifyBooleanExpressions">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/SimplifyBooleanReturns">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/SimplifyConditional">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/SwitchStmtsShouldHaveDefault">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/UncommentedEmptyMethod">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/UnnecessaryLocalBeforeReturn">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/UnsynchronizedStaticDateFormatter">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/design.xml/UseCollectionIsEmpty">
-        <priority>2</priority>
-    </rule>
-    
-    <rule ref="rulesets/migrating_to_15.xml/AvoidEnumAsIdentifier">
-        <priority>1</priority>
-    </rule>
-    
-    <rule ref="rulesets/j2ee.xml/DoNotCallSystemExit">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/j2ee.xml/UseProperClassLoader">
-        <priority>1</priority>
-    </rule>
-    
-    <rule ref="rulesets/junit.xml/JUnitStaticSuite">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/junit.xml/SimplifyBooleanAssertion">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/junit.xml/UnnecessaryBooleanAssertion">
-        <priority>1</priority>
-    </rule>
-    <rule ref="rulesets/junit.xml/UseAssertEqualsInsteadOfAssertTrue">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/junit.xml/UseAssertNullInsteadOfAssertTrue">
-        <priority>2</priority>
-    </rule>
-    <rule ref="rulesets/junit.xml/UseAssertSameInsteadOfAssertTrue">
-        <priority>2</priority>
-    </rule>
-    
 </ruleset>

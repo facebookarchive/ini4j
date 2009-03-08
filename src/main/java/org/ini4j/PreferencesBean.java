@@ -29,22 +29,31 @@ public final class PreferencesBean
 
     public static <T> T newInstance(Class<T> clazz, final Preferences prefs)
     {
-        return clazz.cast(Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] { clazz }, new AbstractBeanInvocationHandler()
-                    {
-                        @Override protected Object getPropertySpi(String property, Class<?> clazz)
-                        {
-                            return prefs.get(property, null);
-                        }
+        return clazz.cast(Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] { clazz }, new Handler(prefs)));
+    }
 
-                        @Override protected void setPropertySpi(String property, Object value, Class<?> clazz)
-                        {
-                            prefs.put(property, value.toString());
-                        }
+    private static class Handler extends AbstractBeanInvocationHandler
+    {
+        private final Preferences _prefs;
 
-                        @Override protected boolean hasPropertySpi(String property)
-                        {
-                            return prefs.get(property, null) != null;
-                        }
-                    }));
+        public Handler(Preferences prefs)
+        {
+            _prefs = prefs;
+        }
+
+        @Override protected Object getPropertySpi(String property, Class<?> clazz)
+        {
+            return _prefs.get(property, null);
+        }
+
+        @Override protected void setPropertySpi(String property, Object value, Class<?> clazz)
+        {
+            _prefs.put(property, value.toString());
+        }
+
+        @Override protected boolean hasPropertySpi(String property)
+        {
+            return _prefs.get(property, null) != null;
+        }
     }
 }

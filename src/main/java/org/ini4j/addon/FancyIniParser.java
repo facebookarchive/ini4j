@@ -62,11 +62,9 @@ import org.ini4j.IniParser;
         getConfig().setUnnamedSection(flag);
     }
 
-    @Deprecated @Override
-    @SuppressWarnings("empty-statement")
-    public void setConfig(Config value)
+    @Deprecated @Override public void setConfig(Config value)
     {
-        ;
+        assert true;
     }
 
     @Deprecated public synchronized boolean isAllowInclude()

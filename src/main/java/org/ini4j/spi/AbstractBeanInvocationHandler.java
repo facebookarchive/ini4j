@@ -28,89 +28,114 @@ import java.lang.reflect.Method;
 
 public abstract class AbstractBeanInvocationHandler implements InvocationHandler
 {
-    private static final String ADD_PREFIX = "add";
-    private static final int ADD_PREFIX_LEN = ADD_PREFIX.length();
-    private static final String REMOVE_PREFIX = "remove";
-    private static final int REMOVE_PREFIX_LEN = REMOVE_PREFIX.length();
     private static final String PROPERTY_CHANGE_LISTENER = "PropertyChangeListener";
     private static final String VETOABLE_CHANGE_LISTENER = "VetoableChangeListener";
+    private static final String ADD_PREFIX = "add";
     private static final String READ_PREFIX = "get";
+    private static final String REMOVE_PREFIX = "remove";
     private static final String READ_BOOLEAN_PREFIX = "is";
     private static final String WRITE_PREFIX = "set";
     private static final String HAS_PREFIX = "has";
-    private static final int READ_PREFIX_LEN = READ_PREFIX.length();
-    private static final int READ_BOOLEAN_PREFIX_LEN = READ_BOOLEAN_PREFIX.length();
-    private static final int WRITE_PREFIX_LEN = WRITE_PREFIX.length();
-    private static final int HAS_PREFIX_LEN = HAS_PREFIX.length();
+
+    private static enum Prefix
+    {
+        READ(READ_PREFIX),
+        READ_BOOLEAN(READ_BOOLEAN_PREFIX),
+        WRITE(WRITE_PREFIX),
+        ADD_CHANGE(ADD_PREFIX + PROPERTY_CHANGE_LISTENER),
+        ADD_VETO(ADD_PREFIX + VETOABLE_CHANGE_LISTENER),
+        REMOVE_CHANGE(REMOVE_PREFIX + PROPERTY_CHANGE_LISTENER),
+        REMOVE_VETO(REMOVE_PREFIX + VETOABLE_CHANGE_LISTENER),
+        HAS(HAS_PREFIX);
+        private int _len;
+        private String _value;
+
+        private Prefix(String value)
+        {
+            _value = value;
+            _len = value.length();
+        }
+
+        public static Prefix parse(String str)
+        {
+            Prefix ret = null;
+
+            for (Prefix p : values())
+            {
+                if (str.startsWith(p.getValue()))
+                {
+                    ret = p;
+
+                    break;
+                }
+            }
+
+            return ret;
+        }
+
+        public String getTail(String input)
+        {
+            return Introspector.decapitalize(input.substring(_len));
+        }
+
+        public String getValue()
+        {
+            return _value;
+        }
+    }
+
     private PropertyChangeSupport _pcSupport;
     private Object _proxy;
     private VetoableChangeSupport _vcSupport;
 
-    @SuppressWarnings("empty-statement")
-    protected AbstractBeanInvocationHandler()
-    {
-        ;
-    }
-
     @Override public Object invoke(Object proxy, Method method, Object[] args) throws PropertyVetoException
     {
         Object ret = null;
-        String name = method.getName();
-        String property;
+        Prefix prefix = Prefix.parse(method.getName());
 
-        synchronized (this)
+        if (prefix != null)
         {
-            if (_proxy == null)
-            {
-                _proxy = proxy;
-            }
-        }
+            String tail = prefix.getTail(method.getName());
 
-        if (name.startsWith(READ_PREFIX))
-        {
-            property = Introspector.decapitalize(name.substring(READ_PREFIX_LEN));
-            ret = getProperty(property, method.getReturnType());
-        }
-        else if (name.startsWith(READ_BOOLEAN_PREFIX))
-        {
-            property = Introspector.decapitalize(name.substring(READ_BOOLEAN_PREFIX_LEN));
-            ret = getProperty(property, method.getReturnType());
-        }
-        else if (name.startsWith(WRITE_PREFIX))
-        {
-            property = Introspector.decapitalize(name.substring(WRITE_PREFIX_LEN));
-            setProperty(property, args[0], method.getParameterTypes()[0]);
-        }
-        else if (name.startsWith(ADD_PREFIX))
-        {
-            String listener = name.substring(ADD_PREFIX_LEN);
+            updateProxy(proxy);
+            switch (prefix)
+            {
 
-            if (listener.equals(PROPERTY_CHANGE_LISTENER))
-            {
-                addPropertyChangeListener((String) args[0], (PropertyChangeListener) args[1]);
-            }
-            else if (listener.equals(VETOABLE_CHANGE_LISTENER))
-            {
-                addVetoableChangeListener((String) args[0], (VetoableChangeListener) args[1]);
-            }
-        }
-        else if (name.startsWith(REMOVE_PREFIX))
-        {
-            String listener = name.substring(REMOVE_PREFIX_LEN);
+                case READ:
+                    ret = getProperty(prefix.getTail(method.getName()), method.getReturnType());
+                    break;
 
-            if (listener.equals(PROPERTY_CHANGE_LISTENER))
-            {
-                removePropertyChangeListener((String) args[0], (PropertyChangeListener) args[1]);
+                case READ_BOOLEAN:
+                    ret = getProperty(prefix.getTail(method.getName()), method.getReturnType());
+                    break;
+
+                case WRITE:
+                    setProperty(tail, args[0], method.getParameterTypes()[0]);
+                    break;
+
+                case HAS:
+                    ret = Boolean.valueOf(hasProperty(prefix.getTail(method.getName())));
+                    break;
+
+                case ADD_CHANGE:
+                    addPropertyChangeListener((String) args[0], (PropertyChangeListener) args[1]);
+                    break;
+
+                case ADD_VETO:
+                    addVetoableChangeListener((String) args[0], (VetoableChangeListener) args[1]);
+                    break;
+
+                case REMOVE_CHANGE:
+                    removePropertyChangeListener((String) args[0], (PropertyChangeListener) args[1]);
+                    break;
+
+                case REMOVE_VETO:
+                    removeVetoableChangeListener((String) args[0], (VetoableChangeListener) args[1]);
+                    break;
+
+                default:
+                    break;
             }
-            else if (listener.equals(VETOABLE_CHANGE_LISTENER))
-            {
-                removeVetoableChangeListener((String) args[0], (VetoableChangeListener) args[1]);
-            }
-        }
-        else if (name.startsWith(HAS_PREFIX))
-        {
-            property = Introspector.decapitalize(name.substring(HAS_PREFIX_LEN));
-            ret = Boolean.valueOf(hasProperty(property));
         }
 
         return ret;
@@ -156,7 +181,6 @@ public abstract class AbstractBeanInvocationHandler implements InvocationHandler
         return o;
     }
 
-    @SuppressWarnings("empty-statement")
     protected synchronized void setProperty(String property, Object value, Class<?> clazz) throws PropertyVetoException
     {
         boolean pc = (_pcSupport != null) && _pcSupport.hasListeners(property);
@@ -262,5 +286,13 @@ public abstract class AbstractBeanInvocationHandler implements InvocationHandler
     protected Object zero(Class clazz)
     {
         return BeanTool.getInstance().zero(clazz);
+    }
+
+    private synchronized void updateProxy(Object value)
+    {
+        if (_proxy == null)
+        {
+            _proxy = value;
+        }
     }
 }

@@ -63,17 +63,17 @@ public class IniParser
 
     public void parse(InputStream input, IniHandler handler) throws IOException, InvalidIniFormatException
     {
-        parse(new IniSource(input, getConfig().isInclude()), handler);
+        parse(new IniSource(input, getConfig().isInclude(), COMMENTS), handler);
     }
 
     public void parse(Reader input, IniHandler handler) throws IOException, InvalidIniFormatException
     {
-        parse(new IniSource(input, getConfig().isInclude()), handler);
+        parse(new IniSource(input, getConfig().isInclude(), COMMENTS), handler);
     }
 
     public void parse(URL input, IniHandler handler) throws IOException, InvalidIniFormatException
     {
-        parse(new IniSource(input, getConfig().isInclude()), handler);
+        parse(new IniSource(input, getConfig().isInclude(), COMMENTS), handler);
     }
 
     public void parseXML(InputStream input, IniHandler handler) throws IOException, InvalidIniFormatException
@@ -175,18 +175,76 @@ public class IniParser
         return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
     }
 
+
+    private String handleSectionLine(String line, IniSource source, IniHandler handler) throws InvalidIniFormatException
+    {
+        String sectionName;
+
+        if (line.charAt(line.length() - 1) != SECTION_END)
+        {
+            parseError(line, source.getLineNumber());
+        }
+
+        sectionName = unescape(line.substring(1, line.length() - 1).trim());
+        if ((sectionName.length() == 0) && !getConfig().isUnnamedSection())
+        {
+            parseError(line, source.getLineNumber());
+        }
+
+        if (getConfig().isLowerCaseSection())
+        {
+            sectionName = sectionName.toLowerCase(Locale.getDefault());
+        }
+
+        handler.startSection(sectionName);
+
+        return sectionName;
+    }
+
+    private void handleOptionLine(String line, IniSource source, IniHandler handler) throws InvalidIniFormatException
+    {
+        int idx = line.indexOf(OPERATOR);
+        String name = null;
+        String value = null;
+
+        if (idx < 0)
+        {
+            if (getConfig().isEmptyOption())
+            {
+                name = line;
+            }
+            else
+            {
+                parseError(line, source.getLineNumber());
+            }
+        }
+        else
+        {
+            name = unescape(line.substring(0, idx)).trim();
+            value = unescape(line.substring(idx + 1)).trim();
+        }
+
+        if (name.length() == 0)
+        {
+            parseError(line, source.getLineNumber());
+        }
+
+        if (getConfig().isLowerCaseOption())
+        {
+            name = name.toLowerCase(Locale.getDefault());
+        }
+
+        handler.handleOption(name, value);
+
+    }
+
     private void parse(IniSource source, IniHandler handler) throws IOException, InvalidIniFormatException
     {
         handler.startIni();
         String sectionName = null;
 
-        for (String srcline = source.readLine(); srcline != null; srcline = source.readLine())
+        for (String line = source.readLine(); line != null; line = source.readLine())
         {
-            String line = srcline.trim();
-            if ((line.length() == 0) || (COMMENTS.indexOf(line.charAt(0)) >= 0))
-            {
-                continue;
-            }
 
             if (line.charAt(0) == SECTION_BEGIN)
             {
@@ -195,23 +253,8 @@ public class IniParser
                     handler.endSection();
                 }
 
-                if (line.charAt(line.length() - 1) != SECTION_END)
-                {
-                    parseError(line, source.getLineNumber());
-                }
+                sectionName = handleSectionLine(line, source, handler);
 
-                sectionName = unescape(line.substring(1, line.length() - 1).trim());
-                if ((sectionName.length() == 0) && !getConfig().isUnnamedSection())
-                {
-                    parseError(line, source.getLineNumber());
-                }
-
-                if (getConfig().isLowerCaseSection())
-                {
-                    sectionName = sectionName.toLowerCase(Locale.getDefault());
-                }
-
-                handler.startSection(sectionName);
             }
             else
             {
@@ -228,38 +271,8 @@ public class IniParser
                     }
                 }
 
-                int idx = line.indexOf(OPERATOR);
-                String name = null;
-                String value = null;
+                handleOptionLine(line, source, handler);
 
-                if (idx < 0)
-                {
-                    if (getConfig().isEmptyOption())
-                    {
-                        name = line;
-                    }
-                    else
-                    {
-                        parseError(line, source.getLineNumber());
-                    }
-                }
-                else
-                {
-                    name = unescape(line.substring(0, idx)).trim();
-                    value = unescape(line.substring(idx + 1)).trim();
-                }
-
-                if (name.length() == 0)
-                {
-                    parseError(line, source.getLineNumber());
-                }
-
-                if (getConfig().isLowerCaseOption())
-                {
-                    name = name.toLowerCase(Locale.getDefault());
-                }
-
-                handler.handleOption(name, value);
             }
         }
 

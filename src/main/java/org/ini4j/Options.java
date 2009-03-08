@@ -68,17 +68,17 @@ public class Options extends OptionMapImpl
 
     public void load(InputStream input) throws IOException, InvalidIniFormatException
     {
-        parse(new IniSource(input, getConfig().isInclude()));
+        parse(new IniSource(input, getConfig().isInclude(), COMMENTS));
     }
 
     public void load(Reader input) throws IOException, InvalidIniFormatException
     {
-        parse(new IniSource(input, getConfig().isInclude()));
+        parse(new IniSource(input, getConfig().isInclude(), COMMENTS));
     }
 
     public void load(URL input) throws IOException, InvalidIniFormatException
     {
-        parse(new IniSource(input, getConfig().isInclude()));
+        parse(new IniSource(input, getConfig().isInclude(), COMMENTS));
     }
 
     public void store(OutputStream output) throws IOException
@@ -138,31 +138,30 @@ public class Options extends OptionMapImpl
         return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
     }
 
+    private int indexOfOperator(String line)
+    {
+        int idx = -1;
+
+        for (char c : OPERATORS.toCharArray())
+        {
+            int index = line.indexOf(c);
+
+            if ((index >= 0) && ((idx == -1) || (index < idx)))
+            {
+                idx = index;
+            }
+        }
+
+        return idx;
+    }
+
     private void parse(IniSource source) throws IOException, InvalidIniFormatException
     {
         boolean multi = getConfig().isMultiOption();
 
-        for (String srcline = source.readLine(); srcline != null; srcline = source.readLine())
+        for (String line = source.readLine(); line != null; line = source.readLine())
         {
-            String line = srcline.trim();
-
-            if ((line.length() == 0) || (COMMENTS.indexOf(line.charAt(0)) >= 0))
-            {
-                continue;
-            }
-
-            int idx = -1;
-
-            for (char c : OPERATORS.toCharArray())
-            {
-                int index = line.indexOf(c);
-
-                if ((index >= 0) && ((idx == -1) || (index < idx)))
-                {
-                    idx = index;
-                }
-            }
-
+            int idx = indexOfOperator(line);
             String name = null;
             String value = null;
 

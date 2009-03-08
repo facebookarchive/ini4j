@@ -40,11 +40,9 @@ import org.ini4j.spi.IniFormatter;
         getConfig().setStrictOperator(flag);
     }
 
-    @Deprecated @Override
-    @SuppressWarnings("empty-statement")
-    public void setConfig(Config value)
+    @Deprecated @Override public void setConfig(Config value)
     {
-        ;
+        assert true;
     }
 
     @Deprecated public synchronized boolean isAllowEmptyOption()

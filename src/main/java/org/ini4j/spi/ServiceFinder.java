@@ -27,6 +27,8 @@ import java.io.InputStreamReader;
  */
 public final class ServiceFinder
 {
+    private static final String SERVICES_PATH = "META-INF/services/";
+
     private ServiceFinder()
     {
     }
@@ -65,31 +67,30 @@ public final class ServiceFinder
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(Warnings.UNCHECKED)
     static <T> Class<? extends T> findServiceClass(Class<T> clazz) throws IllegalArgumentException
     {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        String serviceClassName = findServiceClassName(clazz.getName(), clazz.getName());
+        String serviceClassName = findServiceClassName(clazz.getName());
+        Class<T> ret = clazz;
 
-        try
+        if (serviceClassName != null)
         {
-            return (Class<? extends T>) ((classLoader == null) ? Class.forName(serviceClassName) : classLoader.loadClass(serviceClassName));
+            try
+            {
+                ret = (Class<T>) ((classLoader == null) ? Class.forName(serviceClassName) : classLoader.loadClass(serviceClassName));
+            }
+            catch (ClassNotFoundException x)
+            {
+                throw (IllegalArgumentException) new IllegalArgumentException("Provider " + serviceClassName + " not found").initCause(x);
+            }
         }
-        catch (ClassNotFoundException x)
-        {
-            throw (IllegalArgumentException) new IllegalArgumentException("Provider " + serviceClassName + " not found").initCause(x);
-        }
+
+        return ret;
     }
 
-    @SuppressWarnings("empty-statement")
-    static String findServiceClassName(String serviceId, String defaultService) throws IllegalArgumentException
+    static String findServiceClassName(String serviceId) throws IllegalArgumentException
     {
-        if (defaultService == null)
-        {
-            throw new IllegalArgumentException("Provider for " + serviceId + " cannot be found");
-        }
-
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String serviceClassName = null;
 
         // Use the system property first
@@ -104,50 +105,57 @@ public final class ServiceFinder
         }
         catch (SecurityException x)
         {
-            ;
+            assert true;
         }
 
         if (serviceClassName == null)
         {
-            String servicePath = "META-INF/services/" + serviceId;
-
-            // try to find services in CLASSPATH
-            try
-            {
-                InputStream is = null;
-
-                if (classLoader == null)
-                {
-                    is = ClassLoader.getSystemResourceAsStream(servicePath);
-                }
-                else
-                {
-                    is = classLoader.getResourceAsStream(servicePath);
-                }
-
-                if (is != null)
-                {
-                    BufferedReader rd = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                    String line = rd.readLine();
-
-                    rd.close();
-                    if ((line != null) && !"".equals(line = line.trim()))
-                    {
-                        serviceClassName = line.split("\\s|#")[0];
-                    }
-                }
-            }
-            catch (Exception x)
-            {
-                ;
-            }
-        }
-
-        if (serviceClassName == null)
-        {
-            serviceClassName = defaultService;
+            serviceClassName = loadLine(SERVICES_PATH + serviceId);
         }
 
         return serviceClassName;
+    }
+
+    private static String loadLine(String servicePath)
+    {
+        String ret = null;
+
+        // try to find services in CLASSPATH
+        try
+        {
+            InputStream is = null;
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+            if (classLoader == null)
+            {
+                is = ClassLoader.getSystemResourceAsStream(servicePath);
+            }
+            else
+            {
+                is = classLoader.getResourceAsStream(servicePath);
+            }
+
+            if (is != null)
+            {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                String line = rd.readLine();
+
+                rd.close();
+                if (line != null)
+                {
+                    line = line.trim();
+                    if (line.length() != 0)
+                    {
+                        ret = line.split("\\s|#")[0];
+                    }
+                }
+            }
+        }
+        catch (Exception x)
+        {
+            assert true;
+        }
+
+        return ret;
     }
 }

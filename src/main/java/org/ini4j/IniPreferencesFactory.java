@@ -52,7 +52,6 @@ public class IniPreferencesFactory implements PreferencesFactory
         return _user;
     }
 
-    @SuppressWarnings("empty-statement")
     protected String getIniLocation(String key)
     {
         String location = System.getProperty(key);
@@ -63,12 +62,12 @@ public class IniPreferencesFactory implements PreferencesFactory
             {
                 Properties props = new Properties();
 
-                props.load(getClass().getClassLoader().getResourceAsStream(PROPERTIES));
+                props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES));
                 location = props.getProperty(key);
             }
             catch (Exception x)
             {
-                ;
+                assert true;
             }
         }
 
@@ -84,7 +83,7 @@ public class IniPreferencesFactory implements PreferencesFactory
 
             if (uri.getScheme() == null)
             {
-                url = getClass().getClassLoader().getResource(location);
+                url = Thread.currentThread().getContextClassLoader().getResource(location);
             }
             else
             {

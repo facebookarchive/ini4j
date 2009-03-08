@@ -28,28 +28,33 @@ class IniSource
     public static final char INCLUDE_BEGIN = '<';
     public static final char INCLUDE_END = '>';
     public static final char INCLUDE_OPTIONAL = '?';
-    protected boolean allowInclude;
+    private static final String EMPTY = "";
+    protected final boolean allowInclude;
+    protected final String commentChars;
     private URL _base;
     private IniSource _chain;
     private final LineNumberReader _reader;
 
-    protected IniSource(InputStream input, boolean includeFlag)
+    protected IniSource(InputStream input, boolean includeFlag, String comments)
     {
         _reader = new LineNumberReader(new InputStreamReader(input));
         allowInclude = includeFlag;
+        commentChars = comments;
     }
 
-    protected IniSource(Reader input, boolean includeFlag)
+    protected IniSource(Reader input, boolean includeFlag, String comments)
     {
         _reader = new LineNumberReader(input);
         allowInclude = includeFlag;
+        commentChars = comments;
     }
 
-    protected IniSource(URL input, boolean includeFlag) throws IOException
+    protected IniSource(URL input, boolean includeFlag, String comments) throws IOException
     {
         _base = input;
         _reader = new LineNumberReader(new InputStreamReader(input.openStream()));
         allowInclude = includeFlag;
+        commentChars = comments;
     }
 
     protected int getLineNumber()
@@ -62,56 +67,13 @@ class IniSource
         _reader.close();
     }
 
-    @SuppressWarnings("empty-statement")
     protected String readLine() throws IOException
     {
         String line;
 
         if (_chain == null)
         {
-            line = _reader.readLine();
-            if (line == null)
-            {
-                close();
-            }
-            else
-            {
-                String buff = line.trim();
-
-                if (allowInclude && (buff.length() > 2) && (buff.charAt(0) == INCLUDE_BEGIN) && (buff.charAt(buff.length() - 1) == INCLUDE_END))
-                {
-                    buff = buff.substring(1, buff.length() - 1).trim();
-                    boolean optional = buff.charAt(0) == INCLUDE_OPTIONAL;
-
-                    if (optional)
-                    {
-                        buff = buff.substring(1).trim();
-                    }
-
-                    URL loc = (_base == null) ? new URL(buff) : new URL(_base, buff);
-
-                    if (optional)
-                    {
-                        try
-                        {
-                            _chain = new IniSource(loc, allowInclude);
-                        }
-                        catch (IOException x)
-                        {
-                            ;
-                        }
-                        finally
-                        {
-                            line = readLine();
-                        }
-                    }
-                    else
-                    {
-                        _chain = new IniSource(loc, allowInclude);
-                        line = readLine();
-                    }
-                }
-            }
+            line = readLineLocal();
         }
         else
         {
@@ -120,6 +82,84 @@ class IniSource
             {
                 _chain = null;
                 line = readLine();
+            }
+        }
+
+        return line;
+    }
+
+    private String handleInclude(String input) throws IOException
+    {
+        String line = input;
+
+        if (allowInclude && (line.length() > 2) && (line.charAt(0) == INCLUDE_BEGIN) && (line.charAt(line.length() - 1) == INCLUDE_END))
+        {
+            line = line.substring(1, line.length() - 1).trim();
+            boolean optional = line.charAt(0) == INCLUDE_OPTIONAL;
+
+            if (optional)
+            {
+                line = line.substring(1).trim();
+            }
+
+            URL loc = (_base == null) ? new URL(line) : new URL(_base, line);
+
+            if (optional)
+            {
+                try
+                {
+                    _chain = new IniSource(loc, allowInclude, commentChars);
+                }
+                catch (IOException x)
+                {
+                    assert true;
+                }
+                finally
+                {
+                    line = readLine();
+                }
+            }
+            else
+            {
+                _chain = new IniSource(loc, allowInclude, commentChars);
+                line = readLine();
+            }
+        }
+
+        return line;
+    }
+
+    private String readLineLocal() throws IOException
+    {
+        String line = readLineLocalOne();
+
+        while ((line != null) && (line.length() == 0))
+        {
+            line = readLineLocalOne();
+        }
+
+        if (line == null)
+        {
+            close();
+        }
+        else
+        {
+            line = handleInclude(line);
+        }
+
+        return line;
+    }
+
+    private String readLineLocalOne() throws IOException
+    {
+        String line = _reader.readLine();
+
+        if (line != null)
+        {
+            line = line.trim();
+            if ((line.length() != 0) && (commentChars.indexOf(line.charAt(0)) >= 0))
+            {
+                line = EMPTY;
             }
         }
 

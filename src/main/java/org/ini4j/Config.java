@@ -40,7 +40,7 @@ public class Config implements Cloneable
     public static final boolean DEFAULT_STRICT_OPERATOR = false;
     public static final boolean DEFAULT_UNNAMED_SECTION = false;
     public static final boolean DEFAULT_ESCAPE = true;
-    private static final Config _global = new Config();
+    private static final Config GLOBAL = new Config();
     private boolean _emptyOption;
     private boolean _escape;
     private boolean _globalSection;
@@ -60,7 +60,7 @@ public class Config implements Cloneable
 
     public static Config getGlobal()
     {
-        return _global;
+        return GLOBAL;
     }
 
     public boolean isEscape()
@@ -173,9 +173,7 @@ public class Config implements Cloneable
         _unnamedSection = value;
     }
 
-    @Override
-    @SuppressWarnings("empty-statement")
-    public Config clone()
+    @Override public Config clone()
     {
         try
         {
@@ -183,7 +181,7 @@ public class Config implements Cloneable
         }
         catch (CloneNotSupportedException x)
         {
-            throw new AssertionError();
+            throw new AssertionError(x);
         }
     }
 

@@ -63,17 +63,17 @@ public class IniFormatter implements IniHandler
         return _config;
     }
 
-    public void endIni()
+    @Override public void endIni()
     {
         getOutput().flush();
     }
 
-    public void endSection()
+    @Override public void endSection()
     {
         getOutput().println();
     }
 
-    public void handleOption(String optionName, String optionValue)
+    @Override public void handleOption(String optionName, String optionValue)
     {
         if (getConfig().isStrictOperator())
         {
@@ -106,13 +106,12 @@ public class IniFormatter implements IniHandler
         }
     }
 
-    @SuppressWarnings("empty-statement")
-    public void startIni()
+    @Override public void startIni()
     {
-        ;
+        assert true;
     }
 
-    public void startSection(String sectionName)
+    @Override public void startSection(String sectionName)
     {
         getOutput().print(IniParser.SECTION_BEGIN);
         getOutput().print(escape(sectionName));

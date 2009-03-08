@@ -20,6 +20,8 @@ import org.ini4j.Ini;
 import org.ini4j.IniHandler;
 import org.ini4j.InvalidIniFormatException;
 
+import org.ini4j.spi.Warnings;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -43,7 +45,7 @@ public class ConfigParser
 {
     private PyIni _ini;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(Warnings.UNCHECKED)
     public ConfigParser()
     {
         this(Collections.EMPTY_MAP);
@@ -114,13 +116,13 @@ public class ConfigParser
         return _ini.getDefaults();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(Warnings.UNCHECKED)
     public String get(String section, String option) throws NoSectionException, NoOptionException, InterpolationException
     {
         return get(section, option, false, Collections.EMPTY_MAP);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(Warnings.UNCHECKED)
     public String get(String section, String option, boolean raw) throws NoSectionException, NoOptionException, InterpolationException
     {
         return get(section, option, raw, Collections.EMPTY_MAP);
@@ -151,13 +153,13 @@ public class ConfigParser
         return _ini.containsKey(sectionName);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(Warnings.UNCHECKED)
     public List<Map.Entry<String, String>> items(String sectionName) throws NoSectionException, InterpolationMissingOptionException
     {
         return items(sectionName, false, Collections.EMPTY_MAP);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(Warnings.UNCHECKED)
     public List<Map.Entry<String, String>> items(String sectionName, boolean raw) throws NoSectionException, InterpolationMissingOptionException
     {
         return items(sectionName, raw, Collections.EMPTY_MAP);
@@ -208,7 +210,7 @@ public class ConfigParser
         }
         catch (InvalidIniFormatException x)
         {
-            throw new ParsingException(x.getMessage());
+            throw new ParsingException(x);
         }
     }
 
@@ -220,7 +222,7 @@ public class ConfigParser
         }
         catch (InvalidIniFormatException x)
         {
-            throw new ParsingException(x.getMessage());
+            throw new ParsingException(x);
         }
     }
 
@@ -232,7 +234,7 @@ public class ConfigParser
         }
         catch (InvalidIniFormatException x)
         {
-            throw new ParsingException(x.getMessage());
+            throw new ParsingException(x);
         }
     }
 
@@ -244,7 +246,7 @@ public class ConfigParser
         }
         catch (InvalidIniFormatException x)
         {
-            throw new ParsingException(x.getMessage());
+            throw new ParsingException(x);
         }
     }
 
@@ -402,9 +404,9 @@ public class ConfigParser
 
         /** Use serialVersionUID for interoperability. */ private static final long serialVersionUID = -5395990242007205038L;
 
-        private ParsingException(String message)
+        private ParsingException(Throwable cause)
         {
-            super(message);
+            super(cause.getMessage(), cause);
         }
     }
 
@@ -430,10 +432,9 @@ public class ConfigParser
             super.setConfig(cfg);
         }
 
-        @Deprecated @Override @SuppressWarnings("empty-statement")
-        public void setConfig(Config value)
+        @Override public void setConfig(Config value)
         {
-            ;
+            assert true;
         }
 
         public Map<String, String> getDefaults()
