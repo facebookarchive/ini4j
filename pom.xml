@@ -325,7 +325,7 @@
                     <failOnViolation>true</failOnViolation>
                     <consoleOutput>true</consoleOutput>
                     <encoding>UTF-8</encoding>
-                    <skip>false</skip>
+                    <skip>${check.skip}</skip>
                 </configuration>
                 <executions>
                     <execution>
@@ -352,8 +352,10 @@
                     <rulesets>
                         <ruleset>${basedir}/src/conf/pmd.xml</ruleset>
                     </rulesets>
-                    <skip>false</skip>
+                    <skip>${check.skip}</skip>
                     <verbose>true</verbose>
+                    <sourceEncoding>UTF-8</sourceEncoding>
+                    <targetJdk>1.5</targetJdk>
                 </configuration>
                 <executions>
                     <execution>
@@ -430,25 +432,6 @@
                 <artifactId>maven-changes-plugin</artifactId>
                 <configuration>
                   <issueLinkTemplate>http://sourceforge.net/tracker2/?func=detail&amp;atid=715133&amp;group_id=129580&amp;aid=%ISSUE%</issueLinkTemplate>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <configLocation>${basedir}/src/conf/checkstyle.xml</configLocation>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <configuration>
-                    <targetJdk>1.5</targetJdk>
-                    <sourceEncoding>UTF-8</sourceEncoding>
-                    <rulesets>
-                        <ruleset>${basedir}/src/conf/pmd.xml</ruleset>
-                    </rulesets>
                 </configuration>
             </plugin>
 
