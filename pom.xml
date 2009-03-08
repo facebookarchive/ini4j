@@ -254,7 +254,7 @@
             <plugin>
                 <groupId>com.google.code.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
-                <version>1.3.1</version>
+                <version>1.4.0</version>
                 <inherited>true</inherited>
                     <configuration>
                         <aggregate>true</aggregate>
@@ -265,15 +265,15 @@
                             <exclude>**/META-INF/services/**</exclude>
                             <exclude>**/*.txt</exclude>
                             <exclude>**/*.apt</exclude>
-                            <exclude>**/*.ini</exclude>
-                            <exclude>**/*.opt</exclude>
                         </excludes>
-<!--
                         <mapping>
                             <java>SLASHSTAR_STYLE</java>
+                            <css>SLASHSTAR_STYLE</css>
+                            <js>SLASHSTAR_STYLE</js>
+                            <ini>SEMICOLON_STYLE</ini>
+                            <opt>SCRIPT_STYLE</opt>
                         </mapping>
                         <useDefaultMapping>true</useDefaultMapping>
--->
                     </configuration>
                     <executions>
                         <execution>
