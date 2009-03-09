@@ -15,7 +15,11 @@
  */
 package org.ini4j.tutorial;
 
+import org.ini4j.DwarfsData;
+import org.ini4j.Helper;
 import org.ini4j.Options;
+
+import org.ini4j.sample.Dwarf;
 
 import static org.junit.Assert.*;
 
@@ -155,10 +159,6 @@ public class OptTutorial extends AbstractTutorial
 //| inside the options. To get a value, besides <<<get()>>> you can also
 //| use <<<fetch()>>> which resolves any occurrent $\{option\} format
 //| variable references in the needed value.
-        assertEquals("23", opt.get("age"));
-        assertEquals("${bashful.weight}", opt.get("weight"));
-        assertEquals("45.7", opt.fetch("weight"));
-        assertEquals("${doc.height}", opt.get("height"));
-        assertEquals("87.7", opt.fetch("height"));
+        Helper.assertEquals(DwarfsData.dopey, opt.as(Dwarf.class));
     }
 }

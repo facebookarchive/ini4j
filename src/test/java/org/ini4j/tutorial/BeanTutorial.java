@@ -16,11 +16,13 @@
 package org.ini4j.tutorial;
 
 import org.ini4j.Config;
+import org.ini4j.DwarfsData;
 import org.ini4j.Ini;
 import org.ini4j.Options;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.DwarfBean;
+import org.ini4j.sample.Dwarfs;
 
 import static org.junit.Assert.*;
 
@@ -68,7 +70,7 @@ public class BeanTutorial extends AbstractTutorial
         sample04(getArgument().toURI().toURL());
         Options opts = new Options();
 
-        opts.putAll(ini.get("bashful"));
+        opts.putAll(ini.get(Dwarfs.PROP_BASHFUL));
         sample05(opts);
 
         //
@@ -103,8 +105,8 @@ public class BeanTutorial extends AbstractTutorial
 //| The <<<happy instanceof Dwarf>>> relation is of course fulfilled in the
 //| example above.
 //|
-        assertEquals("http://happy.smurf", homePage.toString());
-        assertEquals(99, age);
+        assertEquals(DwarfsData.happy.homePage.toString(), homePage.toString());
+        assertEquals(DwarfsData.happy.age, age);
         assertEquals(45.55, happy.getWeight(), 0.01);
     }
 
@@ -129,8 +131,8 @@ public class BeanTutorial extends AbstractTutorial
 
 //}
 //|
-        assertTrue(sec.containsKey("age"));
-        assertTrue(sec.containsKey("weight"));
+        assertTrue(sec.containsKey(Dwarf.PROP_AGE));
+        assertTrue(sec.containsKey(Dwarf.PROP_WEIGHT));
     }
 
 //|
@@ -150,8 +152,8 @@ public class BeanTutorial extends AbstractTutorial
 
 //}
 //|
-        assertEquals(76, grumpy.getAge());
-        assertEquals("/home/grumpy", grumpy.getHomeDir());
+        assertEquals(DwarfsData.grumpy.age, grumpy.getAge());
+        assertEquals(DwarfsData.grumpy.homeDir, grumpy.getHomeDir());
     }
 
 //|
@@ -184,9 +186,10 @@ public class BeanTutorial extends AbstractTutorial
         numbers = sneezyBean.getFortuneNumber();
 
 //}
-        assertEquals(4, sec.length("fortuneNumber"));
-        assertEquals(4, sneezy.getFortuneNumber().length);
-        assertEquals(4, sneezyBean.getFortuneNumber().length);
+        assertArrayEquals(DwarfsData.sneezy.fortuneNumber, numbers);
+        assertEquals(DwarfsData.sneezy.fortuneNumber.length, sec.length("fortuneNumber"));
+        assertArrayEquals(DwarfsData.sneezy.fortuneNumber, sneezy.getFortuneNumber());
+        assertArrayEquals(DwarfsData.sneezy.fortuneNumber, sneezyBean.getFortuneNumber());
     }
 
 //|
@@ -214,8 +217,8 @@ public class BeanTutorial extends AbstractTutorial
 //| In sample above the top level properties (like "age") mapped to bean
 //| properties.
 //|
-        assertEquals(67, dwarf.getAge());
-        assertEquals(67, dwarfBean.getAge());
+        assertEquals(DwarfsData.bashful.age, dwarf.getAge());
+        assertEquals(DwarfsData.bashful.age, dwarfBean.getAge());
     }
 
 //|
@@ -238,8 +241,8 @@ public class BeanTutorial extends AbstractTutorial
 //| In the above example, <<<dwarf>>> bean will contain properties starts with
 //| <<<happy.>>> while <<<bean>>> will contain properties starts with
 //| <<<dopey.>>>
-        assertEquals(99, dwarf.getAge());
-        assertEquals(23, bean.getAge());
+        assertEquals(DwarfsData.happy.age, dwarf.getAge());
+        assertEquals(DwarfsData.dopey.age, bean.getAge());
     }
 //}
 }

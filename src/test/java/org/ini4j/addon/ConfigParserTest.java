@@ -15,6 +15,7 @@
  */
 package org.ini4j.addon;
 
+import org.ini4j.DwarfsData;
 import org.ini4j.Helper;
 import org.ini4j.Ini;
 
@@ -100,16 +101,14 @@ public class ConfigParserTest
 
     @Test public void testDwarfs() throws Exception
     {
-        Dwarfs exp = Helper.newDwarfs();
-
         readDwarfs();
-        checkEquals(exp.getBashful(), Dwarfs.PROP_BASHFUL);
-        checkEquals(exp.getDoc(), Dwarfs.PROP_DOC);
-        checkEquals(exp.getDopey(), Dwarfs.PROP_DOPEY);
-        checkEquals(exp.getHappy(), Dwarfs.PROP_HAPPY);
-        checkEquals(exp.getGrumpy(), Dwarfs.PROP_GRUMPY);
-        checkEquals(exp.getSleepy(), Dwarfs.PROP_SLEEPY);
-        checkEquals(exp.getSneezy(), Dwarfs.PROP_SNEEZY);
+        checkEquals(DwarfsData.bashful, Dwarfs.PROP_BASHFUL);
+        checkEquals(DwarfsData.doc, Dwarfs.PROP_DOC);
+        checkEquals(DwarfsData.dopey, Dwarfs.PROP_DOPEY);
+        checkEquals(DwarfsData.happy, Dwarfs.PROP_HAPPY);
+        checkEquals(DwarfsData.grumpy, Dwarfs.PROP_GRUMPY);
+        checkEquals(DwarfsData.sleepy, Dwarfs.PROP_SLEEPY);
+        checkEquals(DwarfsData.sneezy, Dwarfs.PROP_SNEEZY);
     }
 
     @Test public void testGet() throws Exception
@@ -210,7 +209,7 @@ public class ConfigParserTest
     {
         Ini ini = new Ini();
 
-        ini.add(SECTION).from(Helper.newDopey());
+        ini.add(SECTION).from(DwarfsData.dopey);
         Ini.Section section = ini.get(SECTION);
         Ini.Section dopey = ini.add(Dwarfs.PROP_DOPEY);
 

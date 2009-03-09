@@ -15,6 +15,7 @@
  */
 package org.ini4j;
 
+import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.Dwarfs;
 
 import org.junit.AfterClass;
@@ -103,7 +104,7 @@ public class IniPreferencesFactoryTest
         assertNotNull(prefs);
         assertEquals(IniPreferences.class, prefs.getClass());
         assertSame(prefs, Preferences.systemRoot());
-        Helper.assertEquals(Helper.newHappy(), prefs.node(Dwarfs.PROP_HAPPY));
+        Helper.assertEquals(DwarfsData.happy, PreferencesBean.newInstance(Dwarf.class, prefs.node(Dwarfs.PROP_HAPPY)));
     }
 
     /**
@@ -118,6 +119,6 @@ public class IniPreferencesFactoryTest
         assertNotNull(prefs);
         assertEquals(IniPreferences.class, prefs.getClass());
         assertSame(prefs, Preferences.userRoot());
-        Helper.assertEquals(Helper.newDopey(), prefs.node(Dwarfs.PROP_DOPEY));
+        Helper.assertEquals(DwarfsData.happy, PreferencesBean.newInstance(Dwarf.class, prefs.node(Dwarfs.PROP_HAPPY)));
     }
 }

@@ -37,13 +37,13 @@ public class IniPreferencesTest
         IniPreferences prefs = new IniPreferences(ini);
 
         assertSame(ini, prefs.getIni());
-        Helper.doTestDwarfs(ini.as(Dwarfs.class));
+        Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
         prefs = new IniPreferences(Helper.getResourceStream(Helper.DWARFS_INI));
-        Helper.assertEquals(ini.get(Dwarfs.PROP_DOC).as(Dwarf.class), prefs.node(Dwarfs.PROP_DOC));
+        Helper.assertEquals(DwarfsData.doc, PreferencesBean.newInstance(Dwarf.class, prefs.node(Dwarfs.PROP_DOC)));
         prefs = new IniPreferences(Helper.getResourceReader(Helper.DWARFS_INI));
-        Helper.assertEquals(ini.get(Dwarfs.PROP_HAPPY).as(Dwarf.class), prefs.node(Dwarfs.PROP_HAPPY));
+        Helper.assertEquals(DwarfsData.happy, PreferencesBean.newInstance(Dwarf.class, prefs.node(Dwarfs.PROP_HAPPY)));
         prefs = new IniPreferences(Helper.getResourceURL(Helper.DWARFS_INI));
-        Helper.assertEquals(ini.get(Dwarfs.PROP_HAPPY).as(Dwarf.class), prefs.node(Dwarfs.PROP_HAPPY));
+        Helper.assertEquals(DwarfsData.sleepy, PreferencesBean.newInstance(Dwarf.class, prefs.node(Dwarfs.PROP_SLEEPY)));
     }
 
     /**

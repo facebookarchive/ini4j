@@ -53,11 +53,10 @@ public class IniHandlerTest
     protected IniHandler newHandler() throws Exception
     {
         IniHandler handler = EasyMock.createMock(IniHandler.class);
-        Dwarfs dwarfs = Helper.newDwarfs();
         Dwarf dwarf;
 
         handler.startIni();
-        dwarf = dwarfs.getBashful();
+        dwarf = DwarfsData.bashful;
         handler.startSection(Dwarfs.PROP_BASHFUL);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
         handler.handleOption(Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
@@ -65,7 +64,7 @@ public class IniHandlerTest
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.endSection();
-        dwarf = dwarfs.getDoc();
+        dwarf = DwarfsData.doc;
         handler.startSection(Dwarfs.PROP_DOC);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
         handler.handleOption(Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
@@ -73,7 +72,7 @@ public class IniHandlerTest
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.endSection();
-        dwarf = dwarfs.getDopey();
+        dwarf = DwarfsData.dopey;
         handler.startSection(Dwarfs.PROP_DOPEY);
         handler.handleOption(Dwarf.PROP_WEIGHT, DOPEY_WEIGHT);
         handler.handleOption(Dwarf.PROP_HEIGHT, DOPEY_HEIGHT);
@@ -81,7 +80,7 @@ public class IniHandlerTest
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.endSection();
-        dwarf = dwarfs.getGrumpy();
+        dwarf = DwarfsData.grumpy;
         handler.startSection(Dwarfs.PROP_GRUMPY);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
         handler.handleOption(Dwarf.PROP_HEIGHT, GRUMPY_HEIGHT);
@@ -89,7 +88,7 @@ public class IniHandlerTest
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.endSection();
-        dwarf = dwarfs.getHappy();
+        dwarf = DwarfsData.happy;
         handler.startSection(Dwarfs.PROP_HAPPY);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
         handler.handleOption(Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
@@ -97,7 +96,7 @@ public class IniHandlerTest
         handler.handleOption(EasyMock.eq(Dwarf.PROP_HOME_PAGE), (String) EasyMock.anyObject());
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.endSection();
-        dwarf = dwarfs.getSleepy();
+        dwarf = DwarfsData.sleepy;
         handler.startSection(Dwarfs.PROP_SLEEPY);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
         handler.handleOption(Dwarf.PROP_HEIGHT, SLEEPY_HEIGHT);
@@ -106,7 +105,7 @@ public class IniHandlerTest
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[0]));
         handler.endSection();
-        dwarf = dwarfs.getSneezy();
+        dwarf = DwarfsData.sneezy;
         handler.startSection(Dwarfs.PROP_SNEEZY);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
         handler.handleOption(Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
@@ -118,7 +117,7 @@ public class IniHandlerTest
         handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[2]));
         handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[3]));
         handler.endSection();
-        dwarf = dwarfs.getHappy();
+        dwarf = DwarfsData.happy;
         handler.startSection(Dwarfs.PROP_HAPPY);
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.endSection();

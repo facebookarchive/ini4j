@@ -15,6 +15,7 @@
  */
 package org.ini4j.tutorial;
 
+import org.ini4j.DwarfsData;
 import org.ini4j.Ini;
 import org.ini4j.IniPreferences;
 
@@ -77,8 +78,8 @@ public class PrefsTutorial extends AbstractTutorial
         bashful.putDouble("weight", 55.6);
 
 //}
-        assertEquals("/home/bashful", bashful.get("homeDir", null));
-        assertEquals(67, bashful.getInt("age", -1));
-        assertEquals(55.6, bashful.getDouble("weight", -1), 0.001);
+        assertEquals(DwarfsData.bashful.homeDir, bashful.get("homeDir", null));
+        assertEquals(String.valueOf(DwarfsData.bashful.age), bashful.getInt("age", -1));
+        assertEquals(DwarfsData.bashful.weight, bashful.getDouble("weight", -1), 0.001);
     }
 }

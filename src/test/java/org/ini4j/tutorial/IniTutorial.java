@@ -15,7 +15,11 @@
  */
 package org.ini4j.tutorial;
 
+import org.ini4j.DwarfsData;
+import org.ini4j.Helper;
 import org.ini4j.Ini;
+
+import org.ini4j.sample.Dwarf;
 
 import static org.junit.Assert.*;
 
@@ -102,10 +106,6 @@ public class IniTutorial extends AbstractTutorial
 //| inside the section. To get a value, besides <<<get()>>> you can also
 //| use <<<fetch()>>> which resolves any occurrent $\{section/option\} format
 //| variable references in the needed value.
-        assertEquals("23", dopey.get("age"));
-        assertEquals("${bashful/weight}", dopey.get("weight"));
-        assertEquals("45.7", dopey.fetch("weight"));
-        assertEquals("${doc/height}", dopey.get("height"));
-        assertEquals("87.7", dopey.fetch("height"));
+        Helper.assertEquals(DwarfsData.dopey, dopey.as(Dwarf.class));
     }
 }

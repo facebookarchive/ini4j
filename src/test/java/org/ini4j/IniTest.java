@@ -16,6 +16,7 @@
 package org.ini4j;
 
 import org.ini4j.sample.Dwarf;
+import org.ini4j.sample.DwarfBean;
 import org.ini4j.sample.Dwarfs;
 
 import org.junit.AfterClass;
@@ -51,23 +52,22 @@ public class IniTest
     @SuppressWarnings("deprecation")
     @Test public void testBeanInterface() throws Exception
     {
-        Dwarfs exp = Helper.newDwarfs();
         Ini ini = Helper.newDwarfsIni();
         Ini.Section sec = ini.get(Dwarfs.PROP_DOC);
-        Dwarf bean = Helper.newDwarf();
+        Dwarf bean = new DwarfBean();
 
         sec.to(bean);
-        Helper.assertEquals(exp.getDoc(), bean);
+        Helper.assertEquals(DwarfsData.doc, bean);
         sec.clear();
         sec.from(bean);
         assertEquals(5, sec.size());
-        Helper.assertEquals(exp.getDoc(), sec);
+        Helper.assertEquals(DwarfsData.doc, sec.as(Dwarf.class));
 
         //
         // deprecated api test
         bean = sec.to(Dwarf.class);
         assertSame(bean, sec.to(Dwarf.class));
-        Helper.assertEquals(exp.getDoc(), bean);
+        Helper.assertEquals(DwarfsData.doc, bean);
     }
 
     @Test public void testConfig() throws Exception
@@ -115,11 +115,11 @@ public class IniTest
         Ini ini;
 
         ini = new Ini(Helper.getResourceURL(Helper.DWARFS_INI));
-        Helper.doTestDwarfs(ini.as(Dwarfs.class));
+        Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
         ini = new Ini(Helper.getResourceStream(Helper.DWARFS_INI));
-        Helper.doTestDwarfs(ini.as(Dwarfs.class));
+        Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
         ini = new Ini(Helper.getResourceReader(Helper.DWARFS_INI));
-        Helper.doTestDwarfs(ini.as(Dwarfs.class));
+        Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
     }
 
     /**
@@ -132,9 +132,9 @@ public class IniTest
         Ini ini = new Ini();
 
         ini.loadFromXML(getClass().getClassLoader().getResourceAsStream(Helper.DWARFS_XML));
-        Helper.doTestDwarfs(ini.as(Dwarfs.class));
+        Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
         ini.loadFromXML(getClass().getClassLoader().getResource(Helper.DWARFS_XML));
-        Helper.doTestDwarfs(ini.as(Dwarfs.class));
+        Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
     }
 
     /**
@@ -168,14 +168,14 @@ public class IniTest
         buffer = new StringBuilder(input);
 
         ini.resolve(buffer, doc);
-        assertEquals("" + dwarfs.getHappy().getWeight(), buffer.toString());
+        assertEquals(String.valueOf(dwarfs.getHappy().getWeight()), buffer.toString());
 
         // same sections's value
         input = "${height}";
         buffer = new StringBuilder(input);
 
         ini.resolve(buffer, doc);
-        assertEquals("" + dwarfs.getDoc().getHeight(), buffer.toString());
+        assertEquals(String.valueOf(dwarfs.getDoc().getHeight()), buffer.toString());
 
         // system property
         input = "${@prop/user.home}";
@@ -265,12 +265,12 @@ public class IniTest
         Ini dup = new Ini();
 
         dup.load(new ByteArrayInputStream(buffer.toByteArray()));
-        Helper.doTestDwarfs(dup.as(Dwarfs.class));
+        Helper.assertEquals(DwarfsData.dwarfs, dup.as(Dwarfs.class));
         buffer = new ByteArrayOutputStream();
         ini.store(new OutputStreamWriter(buffer));
         dup = new Ini();
         dup.load(new InputStreamReader(new ByteArrayInputStream(buffer.toByteArray())));
-        Helper.doTestDwarfs(dup.as(Dwarfs.class));
+        Helper.assertEquals(DwarfsData.dwarfs, dup.as(Dwarfs.class));
     }
 
     /**
@@ -287,12 +287,12 @@ public class IniTest
         Ini dup = new Ini();
 
         dup.loadFromXML(new ByteArrayInputStream(buffer.toByteArray()));
-        Helper.doTestDwarfs(dup.as(Dwarfs.class));
+        Helper.assertEquals(DwarfsData.dwarfs, dup.as(Dwarfs.class));
         buffer = new ByteArrayOutputStream();
         ini.storeToXML(new OutputStreamWriter(buffer));
         dup = new Ini();
         dup.loadFromXML(new InputStreamReader(new ByteArrayInputStream(buffer.toByteArray())));
-        Helper.doTestDwarfs(dup.as(Dwarfs.class));
+        Helper.assertEquals(DwarfsData.dwarfs, dup.as(Dwarfs.class));
     }
 
     @Test public void testToBean() throws Exception

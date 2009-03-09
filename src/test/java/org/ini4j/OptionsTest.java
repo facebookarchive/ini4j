@@ -35,18 +35,17 @@ public class OptionsTest
 
     @Test public void testBean() throws Exception
     {
-        Dwarfs dwarfs = Helper.newDwarfs();
         Options opts = Helper.loadDwarfsOpt();
         DwarfBean bean = new DwarfBean();
 
         opts.to(bean, Dwarfs.PROP_BASHFUL + '.');
-        Helper.assertEquals(dwarfs.getBashful(), bean);
+        Helper.assertEquals(DwarfsData.bashful, bean);
         OptionMap map = new OptionMapImpl();
 
         map.from(bean, Dwarfs.PROP_BASHFUL + '.');
         bean = new DwarfBean();
         map.to(bean, Dwarfs.PROP_BASHFUL + '.');
-        Helper.assertEquals(dwarfs.getBashful(), bean);
+        Helper.assertEquals(DwarfsData.bashful, bean);
     }
 
     @Test public void testConfig()
@@ -66,18 +65,17 @@ public class OptionsTest
     @Test public void testDwarfs() throws Exception
     {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        Dwarfs dwarfs = Helper.newDwarfs();
         Options happy = new Options();
 
-        happy.from(dwarfs.getHappy());
+        happy.from(DwarfsData.happy);
         happy.store(buffer);
         Options dup = new Options(new ByteArrayInputStream(buffer.toByteArray()));
 
-        Helper.assertEquals(dwarfs.getHappy(), dup);
+        Helper.assertEquals(DwarfsData.happy, dup.as(Dwarf.class));
         buffer = new ByteArrayOutputStream();
         happy.store(new OutputStreamWriter(buffer));
         dup = new Options(new ByteArrayInputStream(buffer.toByteArray()));
-        Helper.assertEquals(dwarfs.getHappy(), dup);
+        Helper.assertEquals(DwarfsData.happy, dup.as(Dwarf.class));
     }
 
     @Test public void testEscape() throws Exception
@@ -97,12 +95,11 @@ public class OptionsTest
         Options o2 = new Options(Helper.getResourceURL(Helper.DWARFS_OPT).openStream());
         Options o3 = new Options(new InputStreamReader(Helper.getResourceURL(Helper.DWARFS_OPT).openStream()));
         Options o4 = new Options(Helper.getResourceURL(Helper.DWARFS_OPT));
-        Dwarf dopey = Helper.newDopey();
 
-        Helper.assertEquals(dopey, o1);
-        Helper.assertEquals(dopey, o2);
-        Helper.assertEquals(dopey, o3);
-        Helper.assertEquals(dopey, o4);
+        Helper.assertEquals(DwarfsData.dopey, o1.as(Dwarf.class));
+        Helper.assertEquals(DwarfsData.dopey, o2.as(Dwarf.class));
+        Helper.assertEquals(DwarfsData.dopey, o3.as(Dwarf.class));
+        Helper.assertEquals(DwarfsData.dopey, o4.as(Dwarf.class));
     }
 
     @Test public void testLowerCase() throws Exception
@@ -147,7 +144,8 @@ public class OptionsTest
         opts.load(new StringReader("foo\n"));
     }
 
-    @Test @SuppressWarnings("empty-statement")
+    @Test
+    @SuppressWarnings("empty-statement")
     public void testParseError() throws Exception
     {
         for (String s : _badOptions)
@@ -166,21 +164,19 @@ public class OptionsTest
 
     @Test public void testPrefixed() throws Exception
     {
-        Dwarfs dwarfs = Helper.newDwarfs();
         Options opts = Helper.loadDwarfsOpt();
 
-        Helper.assertEquals(dwarfs.getBashful(), opts.as(Dwarf.class, Dwarfs.PROP_BASHFUL + '.'));
-        Helper.assertEquals(dwarfs.getDoc(), opts.as(Dwarf.class, Dwarfs.PROP_DOC + '.'));
-        Helper.assertEquals(dwarfs.getDopey(), opts.as(Dwarf.class, Dwarfs.PROP_DOPEY + '.'));
-        Helper.assertEquals(dwarfs.getGrumpy(), opts.as(Dwarf.class, Dwarfs.PROP_GRUMPY + '.'));
-        Helper.assertEquals(dwarfs.getHappy(), opts.as(Dwarf.class, Dwarfs.PROP_HAPPY + '.'));
-        Helper.assertEquals(dwarfs.getSleepy(), opts.as(Dwarf.class, Dwarfs.PROP_SLEEPY + '.'));
-        Helper.assertEquals(dwarfs.getSneezy(), opts.as(Dwarf.class, Dwarfs.PROP_SNEEZY + '.'));
+        Helper.assertEquals(DwarfsData.bashful, opts.as(Dwarf.class, Dwarfs.PROP_BASHFUL + '.'));
+        Helper.assertEquals(DwarfsData.doc, opts.as(Dwarf.class, Dwarfs.PROP_DOC + '.'));
+        Helper.assertEquals(DwarfsData.dopey, opts.as(Dwarf.class, Dwarfs.PROP_DOPEY + '.'));
+        Helper.assertEquals(DwarfsData.grumpy, opts.as(Dwarf.class, Dwarfs.PROP_GRUMPY + '.'));
+        Helper.assertEquals(DwarfsData.happy, opts.as(Dwarf.class, Dwarfs.PROP_HAPPY + '.'));
+        Helper.assertEquals(DwarfsData.sleepy, opts.as(Dwarf.class, Dwarfs.PROP_SLEEPY + '.'));
+        Helper.assertEquals(DwarfsData.sneezy, opts.as(Dwarf.class, Dwarfs.PROP_SNEEZY + '.'));
     }
 
     @Test public void testResolve() throws Exception
     {
-        Dwarf dopey = Helper.newDopey();
         Options opts = Helper.loadDwarfsOpt();
         StringBuilder buffer;
         String input;
@@ -190,7 +186,7 @@ public class OptionsTest
         buffer = new StringBuilder(input);
 
         opts.resolve(buffer);
-        assertEquals("" + dopey.getHeight(), buffer.toString());
+        assertEquals("" + DwarfsData.dopey.getHeight(), buffer.toString());
 
         // system property
         input = "${@prop/user.home}";
@@ -245,7 +241,7 @@ public class OptionsTest
         buffer = new StringBuilder(input);
 
         opts.resolve(buffer);
-        assertEquals("" + dopey.getWeight(), buffer.toString());
+        assertEquals("" + DwarfsData.dopey.getWeight(), buffer.toString());
         input = "\\" + input;
         buffer = new StringBuilder(input);
 

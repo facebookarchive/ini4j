@@ -15,9 +15,11 @@
  */
 package org.ini4j.spi;
 
+import org.ini4j.DwarfsData;
 import org.ini4j.Helper;
 
 import org.ini4j.sample.Dwarf;
+import org.ini4j.sample.Dwarfs;
 
 import static org.junit.Assert.*;
 
@@ -90,9 +92,11 @@ public class AbstractBeanInvocationHandlerTest
      *
      * @throws Exception on error
      */
-    @Test public void testNewDwarfs() throws Exception
+    @Test
+    @SuppressWarnings("deprecation")
+    public void testNewDwarfs() throws Exception
     {
-        Helper.doTestDwarfs(Helper.newDwarfs());
+        Helper.assertEquals(DwarfsData.dwarfs, Helper.loadDwarfsIni().to(Dwarfs.class));
     }
 
     @Test public void testPropertyChangeListener() throws Exception

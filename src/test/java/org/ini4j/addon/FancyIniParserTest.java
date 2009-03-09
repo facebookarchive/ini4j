@@ -18,6 +18,7 @@ package org.ini4j.addon;
 import org.easymock.EasyMock;
 
 import org.ini4j.Config;
+import org.ini4j.DwarfsData;
 import org.ini4j.Helper;
 import org.ini4j.Ini;
 import org.ini4j.IniHandler;
@@ -124,7 +125,7 @@ public class FancyIniParserTest
         System.setProperty(IniParser.class.getName(), FancyIniParser.class.getName());
         Ini ini = new Ini(getClass().getClassLoader().getResource(INCLUDE));
 
-        Helper.doTestDwarfs(ini.to(Dwarfs.class));
+        Helper.assertEquals(DwarfsData.dwarfs, ini.to(Dwarfs.class));
         try
         {
             ini = new Ini(getClass().getClassLoader().getResourceAsStream(INCLUDE));
@@ -136,7 +137,7 @@ public class FancyIniParserTest
         }
 
         ini = new Ini(getClass().getClassLoader().getResource(NESTED));
-        Helper.doTestDwarfs(ini.to(Dwarfs.class));
+        Helper.assertEquals(DwarfsData.dwarfs, ini.to(Dwarfs.class));
         FancyIniParser parser = (FancyIniParser) IniParser.newInstance();
 
         assertTrue(parser.isAllowInclude());
