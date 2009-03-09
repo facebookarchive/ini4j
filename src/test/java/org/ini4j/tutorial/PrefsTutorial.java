@@ -79,7 +79,7 @@ public class PrefsTutorial extends AbstractTutorial
 
 //}
         assertEquals(DwarfsData.bashful.homeDir, bashful.get("homeDir", null));
-        assertEquals(String.valueOf(DwarfsData.bashful.age), bashful.getInt("age", -1));
-        assertEquals(DwarfsData.bashful.weight, bashful.getDouble("weight", -1), 0.001);
+        assertEquals(DwarfsData.bashful.age, bashful.getInt("age", -1));
+        assertEquals(55.6, bashful.getDouble("weight", -1), 0.001);
     }
 }
