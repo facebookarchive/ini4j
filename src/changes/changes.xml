@@ -21,6 +21,11 @@
     <title>[ini4j] Changes</title>
   </properties>
   <body>
+    <release version="0.4.2" description="JNDI support">
+      <action type="add" dev="szkiba">
+      Added JNDI support.
+      </action>
+    </release>
     <release version="0.4.1" date="2009-03-11" description="Python like ConfigParser Options as java.util.Properties replacement">
       <action type="add" dev="szkiba">
       Added Options as replacement for java.util.Properties. Options has a lot
