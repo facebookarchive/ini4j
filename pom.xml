@@ -149,25 +149,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>wagon-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>upload</id>
-                        <goals>
-                            <goal>upload</goal>
-                        </goals>
-                        <phase>deploy</phase>
-                        <configuration>
-                            <serverId>ini4j-upload</serverId>
-                            <fromDir>${project.build.directory}</fromDir>
-                            <includes>${project.build.finalName}-src*,${project.build.finalName}-bin*,${project.build.finalName}-all*</includes>
-                            <url>${upload.url}</url>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
                 <inherited>false</inherited>
@@ -333,6 +314,25 @@
                                 <descriptor>src/main/assembly/all.xml</descriptor>
                             </descriptors>
                             <attach>false</attach>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wagon-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>upload</id>
+                        <goals>
+                            <goal>upload</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <serverId>ini4j-upload</serverId>
+                            <fromDir>${project.build.directory}</fromDir>
+                            <includes>${project.build.finalName}-src*,${project.build.finalName}-bin*,${project.build.finalName}-all*</includes>
+                            <url>${upload.url}</url>
                         </configuration>
                     </execution>
                 </executions>
