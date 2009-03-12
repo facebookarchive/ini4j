@@ -25,9 +25,21 @@ public interface OptionMap extends MultiMap<String, String>
 
     String fetch(Object key, int index);
 
+    <T> T fetch(Object key, Class<T> clazz);
+
+    <T> T fetch(Object key, int index, Class<T> clazz);
+
     void from(Object bean);
 
     void from(Object bean, String keyPrefix);
+
+    <T> T get(Object key, Class<T> clazz);
+
+    <T> T get(Object key, int index, Class<T> clazz);
+
+    String put(String key, Object value);
+
+    String put(String key, int index, Object value);
 
     void to(Object bean);
 

@@ -97,6 +97,36 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler()));
     }
 
+    public String fetch(String section, String option)
+    {
+        return get(section).fetch(option);
+    }
+
+    public <T> T fetch(String section, String option, Class<T> clazz)
+    {
+        return get(section).fetch(option, clazz);
+    }
+
+    public <T> T fetch(String section, String option, int index, Class<T> clazz)
+    {
+        return get(section).fetch(option, index, clazz);
+    }
+
+    public String get(String section, String option)
+    {
+        return get(section).get(option);
+    }
+
+    public <T> T get(String section, String option, Class<T> clazz)
+    {
+        return get(section).get(option, clazz);
+    }
+
+    public <T> T get(String section, String option, int index, Class<T> clazz)
+    {
+        return get(section).get(option, index, clazz);
+    }
+
     public void load(InputStream input) throws IOException, InvalidIniFormatException
     {
         IniParser.newInstance(getConfig()).parse(input, new Builder());
@@ -129,6 +159,16 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         Builder builder = new Builder();
 
         IniParser.newInstance(getConfig()).parseXML(input, builder);
+    }
+
+    public String put(String section, String option, Object value)
+    {
+        return get(section).put(option, value);
+    }
+
+    public String put(String section, String option, int index, Object value)
+    {
+        return get(section).put(option, index, value);
     }
 
     public Section remove(Section section)

@@ -39,7 +39,11 @@ public class Helper
     public static final String DWARFS_XML = RESOURCE_PREFIX + "dwarfs.xml";
     public static final float DELTA = 0.00000001f;
     private static final String[] CONFIG_PROPERTIES =
-        { Config.PROP_EMPTY_OPTION, Config.PROP_GLOBAL_SECTION, Config.PROP_GLOBAL_SECTION_NAME, Config.PROP_INCLUDE, Config.PROP_LOWER_CASE_OPTION, Config.PROP_LOWER_CASE_SECTION, Config.PROP_MULTI_OPTION, Config.PROP_MULTI_SECTION, Config.PROP_STRICT_OPERATOR, Config.PROP_UNNAMED_SECTION, Config.PROP_ESCAPE };
+        {
+            Config.PROP_EMPTY_OPTION, Config.PROP_GLOBAL_SECTION, Config.PROP_GLOBAL_SECTION_NAME, Config.PROP_INCLUDE, Config.PROP_LOWER_CASE_OPTION,
+            Config.PROP_LOWER_CASE_SECTION, Config.PROP_MULTI_OPTION, Config.PROP_MULTI_SECTION, Config.PROP_STRICT_OPERATOR,
+            Config.PROP_UNNAMED_SECTION, Config.PROP_ESCAPE
+        };
     private static final String[] FACTORY_PROPERTIES = { IniFormatter.class.getName(), IniParser.class.getName() };
 
     private Helper()
@@ -184,9 +188,9 @@ public class Helper
 
         if ((numbers != null) && (numbers.length > 0))
         {
-            for (int number : numbers)
+            for (int i = 0; i < numbers.length; i++)
             {
-                s.put(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(number));
+                s.add(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(numbers[i]));
             }
         }
 

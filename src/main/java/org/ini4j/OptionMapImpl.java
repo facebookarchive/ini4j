@@ -17,6 +17,7 @@ package org.ini4j;
 
 import org.ini4j.spi.BeanAccess;
 import org.ini4j.spi.BeanTool;
+import org.ini4j.spi.Warnings;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,6 +66,18 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
         return value;
     }
 
+    @SuppressWarnings(Warnings.UNCHECKED)
+    @Override public <T> T fetch(Object key, Class<T> clazz)
+    {
+        return (T) BeanTool.getInstance().parse(fetch(key), clazz);
+    }
+
+    @SuppressWarnings(Warnings.UNCHECKED)
+    @Override public <T> T fetch(Object key, int index, Class<T> clazz)
+    {
+        return (T) BeanTool.getInstance().parse(fetch(key, index), clazz);
+    }
+
     @Override public void from(Object bean)
     {
         BeanTool.getInstance().inject(getDefaultBeanAccess(), bean);
@@ -73,6 +86,28 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
     @Override public void from(Object bean, String keyPrefix)
     {
         BeanTool.getInstance().inject(newBeanAccess(keyPrefix), bean);
+    }
+
+    @SuppressWarnings(Warnings.UNCHECKED)
+    @Override public <T> T get(Object key, Class<T> clazz)
+    {
+        return (T) BeanTool.getInstance().parse(get(key), clazz);
+    }
+
+    @SuppressWarnings(Warnings.UNCHECKED)
+    @Override public <T> T get(Object key, int index, Class<T> clazz)
+    {
+        return (T) BeanTool.getInstance().parse(get(key, index), clazz);
+    }
+
+    @Override public String put(String key, Object value)
+    {
+        return put(key, ((value == null) || (value instanceof String)) ? (String) value : String.valueOf(value));
+    }
+
+    @Override public String put(String key, int index, Object value)
+    {
+        return put(key, index, ((value == null) || (value instanceof String)) ? (String) value : String.valueOf(value));
     }
 
     @Override public void to(Object bean)
