@@ -39,8 +39,12 @@ public interface Profile<S extends Profile.Section> extends MultiMap<String, S>
 
     Section remove(S section);
 
+    @Deprecated <T> T to(Class<T> clazz);
+
     interface Section extends OptionMap
     {
         String getName();
+
+        @Deprecated <T> T to(Class<T> clazz);
     }
 }

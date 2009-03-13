@@ -15,7 +15,6 @@
  */
 package org.ini4j;
 
-import org.ini4j.spi.AbstractBeanInvocationHandler;
 import org.ini4j.spi.IniFormatter;
 import org.ini4j.spi.XMLFormatter;
 
@@ -30,26 +29,10 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Proxy;
-
 import java.net.URL;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class Ini extends MultiMapImpl<String, Ini.Section> implements Profile<Ini.Section>
+public class Ini extends ProfileImpl implements Persistable
 {
-    private static final String SECTION_SYSTEM_PROPERTIES = "@prop";
-    private static final String SECTION_ENVIRONMENT = "@env";
-    private static final Pattern EXPRESSION = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?/)?([^\\[]+)(\\[(([0-9]+))\\])?\\}");
-    private static final int G_SECTION = 2;
-    private static final int G_SECTION_IDX = 4;
-    private static final int G_OPTION = 5;
-    private static final int G_OPTION_IDX = 7;
-    private Map<Class, Object> _beans;
     private Config _config = Config.getGlobal();
     private File _file;
 
@@ -88,68 +71,17 @@ public class Ini extends MultiMapImpl<String, Ini.Section> implements Profile<In
         _config = value;
     }
 
-    public File getFile()
+    @Override public File getFile()
     {
         return _file;
     }
 
-    public void setFile(File value)
+    @Override public void setFile(File value)
     {
         _file = value;
     }
 
-    public Section add(String name)
-    {
-        Section s = new Section(name);
-
-        if (getConfig().isMultiSection())
-        {
-            add(name, s);
-        }
-        else
-        {
-            put(name, s);
-        }
-
-        return s;
-    }
-
-    public <T> T as(Class<T> clazz)
-    {
-        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler()));
-    }
-
-    public String fetch(String section, String option)
-    {
-        return get(section).fetch(option);
-    }
-
-    public <T> T fetch(String section, String option, Class<T> clazz)
-    {
-        return get(section).fetch(option, clazz);
-    }
-
-    public <T> T fetch(String section, String option, int index, Class<T> clazz)
-    {
-        return get(section).fetch(option, index, clazz);
-    }
-
-    public String get(String section, String option)
-    {
-        return get(section).get(option);
-    }
-
-    public <T> T get(String section, String option, Class<T> clazz)
-    {
-        return get(section).get(option, clazz);
-    }
-
-    public <T> T get(String section, String option, int index, Class<T> clazz)
-    {
-        return get(section).get(option, index, clazz);
-    }
-
-    public void load() throws IOException, InvalidIniFormatException
+    @Override public void load() throws IOException, InvalidIniFormatException
     {
         if (_file == null)
         {
@@ -159,17 +91,17 @@ public class Ini extends MultiMapImpl<String, Ini.Section> implements Profile<In
         load(_file);
     }
 
-    public void load(InputStream input) throws IOException, InvalidIniFormatException
+    @Override public void load(InputStream input) throws IOException, InvalidIniFormatException
     {
         IniParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
-    public void load(Reader input) throws IOException, InvalidIniFormatException
+    @Override public void load(Reader input) throws IOException, InvalidIniFormatException
     {
         IniParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
-    public void load(File input) throws IOException, InvalidIniFormatException
+    @Override public void load(File input) throws IOException, InvalidIniFormatException
     {
         Reader reader = new FileReader(input);
 
@@ -177,7 +109,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section> implements Profile<In
         reader.close();
     }
 
-    public void load(URL input) throws IOException, InvalidIniFormatException
+    @Override public void load(URL input) throws IOException, InvalidIniFormatException
     {
         IniParser.newInstance(getConfig()).parse(input, new Builder());
     }
@@ -201,22 +133,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section> implements Profile<In
         IniParser.newInstance(getConfig()).parseXML(input, builder);
     }
 
-    public String put(String section, String option, Object value)
-    {
-        return get(section).put(option, value);
-    }
-
-    public String put(String section, String option, int index, Object value)
-    {
-        return get(section).put(option, index, value);
-    }
-
-    public Section remove(Section section)
-    {
-        return remove((Object) section.getName());
-    }
-
-    public void store() throws IOException
+    @Override public void store() throws IOException
     {
         if (_file == null)
         {
@@ -226,17 +143,17 @@ public class Ini extends MultiMapImpl<String, Ini.Section> implements Profile<In
         store(_file);
     }
 
-    public void store(OutputStream output) throws IOException
+    @Override public void store(OutputStream output) throws IOException
     {
         store(IniFormatter.newInstance(output, getConfig()));
     }
 
-    public void store(Writer output) throws IOException
+    @Override public void store(Writer output) throws IOException
     {
         store(IniFormatter.newInstance(output, getConfig()));
     }
 
-    public void store(File output) throws IOException
+    @Override public void store(File output) throws IOException
     {
         Writer writer = new FileWriter(output);
 
@@ -254,64 +171,9 @@ public class Ini extends MultiMapImpl<String, Ini.Section> implements Profile<In
         store(XMLFormatter.newInstance(output));
     }
 
-    @Deprecated public synchronized <T> T to(Class<T> clazz)
-    {
-        Object bean = null;
-
-        if (_beans == null)
-        {
-            _beans = new HashMap<Class, Object>();
-        }
-        else
-        {
-            bean = _beans.get(clazz);
-        }
-
-        if (bean == null)
-        {
-            bean = as(clazz);
-            _beans.put(clazz, bean);
-        }
-
-        return clazz.cast(bean);
-    }
-
     protected Config getConfig()
     {
         return _config;
-    }
-
-    protected void resolve(StringBuilder buffer, Section owner)
-    {
-        Matcher m = EXPRESSION.matcher(buffer);
-
-        while (m.find())
-        {
-            String sectionName = m.group(G_SECTION);
-            String optionName = m.group(G_OPTION);
-            int optionIndex = parseOptionIndex(m);
-            Section section = parseSection(m, owner);
-            String value = null;
-
-            if (SECTION_ENVIRONMENT.equals(sectionName))
-            {
-                value = System.getenv(optionName);
-            }
-            else if (SECTION_SYSTEM_PROPERTIES.equals(sectionName))
-            {
-                value = System.getProperty(optionName);
-            }
-            else if (section != null)
-            {
-                value = (optionIndex == -1) ? section.fetch(optionName) : section.fetch(optionName, optionIndex);
-            }
-
-            if (value != null)
-            {
-                buffer.replace(m.start(), m.end(), value);
-                m.reset(buffer);
-            }
-        }
     }
 
     protected void store(IniHandler formatter) throws IOException
@@ -336,147 +198,11 @@ public class Ini extends MultiMapImpl<String, Ini.Section> implements Profile<In
         formatter.endIni();
     }
 
-    private int parseOptionIndex(Matcher m)
-    {
-        return (m.group(G_OPTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_OPTION_IDX));
-    }
-
-    private Section parseSection(Matcher m, Section owner)
-    {
-        String sectionName = m.group(G_SECTION);
-        int sectionIndex = parseSectionIndex(m);
-
-        return (sectionName == null) ? owner : ((sectionIndex == -1) ? get(sectionName) : get(sectionName, sectionIndex));
-    }
-
-    private int parseSectionIndex(Matcher m)
-    {
-        return (m.group(G_SECTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_SECTION_IDX));
-    }
-
-    public class Section extends OptionMapImpl implements Profile.Section
-    {
-        private Map<Class, Object> _beans;
-        private final String _name;
-
-        public Section(String name)
-        {
-            super();
-            _name = name;
-        }
-
-        public String getName()
-        {
-            return _name;
-        }
-
-        @Deprecated public synchronized <T> T to(Class<T> clazz)
-        {
-            Object bean = null;
-
-            if (_beans == null)
-            {
-                _beans = new HashMap<Class, Object>();
-            }
-            else
-            {
-                bean = _beans.get(clazz);
-            }
-
-            if (bean == null)
-            {
-                bean = as(clazz);
-                _beans.put(clazz, bean);
-            }
-
-            return clazz.cast(bean);
-        }
-
-        @Override protected void resolve(StringBuilder buffer)
-        {
-            Ini.this.resolve(buffer, this);
-        }
-    }
-
-    private class BeanInvocationHandler extends AbstractBeanInvocationHandler
-    {
-        private final MultiMap<String, Object> _sectionBeans = new MultiMapImpl<String, Object>();
-
-        @Override protected Object getPropertySpi(String property, Class<?> clazz)
-        {
-            Object o = null;
-
-            if (clazz.isArray())
-            {
-                if (!_sectionBeans.containsKey(property) && containsKey(property))
-                {
-                    for (int i = 0; i < length(property); i++)
-                    {
-                        _sectionBeans.add(property, get(property, i).as(clazz.getComponentType()));
-                    }
-                }
-
-                if (_sectionBeans.containsKey(property))
-                {
-                    o = Array.newInstance(clazz.getComponentType(), _sectionBeans.length(property));
-                    for (int i = 0; i < _sectionBeans.length(property); i++)
-                    {
-                        Array.set(o, i, _sectionBeans.get(property, i));
-                    }
-                }
-            }
-            else
-            {
-                o = _sectionBeans.get(property);
-                if (o == null)
-                {
-                    Section section = get(property);
-
-                    if (section != null)
-                    {
-                        o = section.as(clazz);
-                        _sectionBeans.put(property, o);
-                    }
-                }
-            }
-
-            return o;
-        }
-
-        @Override protected void setPropertySpi(String property, Object value, Class<?> clazz)
-        {
-            remove(property);
-            if (value != null)
-            {
-                if (clazz.isArray())
-                {
-                    for (int i = 0; i < Array.getLength(value); i++)
-                    {
-                        Section sec = add(property);
-
-                        sec.from(Array.get(value, i));
-                    }
-                }
-                else
-                {
-                    Section sec = add(property);
-
-                    sec.from(value);
-                }
-            }
-        }
-
-        @Override protected boolean hasPropertySpi(String property)
-        {
-            return containsKey(property);
-        }
-    }
-
     private class Builder implements IniHandler
     {
         private Section _currentSection;
 
-        public void endIni()
+        @Override public void endIni()
         {
             assert true;
         }
@@ -498,7 +224,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section> implements Profile<In
             }
         }
 
-        public void startIni()
+        @Override public void startIni()
         {
             assert true;
         }

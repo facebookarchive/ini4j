@@ -125,9 +125,6 @@ public class ArrayTest
 
         g.setSection(all);
         assertEquals(2, ini.length("section"));
-        cfg.setMultiSection(false);
-        g.setSection(all);
-        assertEquals(1, ini.length("section"));
         assertNull(g.getSolo());
         g.setSolo(s1);
         assertNotNull(g.getSolo());

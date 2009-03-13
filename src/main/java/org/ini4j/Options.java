@@ -17,6 +17,10 @@ package org.ini4j;
 
 import org.ini4j.spi.EscapeTool;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,11 +30,12 @@ import java.io.Writer;
 
 import java.net.URL;
 
-public class Options extends OptionMapImpl
+public class Options extends OptionMapImpl implements Persistable
 {
     private static final char OPERATOR = '=';
     private static final String NEWLINE = "\n";
     private Config _config;
+    private File _file;
 
     public Options()
     {
@@ -61,29 +66,75 @@ public class Options extends OptionMapImpl
         _config = value;
     }
 
-    public void load(InputStream input) throws IOException, InvalidIniFormatException
+    @Override public File getFile()
+    {
+        return _file;
+    }
+
+    @Override public void setFile(File value)
+    {
+        _file = value;
+    }
+
+    @Override public void load() throws IOException, InvalidIniFormatException
+    {
+        if (_file == null)
+        {
+            throw new FileNotFoundException();
+        }
+
+        load(_file);
+    }
+
+    @Override public void load(InputStream input) throws IOException, InvalidIniFormatException
     {
         OptionParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
-    public void load(Reader input) throws IOException, InvalidIniFormatException
+    @Override public void load(Reader input) throws IOException, InvalidIniFormatException
     {
         OptionParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
-    public void load(URL input) throws IOException, InvalidIniFormatException
+    @Override public void load(URL input) throws IOException, InvalidIniFormatException
     {
         OptionParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
-    public void store(OutputStream output) throws IOException
+    @Override public void load(File input) throws IOException, InvalidIniFormatException
+    {
+        Reader reader = new FileReader(input);
+
+        OptionParser.newInstance(getConfig()).parse(reader, new Builder());
+        reader.close();
+    }
+
+    @Override public void store() throws IOException
+    {
+        if (_file == null)
+        {
+            throw new FileNotFoundException();
+        }
+
+        store(_file);
+    }
+
+    @Override public void store(OutputStream output) throws IOException
     {
         format(new OutputStreamWriter(output));
     }
 
-    public void store(Writer output) throws IOException
+    @Override public void store(Writer output) throws IOException
     {
         format(output);
+    }
+
+    @Override public void store(File output) throws IOException
+    {
+        Writer writer = new FileWriter(output);
+
+        format(writer);
+        writer.close();
     }
 
     protected Config getConfig()

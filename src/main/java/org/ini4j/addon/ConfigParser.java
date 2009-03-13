@@ -128,8 +128,7 @@ public class ConfigParser
         return get(section, option, raw, Collections.EMPTY_MAP);
     }
 
-    public String get(String sectionName, String optionName, boolean raw, Map<String, String> variables) throws NoSectionException, NoOptionException,
-        InterpolationException
+    public String get(String sectionName, String optionName, boolean raw, Map<String, String> variables) throws NoSectionException, NoOptionException, InterpolationException
     {
         String value = requireOption(sectionName, optionName);
 
@@ -165,8 +164,7 @@ public class ConfigParser
         return items(sectionName, raw, Collections.EMPTY_MAP);
     }
 
-    public List<Map.Entry<String, String>> items(String sectionName, boolean raw, Map<String, String> variables) throws NoSectionException,
-        InterpolationMissingOptionException
+    public List<Map.Entry<String, String>> items(String sectionName, boolean raw, Map<String, String> variables) throws NoSectionException, InterpolationMissingOptionException
     {
         Ini.Section section = requireSection(sectionName);
         Map<String, String> ret;
@@ -450,7 +448,7 @@ public class ConfigParser
             {
                 if (_defaultSection == null)
                 {
-                    _defaultSection = new Ini.Section(name);
+                    _defaultSection = new DefaultSection(name);
                 }
 
                 section = _defaultSection;
@@ -547,6 +545,14 @@ public class ConfigParser
             }
 
             formatter.endSection();
+        }
+
+        protected class DefaultSection extends SectionImpl
+        {
+            protected DefaultSection(String name)
+            {
+                super(name);
+            }
         }
     }
 }
