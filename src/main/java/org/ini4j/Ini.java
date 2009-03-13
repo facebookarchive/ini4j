@@ -19,6 +19,10 @@ import org.ini4j.spi.AbstractBeanInvocationHandler;
 import org.ini4j.spi.IniFormatter;
 import org.ini4j.spi.XMLFormatter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,7 +40,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Ini extends MultiMapImpl<String, Ini.Section>
+public class Ini extends MultiMapImpl<String, Ini.Section> implements Profile<Ini.Section>
 {
     private static final String SECTION_SYSTEM_PROPERTIES = "@prop";
     private static final String SECTION_ENVIRONMENT = "@env";
@@ -47,6 +51,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
     private static final int G_OPTION_IDX = 7;
     private Map<Class, Object> _beans;
     private Config _config = Config.getGlobal();
+    private File _file;
 
     public Ini()
     {
@@ -71,9 +76,26 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         load(input);
     }
 
+    public Ini(File input) throws IOException, InvalidIniFormatException
+    {
+        this();
+        _file = input;
+        load();
+    }
+
     public void setConfig(Config value)
     {
         _config = value;
+    }
+
+    public File getFile()
+    {
+        return _file;
+    }
+
+    public void setFile(File value)
+    {
+        _file = value;
     }
 
     public Section add(String name)
@@ -127,6 +149,16 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         return get(section).get(option, index, clazz);
     }
 
+    public void load() throws IOException, InvalidIniFormatException
+    {
+        if (_file == null)
+        {
+            throw new FileNotFoundException();
+        }
+
+        load(_file);
+    }
+
     public void load(InputStream input) throws IOException, InvalidIniFormatException
     {
         IniParser.newInstance(getConfig()).parse(input, new Builder());
@@ -135,6 +167,14 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
     public void load(Reader input) throws IOException, InvalidIniFormatException
     {
         IniParser.newInstance(getConfig()).parse(input, new Builder());
+    }
+
+    public void load(File input) throws IOException, InvalidIniFormatException
+    {
+        Reader reader = new FileReader(input);
+
+        IniParser.newInstance(getConfig()).parse(reader, new Builder());
+        reader.close();
     }
 
     public void load(URL input) throws IOException, InvalidIniFormatException
@@ -176,6 +216,16 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         return remove((Object) section.getName());
     }
 
+    public void store() throws IOException
+    {
+        if (_file == null)
+        {
+            throw new FileNotFoundException();
+        }
+
+        store(_file);
+    }
+
     public void store(OutputStream output) throws IOException
     {
         store(IniFormatter.newInstance(output, getConfig()));
@@ -184,6 +234,14 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
     public void store(Writer output) throws IOException
     {
         store(IniFormatter.newInstance(output, getConfig()));
+    }
+
+    public void store(File output) throws IOException
+    {
+        Writer writer = new FileWriter(output);
+
+        store(IniFormatter.newInstance(writer, getConfig()));
+        writer.close();
     }
 
     public void storeToXML(OutputStream output) throws IOException
@@ -296,7 +354,7 @@ public class Ini extends MultiMapImpl<String, Ini.Section>
         return (m.group(G_SECTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_SECTION_IDX));
     }
 
-    public class Section extends OptionMapImpl
+    public class Section extends OptionMapImpl implements Profile.Section
     {
         private Map<Class, Object> _beans;
         private final String _name;
