@@ -15,6 +15,8 @@
  */
 package org.ini4j;
 
+import org.ini4j.test.Helper;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;

@@ -16,13 +16,14 @@
 package org.ini4j.tutorial;
 
 import org.ini4j.Config;
-import org.ini4j.DwarfsData;
 import org.ini4j.Ini;
 import org.ini4j.Options;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.DwarfBean;
 import org.ini4j.sample.Dwarfs;
+
+import org.ini4j.test.DwarfsData;
 
 import static org.junit.Assert.*;
 
@@ -57,24 +58,24 @@ public class BeanTutorial extends AbstractTutorial
 {
     public static void main(String[] args) throws Exception
     {
-        new BeanTutorial().run(args);
+        new BeanTutorial().run(filearg(args));
     }
 
-    protected void run() throws Exception
+    protected void run(File arg) throws Exception
     {
-        Ini ini = new Ini(getArgument().toURI().toURL());
+        Ini ini = new Ini(arg.toURI().toURL());
 
         sample01(ini);
         sample02(ini);
         sample03(ini);
-        sample04(getArgument().toURI().toURL());
+        sample04(arg.toURI().toURL());
         Options opts = new Options();
 
         opts.putAll(ini.get(Dwarfs.PROP_BASHFUL));
         sample05(opts);
 
         //
-        File optFile = new File(getArgument().getParentFile(), OptTutorial.FILENAME);
+        File optFile = new File(arg.getParentFile(), OptTutorial.FILENAME);
 
         sample06(optFile.toURI().toURL());
     }

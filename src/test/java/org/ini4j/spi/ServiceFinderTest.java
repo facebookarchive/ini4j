@@ -15,8 +15,9 @@
  */
 package org.ini4j.spi;
 
-import org.ini4j.Helper;
 import org.ini4j.IniParser;
+
+import org.ini4j.test.Helper;
 
 import org.junit.AfterClass;
 

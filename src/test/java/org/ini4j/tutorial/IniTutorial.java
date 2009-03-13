@@ -15,11 +15,12 @@
  */
 package org.ini4j.tutorial;
 
-import org.ini4j.DwarfsData;
-import org.ini4j.Helper;
 import org.ini4j.Ini;
 
 import org.ini4j.sample.Dwarf;
+
+import org.ini4j.test.DwarfsData;
+import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
 
@@ -48,14 +49,14 @@ public class IniTutorial extends AbstractTutorial
 {
     public static void main(String[] args) throws Exception
     {
-        new IniTutorial().run(args);
+        new IniTutorial().run(filearg(args));
     }
 
-    protected void run() throws Exception
+    protected void run(File arg) throws Exception
     {
-        Ini ini = new Ini(getArgument().toURI().toURL());
+        Ini ini = new Ini(arg.toURI().toURL());
 
-        sample01(getArgument());
+        sample01(arg);
         sample02(ini);
     }
 

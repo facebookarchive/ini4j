@@ -16,11 +16,12 @@
 package org.ini4j.addon;
 
 import org.ini4j.Config;
-import org.ini4j.Helper;
 import org.ini4j.Ini;
 import org.ini4j.IniHandler;
 
 import org.ini4j.spi.IniFormatter;
+
+import org.ini4j.test.Helper;
 
 import org.junit.AfterClass;
 

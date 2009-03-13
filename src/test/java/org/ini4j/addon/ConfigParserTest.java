@@ -15,12 +15,13 @@
  */
 package org.ini4j.addon;
 
-import org.ini4j.DwarfsData;
-import org.ini4j.Helper;
 import org.ini4j.Ini;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.Dwarfs;
+
+import org.ini4j.test.DwarfsData;
+import org.ini4j.test.Helper;
 
 import org.junit.After;
 

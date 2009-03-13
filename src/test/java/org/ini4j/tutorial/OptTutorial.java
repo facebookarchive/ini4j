@@ -15,11 +15,12 @@
  */
 package org.ini4j.tutorial;
 
-import org.ini4j.DwarfsData;
-import org.ini4j.Helper;
 import org.ini4j.Options;
 
 import org.ini4j.sample.Dwarf;
+
+import org.ini4j.test.DwarfsData;
+import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
 
@@ -108,14 +109,14 @@ public class OptTutorial extends AbstractTutorial
 
     public static void main(String[] args) throws Exception
     {
-        new OptTutorial().run(args);
+        new OptTutorial().run(filearg(args));
     }
 
-    protected void run() throws Exception
+    protected void run(File arg) throws Exception
     {
-        Options opt = new Options(getArgument().toURI().toURL());
+        Options opt = new Options(arg.toURI().toURL());
 
-        sample01(getArgument());
+        sample01(arg);
         sample02(opt);
     }
 

@@ -18,6 +18,9 @@ package org.ini4j;
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.Dwarfs;
 
+import org.ini4j.test.DwarfsData;
+import org.ini4j.test.Helper;
+
 import org.junit.AfterClass;
 
 import static org.junit.Assert.*;

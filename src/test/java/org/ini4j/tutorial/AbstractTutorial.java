@@ -20,18 +20,11 @@ import java.io.File;
 public abstract class AbstractTutorial
 {
     public static final String FILENAME = "../sample/dwarfs.ini";
-    protected File _argument;
 
-    public void run(String[] args) throws Exception
+    protected abstract void run(File arg) throws Exception;
+
+    protected static File filearg(String[] args)
     {
-        _argument = new File((args.length > 0) ? args[0] : FILENAME);
-        run();
-    }
-
-    protected abstract void run() throws Exception;
-
-    protected File getArgument()
-    {
-        return _argument;
+        return new File((args.length > 0) ? args[0] : FILENAME);
     }
 }

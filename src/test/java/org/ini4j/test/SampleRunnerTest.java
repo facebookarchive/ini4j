@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j;
+package org.ini4j.test;
 
 import org.ini4j.sample.BeanEventSample;
 import org.ini4j.sample.BeanSample;
@@ -34,6 +34,7 @@ import org.ini4j.sample.ToSample;
 
 import org.ini4j.tutorial.BeanTutorial;
 import org.ini4j.tutorial.IniTutorial;
+import org.ini4j.tutorial.OneMinuteTutorial;
 import org.ini4j.tutorial.OptTutorial;
 import org.ini4j.tutorial.PrefsTutorial;
 
@@ -109,7 +110,8 @@ public class SampleRunnerTest
                     { IniTutorial.class },
                     { BeanTutorial.class },
                     { OptTutorial.class },
-                    { PrefsTutorial.class }
+                    { PrefsTutorial.class },
+                    { OneMinuteTutorial.class }
                 });
     }
 

@@ -15,11 +15,12 @@
  */
 package org.ini4j.spi;
 
-import org.ini4j.Helper;
 import org.ini4j.OptionMapImpl;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.DwarfBean;
+
+import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
 

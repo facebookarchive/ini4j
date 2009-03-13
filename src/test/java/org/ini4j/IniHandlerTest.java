@@ -20,6 +20,9 @@ import org.easymock.classextension.EasyMock;
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.Dwarfs;
 
+import org.ini4j.test.DwarfsData;
+import org.ini4j.test.Helper;
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
