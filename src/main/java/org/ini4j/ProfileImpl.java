@@ -16,6 +16,7 @@
 package org.ini4j;
 
 import org.ini4j.spi.AbstractBeanInvocationHandler;
+import org.ini4j.spi.BeanTool;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Proxy;
@@ -45,54 +46,59 @@ public class ProfileImpl extends MultiMapImpl<String, Profile.Section> implement
         return s;
     }
 
+    @Override public void add(String section, String option, Object value)
+    {
+        getOrAdd(section).add(option, value);
+    }
+
     @Override public <T> T as(Class<T> clazz)
     {
         return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler()));
     }
 
-    @Override public String fetch(String section, String option)
+    @Override public String fetch(Object sectionName, Object optionName)
     {
-        return get(section).fetch(option);
+        Section sec = get(sectionName);
+
+        return (sec == null) ? null : sec.fetch(optionName);
     }
 
-    @Override public <T> T fetch(String section, String option, Class<T> clazz)
+    @Override public <T> T fetch(Object sectionName, Object optionName, Class<T> clazz)
     {
-        return get(section).fetch(option, clazz);
+        Section sec = get(sectionName);
+
+        return (sec == null) ? BeanTool.getInstance().zero(clazz) : sec.fetch(optionName, clazz);
     }
 
-    @Override public <T> T fetch(String section, String option, int index, Class<T> clazz)
+    @Override public String get(Object sectionName, Object optionName)
     {
-        return get(section).fetch(option, index, clazz);
+        Section sec = get(sectionName);
+
+        return (sec == null) ? null : sec.get(optionName);
     }
 
-    @Override public String get(String section, String option)
+    @Override public <T> T get(Object sectionName, Object optionName, Class<T> clazz)
     {
-        return get(section).get(option);
+        Section sec = get(sectionName);
+
+        return (sec == null) ? BeanTool.getInstance().zero(clazz) : sec.get(optionName, clazz);
     }
 
-    @Override public <T> T get(String section, String option, Class<T> clazz)
+    @Override public String put(String sectionName, String optionName, Object value)
     {
-        return get(section).get(option, clazz);
-    }
-
-    @Override public <T> T get(String section, String option, int index, Class<T> clazz)
-    {
-        return get(section).get(option, index, clazz);
-    }
-
-    @Override public String put(String section, String option, Object value)
-    {
-        return get(section).put(option, value);
-    }
-
-    @Override public String put(String section, String option, int index, Object value)
-    {
-        return get(section).put(option, index, value);
+        return getOrAdd(sectionName).put(optionName, value);
     }
 
     @Override public Section remove(Section section)
     {
         return remove((Object) section.getName());
+    }
+
+    @Override public String remove(Object sectionName, Object optionName)
+    {
+        Section sec = get(sectionName);
+
+        return (sec == null) ? null : sec.remove(optionName);
     }
 
     @Override @Deprecated public synchronized <T> T to(Class<T> clazz)
@@ -148,6 +154,13 @@ public class ProfileImpl extends MultiMapImpl<String, Profile.Section> implement
                 m.reset(buffer);
             }
         }
+    }
+
+    private Section getOrAdd(String sectionName)
+    {
+        Section section = get(sectionName);
+
+        return ((section == null)) ? add(sectionName) : section;
     }
 
     private int parseOptionIndex(Matcher m)

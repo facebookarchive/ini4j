@@ -119,7 +119,8 @@ public class BeanTool
         }
     }
 
-    public Object parse(String value, Class clazz) throws IllegalArgumentException
+    @SuppressWarnings("unchecked")
+    public <T> T parse(String value, Class<T> clazz) throws IllegalArgumentException
     {
         if (clazz == null)
         {
@@ -152,7 +153,7 @@ public class BeanTool
             }
         }
 
-        return o;
+        return (T) o;
     }
 
     public <T> T proxy(Class<T> clazz, BeanAccess props)
@@ -161,7 +162,8 @@ public class BeanTool
                     new BeanInvocationHandler(props)));
     }
 
-    public Object zero(Class clazz)
+    @SuppressWarnings("unchecked")
+    public <T> T zero(Class<T> clazz)
     {
         Object o = null;
 
@@ -201,7 +203,7 @@ public class BeanTool
             }
         }
 
-        return o;
+        return (T) o;
     }
 
     @SuppressWarnings(Warnings.UNCHECKED)

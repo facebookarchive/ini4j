@@ -17,27 +17,25 @@ package org.ini4j;
 
 public interface Profile<S extends Profile.Section> extends MultiMap<String, S>
 {
-    S add(String name);
+    S add(String sectionName);
+
+    void add(String sectionName, String optionName, Object value);
 
     <T> T as(Class<T> clazz);
 
-    String fetch(String section, String option);
+    String fetch(Object sectionName, Object optionName);
 
-    <T> T fetch(String section, String option, Class<T> clazz);
+    <T> T fetch(Object sectionName, Object optionName, Class<T> clazz);
 
-    <T> T fetch(String section, String option, int index, Class<T> clazz);
+    String get(Object sectionName, Object optionName);
 
-    String get(String section, String option);
+    <T> T get(Object sectionName, Object optionName, Class<T> clazz);
 
-    <T> T get(String section, String option, Class<T> clazz);
-
-    <T> T get(String section, String option, int index, Class<T> clazz);
-
-    String put(String section, String option, Object value);
-
-    String put(String section, String option, int index, Object value);
+    String put(String sectionName, String optionName, Object value);
 
     Section remove(S section);
+
+    String remove(Object sectionName, Object optionName);
 
     @Deprecated <T> T to(Class<T> clazz);
 

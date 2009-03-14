@@ -30,6 +30,8 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
@@ -123,6 +125,20 @@ public class IniTest
         Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
         ini = new Ini(Helper.getResourceReader(Helper.DWARFS_INI));
         Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
+        ini = new Ini(Helper.getSourceFile(Helper.DWARFS_INI));
+        Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
+        ini = new Ini();
+        ini.setFile(Helper.getSourceFile(Helper.DWARFS_INI));
+        ini.load();
+        Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void testLoadException() throws Exception
+    {
+        Ini ini = new Ini();
+
+        ini.load();
     }
 
     /**
@@ -274,6 +290,27 @@ public class IniTest
         dup = new Ini();
         dup.load(new InputStreamReader(new ByteArrayInputStream(buffer.toByteArray())));
         Helper.assertEquals(DwarfsData.dwarfs, dup.as(Dwarfs.class));
+
+        //
+        File file = File.createTempFile("test", ".ini");
+
+        file.deleteOnExit();
+        ini.setFile(file);
+        assertEquals(file, ini.getFile());
+        ini.store();
+        dup = new Ini();
+        dup.setFile(file);
+        dup.load();
+        Helper.assertEquals(DwarfsData.dwarfs, dup.as(Dwarfs.class));
+        file.delete();
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void testStoreException() throws Exception
+    {
+        Ini ini = new Ini();
+
+        ini.store();
     }
 
     /**

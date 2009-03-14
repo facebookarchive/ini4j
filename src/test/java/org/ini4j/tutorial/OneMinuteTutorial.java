@@ -26,6 +26,8 @@ import org.ini4j.test.Helper;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 //<editor-fold defaultstate="collapsed" desc="apt documentation">
@@ -46,16 +48,34 @@ public class OneMinuteTutorial extends AbstractTutorial
         new OneMinuteTutorial().run(filearg(args));
     }
 
-    protected void run(File arg) throws Exception
+    protected void copy(File inputFile, File outputFile) throws IOException
     {
-//        sample01(arg.getCanonicalPath());
-//        sample02(arg.getCanonicalPath());
+        FileInputStream is = new FileInputStream(inputFile);
+        FileOutputStream os = new FileOutputStream(outputFile);
+        byte[] buff = new byte[8192];
+        int n;
+
+        while ((n = is.read(buff)) > 0)
+        {
+            os.write(buff, 0, n);
+        }
+
+        is.close();
+        os.close();
+    }
+
+    @Override protected void run(File arg) throws Exception
+    {
+        File file = File.createTempFile("tutorial", ".ini");
+
+        file.deleteOnExit();
+        copy(arg, file);
+        sample01(file.getCanonicalPath());
+        sample02(file.getCanonicalPath());
     }
 
 //|
-//|*First step
-//|
-//| Lets read some value from .ini file (ofcourse in type safe way)...
+//| Lets read some value from .ini file ...
 //|
 //{
     void sample01(String filename) throws IOException
@@ -63,18 +83,17 @@ public class OneMinuteTutorial extends AbstractTutorial
         Ini ini = new Ini(new File(filename));
         int age = ini.get("happy", "age", int.class);
         double height = ini.get("happy", "height", double.class);
+        String dir = ini.get("happy", "homeDir");
 
-//| ... assuming there is a section with name <<<happy>>>, which contains at least
-//| two options: <<<age>>> and <<<height>>>
 //}
+//| ... assuming there is a section with name <<<happy>>>, which contains at least
+//| three options: <<<age>>>, <<<height>>> and <<<homeDir>>> .
         assertEquals(DwarfsData.happy.age, age);
         assertEquals(DwarfsData.happy.height, height, Helper.DELTA);
+        assertEquals(DwarfsData.happy.homeDir, dir);
     }
 
-//|
-//|*Second step
-//|
-//| OK, reading is simple, but whats about writing values ...
+//| Wwhats about writing values ...
 //|
 //{
     void sample02(String filename) throws IOException
@@ -85,10 +104,10 @@ public class OneMinuteTutorial extends AbstractTutorial
         ini.put("sleepy", "weight", 45.6);
         ini.store();
 
+//}
 //| ... and then file will have a section <<<sleepy>>> and in this section there
 //| will be at least two options: <<<age>>> with value <<<55>>> and <<<weight>>>
 //| with value <<<45.6>>>
-//}
         assertEquals(55, (int) ini.get(Dwarfs.PROP_SLEEPY, Dwarf.PROP_AGE, int.class));
         assertEquals(45.6, (double) ini.get(Dwarfs.PROP_SLEEPY, Dwarf.PROP_WEIGHT, double.class), Helper.DELTA);
     }

@@ -61,6 +61,13 @@ public class Options extends OptionMapImpl implements Persistable
         load(input);
     }
 
+    public Options(File input) throws IOException, InvalidIniFormatException
+    {
+        this();
+        setFile(input);
+        load();
+    }
+
     public void setConfig(Config value)
     {
         _config = value;

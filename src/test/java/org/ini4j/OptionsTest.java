@@ -28,6 +28,8 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
@@ -79,6 +81,17 @@ public class OptionsTest
         happy.store(new OutputStreamWriter(buffer));
         dup = new Options(new ByteArrayInputStream(buffer.toByteArray()));
         Helper.assertEquals(DwarfsData.happy, dup.as(Dwarf.class));
+        File file = File.createTempFile("test", ".opt");
+
+        file.deleteOnExit();
+        happy.setFile(file);
+        happy.store();
+        dup = new Options();
+        dup.setFile(file);
+        assertEquals(file, dup.getFile());
+        dup.load();
+        Helper.assertEquals(DwarfsData.happy, dup.as(Dwarf.class));
+        file.delete();
     }
 
     @Test public void testEscape() throws Exception
@@ -98,11 +111,25 @@ public class OptionsTest
         Options o2 = new Options(Helper.getResourceURL(Helper.DWARFS_OPT).openStream());
         Options o3 = new Options(new InputStreamReader(Helper.getResourceURL(Helper.DWARFS_OPT).openStream()));
         Options o4 = new Options(Helper.getResourceURL(Helper.DWARFS_OPT));
+        Options o5 = new Options(Helper.getSourceFile(Helper.DWARFS_OPT));
+        Options o6 = new Options();
 
+        o6.setFile(Helper.getSourceFile(Helper.DWARFS_OPT));
+        o6.load();
         Helper.assertEquals(DwarfsData.dopey, o1.as(Dwarf.class));
         Helper.assertEquals(DwarfsData.dopey, o2.as(Dwarf.class));
         Helper.assertEquals(DwarfsData.dopey, o3.as(Dwarf.class));
         Helper.assertEquals(DwarfsData.dopey, o4.as(Dwarf.class));
+        Helper.assertEquals(DwarfsData.dopey, o5.as(Dwarf.class));
+        Helper.assertEquals(DwarfsData.dopey, o6.as(Dwarf.class));
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void testLoadException() throws Exception
+    {
+        Options opt = new Options();
+
+        opt.load();
     }
 
     @Test public void testLowerCase() throws Exception
@@ -147,8 +174,7 @@ public class OptionsTest
         opts.load(new StringReader("foo\n"));
     }
 
-    @Test
-    @SuppressWarnings("empty-statement")
+    @Test @SuppressWarnings("empty-statement")
     public void testParseError() throws Exception
     {
         for (String s : _badOptions)
@@ -249,5 +275,13 @@ public class OptionsTest
         buffer = new StringBuilder(input);
 
         assertEquals(input, buffer.toString());
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void testStoreException() throws Exception
+    {
+        Options opt = new Options();
+
+        opt.store();
     }
 }

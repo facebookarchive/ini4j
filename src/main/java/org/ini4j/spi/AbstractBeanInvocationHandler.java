@@ -262,7 +262,7 @@ public abstract class AbstractBeanInvocationHandler implements InvocationHandler
         return ret;
     }
 
-    protected Object parse(String value, Class clazz) throws IllegalArgumentException
+    protected Object parse(String value, Class<?> clazz) throws IllegalArgumentException
     {
         return BeanTool.getInstance().parse(value, clazz);
     }
@@ -283,7 +283,7 @@ public abstract class AbstractBeanInvocationHandler implements InvocationHandler
         }
     }
 
-    protected Object zero(Class clazz)
+    protected Object zero(Class<?> clazz)
     {
         return BeanTool.getInstance().zero(clazz);
     }

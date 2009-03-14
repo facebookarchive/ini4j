@@ -17,6 +17,10 @@ package org.ini4j;
 
 public interface OptionMap extends MultiMap<String, String>
 {
+    void add(String key, Object value);
+
+    void add(String key, Object value, int index);
+
     <T> T as(Class<T> clazz);
 
     <T> T as(Class<T> clazz, String keyPrefix);
@@ -39,7 +43,7 @@ public interface OptionMap extends MultiMap<String, String>
 
     String put(String key, Object value);
 
-    String put(String key, int index, Object value);
+    String put(String key, Object value, int index);
 
     void to(Object bean);
 

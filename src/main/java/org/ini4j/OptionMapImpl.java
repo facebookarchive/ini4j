@@ -34,6 +34,16 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
     private static final int G_INDEX = 4;
     private BeanAccess _defaultBeanAccess;
 
+    @Override public void add(String key, Object value)
+    {
+        super.add(key, ((value == null) || (value instanceof String)) ? (String) value : String.valueOf(value));
+    }
+
+    @Override public void add(String key, Object value, int index)
+    {
+        super.add(key, ((value == null) || (value instanceof String)) ? (String) value : String.valueOf(value), index);
+    }
+
     @Override public <T> T as(Class<T> clazz)
     {
         return BeanTool.getInstance().proxy(clazz, getDefaultBeanAccess());
@@ -102,12 +112,12 @@ public class OptionMapImpl extends MultiMapImpl<String, String> implements Optio
 
     @Override public String put(String key, Object value)
     {
-        return put(key, ((value == null) || (value instanceof String)) ? (String) value : String.valueOf(value));
+        return super.put(key, ((value == null) || (value instanceof String)) ? (String) value : String.valueOf(value));
     }
 
-    @Override public String put(String key, int index, Object value)
+    @Override public String put(String key, Object value, int index)
     {
-        return put(key, index, ((value == null) || (value instanceof String)) ? (String) value : String.valueOf(value));
+        return super.put(key, ((value == null) || (value instanceof String)) ? (String) value : String.valueOf(value), index);
     }
 
     @Override public void to(Object bean)

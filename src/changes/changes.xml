@@ -22,8 +22,11 @@
   </properties>
   <body>
     <release version="0.4.2" description="JNDI support">
+      <action type="update" dev="szkiba">
+      Refactor Ini class, extract Profile interface and ProfileImpl superclass.
+      </action>
       <action type="add" dev="szkiba">
-      Comfortable access methods.
+      Comfortable access methods for Profile and Options.
       </action>
     </release>
     <release version="0.4.1" date="2009-03-11" description="Python like ConfigParser Options as java.util.Properties replacement">
