@@ -28,11 +28,12 @@ class IniSource
     public static final char INCLUDE_BEGIN = '<';
     public static final char INCLUDE_END = '>';
     public static final char INCLUDE_OPTIONAL = '?';
-    private static final String EMPTY = "";
+    private static final String NEWLINE = "\n";
     protected final boolean allowInclude;
     protected final String commentChars;
     private URL _base;
     private IniSource _chain;
+    private CommentHandler _commentHandler;
     private final LineNumberReader _reader;
 
     protected IniSource(InputStream input, boolean includeFlag, String comments)
@@ -55,6 +56,11 @@ class IniSource
         _reader = new LineNumberReader(new InputStreamReader(input.openStream()));
         allowInclude = includeFlag;
         commentChars = comments;
+    }
+
+    protected void setCommentHandler(CommentHandler value)
+    {
+        _commentHandler = value;
     }
 
     protected int getLineNumber()
@@ -86,6 +92,20 @@ class IniSource
         }
 
         return line;
+    }
+
+    private void handleComment(StringBuilder buff)
+    {
+        if (buff.length() != 0)
+        {
+            if (_commentHandler != null)
+            {
+                buff.deleteCharAt(buff.length() - 1);
+                _commentHandler.handleComment(buff.toString());
+            }
+
+            buff.delete(0, buff.length());
+        }
     }
 
     private String handleInclude(String input) throws IOException
@@ -131,12 +151,7 @@ class IniSource
 
     private String readLineLocal() throws IOException
     {
-        String line = readLineLocalOne();
-
-        while ((line != null) && (line.length() == 0))
-        {
-            line = readLineLocalOne();
-        }
+        String line = readLineSkipComments();
 
         if (line == null)
         {
@@ -150,17 +165,35 @@ class IniSource
         return line;
     }
 
-    private String readLineLocalOne() throws IOException
+    private String readLineSkipComments() throws IOException
     {
-        String line = _reader.readLine();
+        String line;
+        StringBuilder comment = new StringBuilder();
 
-        if (line != null)
+        for (line = _reader.readLine(); line != null; line = _reader.readLine())
         {
             line = line.trim();
-            if ((line.length() != 0) && (commentChars.indexOf(line.charAt(0)) >= 0))
+            if (line.length() == 0)
             {
-                line = EMPTY;
+                handleComment(comment);
             }
+            else if (commentChars.indexOf(line.charAt(0)) >= 0)
+            {
+                comment.append(line.substring(1));
+                comment.append(NEWLINE);
+            }
+            else
+            {
+                handleComment(comment);
+
+                break;
+            }
+        }
+
+        // handle end comments
+        if ((line == null) && (comment.length() != 0))
+        {
+            handleComment(comment);
         }
 
         return line;

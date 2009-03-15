@@ -37,7 +37,6 @@ import java.io.IOException;
 //|
 //|One minute Tutorial
 //|
-//| Using \[ini4j\] is realy simple !
 //|
 //|
 //</editor-fold>

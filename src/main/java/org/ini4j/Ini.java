@@ -33,6 +33,7 @@ import java.net.URL;
 
 public class Ini extends ProfileImpl implements Persistable
 {
+    private String _comment;
     private Config _config = Config.getGlobal();
     private File _file;
 
@@ -64,6 +65,16 @@ public class Ini extends ProfileImpl implements Persistable
         this();
         _file = input;
         load();
+    }
+
+    public String getComment()
+    {
+        return _comment;
+    }
+
+    public void setComment(String value)
+    {
+        _comment = value;
     }
 
     public void setConfig(Config value)
@@ -198,13 +209,20 @@ public class Ini extends ProfileImpl implements Persistable
         formatter.endIni();
     }
 
-    private class Builder implements IniHandler
+    private class Builder implements IniHandler, CommentHandler
     {
         private Section _currentSection;
+        private boolean _header;
+        private String _lastComment;
 
         @Override public void endIni()
         {
-            assert true;
+
+            // comment only .ini files....
+            if ((_lastComment != null) && _header)
+            {
+                setComment(_lastComment);
+            }
         }
 
         @Override public void endSection()
@@ -212,8 +230,20 @@ public class Ini extends ProfileImpl implements Persistable
             _currentSection = null;
         }
 
+        @Override public void handleComment(String comment)
+        {
+            if ((_lastComment != null) && _header)
+            {
+                setComment(_lastComment);
+                _header = false;
+            }
+
+            _lastComment = comment;
+        }
+
         @Override public void handleOption(String name, String value)
         {
+            _header = false;
             if (getConfig().isMultiOption())
             {
                 _currentSection.add(name, value);
@@ -222,11 +252,17 @@ public class Ini extends ProfileImpl implements Persistable
             {
                 _currentSection.put(name, value);
             }
+
+            if (_lastComment != null)
+            {
+                _currentSection.putComment(name, _lastComment);
+                _lastComment = null;
+            }
         }
 
         @Override public void startIni()
         {
-            assert true;
+            _header = true;
         }
 
         @Override public void startSection(String sectionName)
@@ -241,6 +277,22 @@ public class Ini extends ProfileImpl implements Persistable
 
                 _currentSection = (s == null) ? add(sectionName) : s;
             }
+
+            if (_lastComment != null)
+            {
+                if (_header)
+                {
+                    setComment(_lastComment);
+                }
+                else
+                {
+                    putComment(sectionName, _lastComment);
+                }
+
+                _lastComment = null;
+            }
+
+            _header = false;
         }
     }
 }

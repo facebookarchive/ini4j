@@ -15,7 +15,7 @@
  */
 package org.ini4j;
 
-public interface OptionMap extends MultiMap<String, String>
+public interface OptionMap extends CommentMultiMap<String, String>
 {
     void add(String key, Object value);
 

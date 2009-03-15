@@ -34,6 +34,7 @@ public final class DwarfsData implements Dwarfs
     public static final DwarfData sleepy;
     public static final DwarfData sneezy;
     public static final Dwarfs dwarfs;
+    public static final String[] dwarfNames;
 
     static
     {
@@ -47,6 +48,7 @@ public final class DwarfsData implements Dwarfs
         sleepy = new DwarfData(121, new int[] { 99 }, doc.height + 0.08, "/home/sleepy", "http://snowwhite.tale/~sleepy", 76.11);
         sneezy = new DwarfData(64, new int[] { 11, 22, 33, 44 }, 76.88, "/home/sneezy", happy.homePage.toString() + "/~sneezy", 69.7);
         dwarfs = new DwarfsData();
+        dwarfNames = new String[] { "bashful", "doc", "dopey", "grumpy", "happy", "sleepy", "sneezy" };
     }
 
     @SuppressWarnings("empty-statement")

@@ -110,18 +110,28 @@ public abstract class AbstractParser
         return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
     }
 
-    IniSource newIniSource(InputStream input)
+    IniSource newIniSource(InputStream input, OptionHandler handler)
     {
-        return new IniSource(input, getConfig().isInclude(), _comments);
+        return addCommentHandler(new IniSource(input, getConfig().isInclude(), _comments), handler);
     }
 
-    IniSource newIniSource(Reader input)
+    IniSource newIniSource(Reader input, OptionHandler handler)
     {
-        return new IniSource(input, getConfig().isInclude(), _comments);
+        return addCommentHandler(new IniSource(input, getConfig().isInclude(), _comments), handler);
     }
 
-    IniSource newIniSource(URL input) throws IOException
+    IniSource newIniSource(URL input, OptionHandler handler) throws IOException
     {
-        return new IniSource(input, getConfig().isInclude(), _comments);
+        return addCommentHandler(new IniSource(input, getConfig().isInclude(), _comments), handler);
+    }
+
+    private IniSource addCommentHandler(IniSource source, OptionHandler handler)
+    {
+        if (handler instanceof CommentHandler)
+        {
+            source.setCommentHandler((CommentHandler) handler);
+        }
+
+        return source;
     }
 }

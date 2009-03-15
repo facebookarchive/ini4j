@@ -23,50 +23,53 @@ import java.io.Reader;
 
 import java.net.URL;
 
-public class OptionParser extends AbstractParser
+public class OptionsParser extends AbstractParser
 {
     private static final String COMMENTS = "!#";
     private static final String OPERATORS = ":=";
 
-    public OptionParser()
+    public OptionsParser()
     {
         super(OPERATORS, COMMENTS);
     }
 
-    public static OptionParser newInstance()
+    public static OptionsParser newInstance()
     {
-        return ServiceFinder.findService(OptionParser.class);
+        return ServiceFinder.findService(OptionsParser.class);
     }
 
-    public static OptionParser newInstance(Config config)
+    public static OptionsParser newInstance(Config config)
     {
-        OptionParser instance = newInstance();
+        OptionsParser instance = newInstance();
 
         instance.setConfig(config);
 
         return instance;
     }
 
-    public void parse(InputStream input, OptionHandler handler) throws IOException, InvalidIniFormatException
+    public void parse(InputStream input, OptionsHandler handler) throws IOException, InvalidIniFormatException
     {
-        parse(newIniSource(input), handler);
+        parse(newIniSource(input, handler), handler);
     }
 
-    public void parse(Reader input, OptionHandler handler) throws IOException, InvalidIniFormatException
+    public void parse(Reader input, OptionsHandler handler) throws IOException, InvalidIniFormatException
     {
-        parse(newIniSource(input), handler);
+        parse(newIniSource(input, handler), handler);
     }
 
-    public void parse(URL input, OptionHandler handler) throws IOException, InvalidIniFormatException
+    public void parse(URL input, OptionsHandler handler) throws IOException, InvalidIniFormatException
     {
-        parse(newIniSource(input), handler);
+        parse(newIniSource(input, handler), handler);
     }
 
-    private void parse(IniSource source, OptionHandler handler) throws IOException, InvalidIniFormatException
+    private void parse(IniSource source, OptionsHandler handler) throws IOException, InvalidIniFormatException
     {
+        handler.startOptions();
         for (String line = source.readLine(); line != null; line = source.readLine())
         {
             parseOptionLine(line, handler, source.getLineNumber());
         }
+
+        handler.endOptions();
     }
 }

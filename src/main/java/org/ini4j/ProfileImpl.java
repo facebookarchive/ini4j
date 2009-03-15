@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ProfileImpl extends MultiMapImpl<String, Profile.Section> implements Profile<Profile.Section>
+public class ProfileImpl extends CommentMultiMapImpl<String, Profile.Section> implements Profile<Profile.Section>
 {
     private static final String SECTION_SYSTEM_PROPERTIES = "@prop";
     private static final String SECTION_ENVIRONMENT = "@env";

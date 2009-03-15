@@ -22,6 +22,12 @@
   </properties>
   <body>
     <release version="0.4.2" description="JNDI support">
+      <action type="add" dev="szkiba">
+      Comment support for Ini and Options. There is a header comment, section
+      comment and option comment. Comments at beginig of file are header
+      comments. Continous comment block before section is a section comment,
+      continous comment bleck before option is an option comment.
+      </action>
       <action type="update" dev="szkiba">
       Refactor Ini class, extract Profile interface and ProfileImpl superclass.
       </action>

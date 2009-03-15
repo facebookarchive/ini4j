@@ -15,7 +15,7 @@
  */
 package org.ini4j;
 
-public interface Profile<S extends Profile.Section> extends MultiMap<String, S>
+public interface Profile<S extends Profile.Section> extends CommentMultiMap<String, S>
 {
     S add(String sectionName);
 

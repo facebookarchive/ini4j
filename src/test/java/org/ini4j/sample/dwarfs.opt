@@ -1,4 +1,3 @@
-#
 # Copyright 2005,2009 Ivan SZKIBA
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+
 #|                        ----------
 #|                        dwarfs.opt
 #|
@@ -21,6 +20,8 @@
 #| Common .opt file for tutorials
 #|
 #{
+
+!
 ! Dopey properties without prefix
 !
 weight = ${bashful.weight}
@@ -31,9 +32,11 @@ homeDir = c:\\Documents and Settings\\dopey
 fortuneNumber = 11
 fortuneNumber = 33
 fortuneNumber = 55
+
 !
 ! dwarf properties prefixed with dwarf names
 !
+
 ! Bashful
 bashful.weight = 45.7
 bashful.height = 98.8

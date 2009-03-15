@@ -34,6 +34,7 @@ public class Options extends OptionMapImpl implements Persistable
 {
     private static final char OPERATOR = '=';
     private static final String NEWLINE = "\n";
+    private String _comment;
     private Config _config;
     private File _file;
 
@@ -64,8 +65,18 @@ public class Options extends OptionMapImpl implements Persistable
     public Options(File input) throws IOException, InvalidIniFormatException
     {
         this();
-        setFile(input);
+        _file = input;
         load();
+    }
+
+    public String getComment()
+    {
+        return _comment;
+    }
+
+    public void setComment(String value)
+    {
+        _comment = value;
     }
 
     public void setConfig(Config value)
@@ -95,24 +106,24 @@ public class Options extends OptionMapImpl implements Persistable
 
     @Override public void load(InputStream input) throws IOException, InvalidIniFormatException
     {
-        OptionParser.newInstance(getConfig()).parse(input, new Builder());
+        OptionsParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
     @Override public void load(Reader input) throws IOException, InvalidIniFormatException
     {
-        OptionParser.newInstance(getConfig()).parse(input, new Builder());
+        OptionsParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
     @Override public void load(URL input) throws IOException, InvalidIniFormatException
     {
-        OptionParser.newInstance(getConfig()).parse(input, new Builder());
+        OptionsParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
     @Override public void load(File input) throws IOException, InvalidIniFormatException
     {
         Reader reader = new FileReader(input);
 
-        OptionParser.newInstance(getConfig()).parse(reader, new Builder());
+        OptionsParser.newInstance(getConfig()).parse(reader, new Builder());
         reader.close();
     }
 
@@ -181,8 +192,32 @@ public class Options extends OptionMapImpl implements Persistable
         output.flush();
     }
 
-    private class Builder implements OptionHandler
+    private class Builder implements OptionsHandler, CommentHandler
     {
+        private boolean _header;
+        private String _lastComment;
+
+        public void endOptions()
+        {
+
+            // comment only .opt file ...
+            if ((_lastComment != null) && _header)
+            {
+                setComment(_lastComment);
+            }
+        }
+
+        @Override public void handleComment(String comment)
+        {
+            if ((_lastComment != null) && _header)
+            {
+                setComment(_lastComment);
+                _header = false;
+            }
+
+            _lastComment = comment;
+        }
+
         @Override public void handleOption(String name, String value)
         {
             if (getConfig().isMultiOption())
@@ -193,6 +228,27 @@ public class Options extends OptionMapImpl implements Persistable
             {
                 put(name, value);
             }
+
+            if (_lastComment != null)
+            {
+                if (_header)
+                {
+                    setComment(_lastComment);
+                }
+                else
+                {
+                    putComment(name, _lastComment);
+                }
+
+                _lastComment = null;
+            }
+
+            _header = false;
+        }
+
+        public void startOptions()
+        {
+            _header = true;
         }
     }
 }

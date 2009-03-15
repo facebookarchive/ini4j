@@ -22,7 +22,7 @@ import org.ini4j.spi.Warnings;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class OptionMapImpl extends MultiMapImpl<String, String> implements OptionMap
+public class OptionMapImpl extends CommentMultiMapImpl<String, String> implements OptionMap
 {
     private static final char SUBST_CHAR = '$';
     private static final String SYSTEM_PROPERTY_PREFIX = "@prop/";

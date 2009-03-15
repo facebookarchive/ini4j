@@ -62,17 +62,17 @@ public class IniParser extends AbstractParser
 
     public void parse(InputStream input, IniHandler handler) throws IOException, InvalidIniFormatException
     {
-        parse(newIniSource(input), handler);
+        parse(newIniSource(input, handler), handler);
     }
 
     public void parse(Reader input, IniHandler handler) throws IOException, InvalidIniFormatException
     {
-        parse(newIniSource(input), handler);
+        parse(newIniSource(input, handler), handler);
     }
 
     public void parse(URL input, IniHandler handler) throws IOException, InvalidIniFormatException
     {
-        parse(newIniSource(input), handler);
+        parse(newIniSource(input, handler), handler);
     }
 
     public void parseXML(InputStream input, IniHandler handler) throws IOException, InvalidIniFormatException
