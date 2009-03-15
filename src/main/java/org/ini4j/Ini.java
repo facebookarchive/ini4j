@@ -190,11 +190,14 @@ public class Ini extends ProfileImpl implements Persistable
     protected void store(IniHandler formatter) throws IOException
     {
         formatter.startIni();
+        handleComment(formatter, _comment);
         for (Ini.Section s : values())
         {
+            handleComment(formatter, getComment(s.getName()));
             formatter.startSection(s.getName());
             for (String name : s.keySet())
             {
+                handleComment(formatter, s.getComment(name));
                 int n = getConfig().isMultiOption() ? s.length(name) : 1;
 
                 for (int i = 0; i < n; i++)
@@ -207,6 +210,14 @@ public class Ini extends ProfileImpl implements Persistable
         }
 
         formatter.endIni();
+    }
+
+    private void handleComment(IniHandler formatter, String comment)
+    {
+        if ((comment != null) && (comment.length() != 0) && (formatter instanceof CommentHandler))
+        {
+            ((CommentHandler) formatter).handleComment(comment);
+        }
     }
 
     private class Builder implements IniHandler, CommentHandler

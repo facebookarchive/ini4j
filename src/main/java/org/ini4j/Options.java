@@ -16,6 +16,7 @@
 package org.ini4j;
 
 import org.ini4j.spi.EscapeTool;
+import org.ini4j.spi.OptionsFormatter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,7 +25,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -32,8 +32,6 @@ import java.net.URL;
 
 public class Options extends OptionMapImpl implements Persistable
 {
-    private static final char OPERATOR = '=';
-    private static final String NEWLINE = "\n";
     private String _comment;
     private Config _config;
     private File _file;
@@ -139,19 +137,19 @@ public class Options extends OptionMapImpl implements Persistable
 
     @Override public void store(OutputStream output) throws IOException
     {
-        format(new OutputStreamWriter(output));
+        store(OptionsFormatter.newInstance(output, getConfig()));
     }
 
     @Override public void store(Writer output) throws IOException
     {
-        format(output);
+        store(OptionsFormatter.newInstance(output, getConfig()));
     }
 
     @Override public void store(File output) throws IOException
     {
         Writer writer = new FileWriter(output);
 
-        format(writer);
+        store(writer);
         writer.close();
     }
 
@@ -165,31 +163,32 @@ public class Options extends OptionMapImpl implements Persistable
         return getConfig().isEscape() ? EscapeTool.getInstance().escape(input) : input;
     }
 
-    protected void format(Writer output) throws IOException
+    protected void store(OptionsHandler formatter) throws IOException
     {
+        formatter.startOptions();
+        handleComment(formatter, _comment);
         for (String name : keySet())
         {
+            handleComment(formatter, getComment(name));
             int n = getConfig().isMultiOption() ? length(name) : 1;
 
             for (int i = 0; i < n; i++)
             {
                 String value = get(name, i);
 
-                if ((value != null) || getConfig().isEmptyOption())
-                {
-                    output.append(escape(name));
-                    output.append(OPERATOR);
-                    if (value != null)
-                    {
-                        output.append(escape(value));
-                    }
-
-                    output.append(NEWLINE);
-                }
+                formatter.handleOption(name, value);
             }
         }
 
-        output.flush();
+        formatter.endOptions();
+    }
+
+    private void handleComment(OptionsHandler formatter, String comment)
+    {
+        if ((comment != null) && (comment.length() != 0) && (formatter instanceof CommentHandler))
+        {
+            ((CommentHandler) formatter).handleComment(comment);
+        }
     }
 
     private class Builder implements OptionsHandler, CommentHandler

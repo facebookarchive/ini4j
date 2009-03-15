@@ -16,68 +16,55 @@
 package org.ini4j.spi;
 
 import org.ini4j.Config;
-import org.ini4j.IniHandler;
-import org.ini4j.IniParser;
+import org.ini4j.OptionsHandler;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 
-public class IniFormatter extends AbstractFormatter implements IniHandler
+public class OptionsFormatter extends AbstractFormatter implements OptionsHandler
 {
-    public static IniFormatter newInstance(Writer out)
+    public static OptionsFormatter newInstance(Writer out)
     {
-        IniFormatter instance = newInstance();
+        OptionsFormatter instance = newInstance();
 
         instance.setOutput(new PrintWriter(out));
 
         return instance;
     }
 
-    public static IniFormatter newInstance(OutputStream out)
+    public static OptionsFormatter newInstance(OutputStream out)
     {
         return newInstance(new OutputStreamWriter(out));
     }
 
-    public static IniFormatter newInstance(Writer out, Config config)
+    public static OptionsFormatter newInstance(Writer out, Config config)
     {
-        IniFormatter instance = newInstance(out);
+        OptionsFormatter instance = newInstance(out);
 
         instance.setConfig(config);
 
         return instance;
     }
 
-    public static IniFormatter newInstance(OutputStream out, Config config)
+    public static OptionsFormatter newInstance(OutputStream out, Config config)
     {
         return newInstance(new OutputStreamWriter(out), config);
     }
 
-    @Override public void endIni()
+    public void endOptions()
     {
         getOutput().flush();
     }
 
-    @Override public void endSection()
-    {
-        getOutput().println();
-    }
-
-    @Override public void startIni()
+    public void startOptions()
     {
         assert true;
     }
 
-    @Override public void startSection(String sectionName)
+    protected static OptionsFormatter newInstance()
     {
-        getOutput().print(IniParser.SECTION_BEGIN);
-        getOutput().print(escape(sectionName));
-        getOutput().println(IniParser.SECTION_END);
-    }
-
-    protected static IniFormatter newInstance()
-    {
-        return ServiceFinder.findService(IniFormatter.class);
+        return ServiceFinder.findService(OptionsFormatter.class);
     }
 }
