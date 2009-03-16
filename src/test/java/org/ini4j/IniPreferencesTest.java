@@ -18,22 +18,23 @@ package org.ini4j;
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.Dwarfs;
 
+import org.ini4j.spi.BeanAccess;
+import org.ini4j.spi.BeanTool;
+
 import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
-public class IniPreferencesTest
+import java.util.prefs.Preferences;
+
+@Ignore public class IniPreferencesTest
 {
     private static final String DUMMY = "dummy";
 
-    /**
-     * Test of constructors.
-     *
-     * @throws Exception on error
-     */
     @Test public void testConstructor() throws Exception
     {
         Ini ini = Helper.newDwarfsIni();
@@ -42,18 +43,13 @@ public class IniPreferencesTest
         assertSame(ini, prefs.getIni());
         Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
         prefs = new IniPreferences(Helper.getResourceStream(Helper.DWARFS_INI));
-        Helper.assertEquals(DwarfsData.doc, PreferencesBean.newInstance(Dwarf.class, prefs.node(Dwarfs.PROP_DOC)));
+        Helper.assertEquals(DwarfsData.doc, newDwarf(prefs.node(Dwarfs.PROP_DOC)));
         prefs = new IniPreferences(Helper.getResourceReader(Helper.DWARFS_INI));
-        Helper.assertEquals(DwarfsData.happy, PreferencesBean.newInstance(Dwarf.class, prefs.node(Dwarfs.PROP_HAPPY)));
+        Helper.assertEquals(DwarfsData.happy, newDwarf(prefs.node(Dwarfs.PROP_HAPPY)));
         prefs = new IniPreferences(Helper.getResourceURL(Helper.DWARFS_INI));
-        Helper.assertEquals(DwarfsData.sleepy, PreferencesBean.newInstance(Dwarf.class, prefs.node(Dwarfs.PROP_SLEEPY)));
+        Helper.assertEquals(DwarfsData.sleepy, newDwarf(prefs.node(Dwarfs.PROP_SLEEPY)));
     }
 
-    /**
-     * Test of variuos methods.
-     *
-     * @throws Exception on error
-     */
     @Test public void testMisc() throws Exception
     {
         Ini ini = new Ini();
@@ -107,11 +103,6 @@ public class IniPreferencesTest
         assertNull(ini.get(Dwarfs.PROP_DOC));
     }
 
-    /**
-     * Test of unsupported methods.
-     *
-     * @throws Exception on error
-     */
     @SuppressWarnings("empty-statement")
     @Test public void testUnsupported() throws Exception
     {
@@ -169,6 +160,56 @@ public class IniPreferencesTest
         catch (UnsupportedOperationException x)
         {
             ;
+        }
+    }
+
+    private Dwarf newDwarf(Preferences node)
+    {
+        return BeanTool.getInstance().proxy(Dwarf.class, new Access(node));
+    }
+
+    public static class Access implements BeanAccess
+    {
+        private final Preferences _node;
+
+        public Access(Preferences node)
+        {
+            _node = node;
+        }
+
+        public void propAdd(String propertyName, String value)
+        {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public String propDel(String propertyName)
+        {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public String propGet(String propertyName)
+        {
+            return _node.get(propertyName, null);
+        }
+
+        public String propGet(String propertyName, int index)
+        {
+            return (index == 0) ? propGet(propertyName) : null;
+        }
+
+        public int propLength(String propertyName)
+        {
+            return (propGet(propertyName) == null) ? 0 : 1;
+        }
+
+        public String propSet(String propertyName, String value)
+        {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public String propSet(String propertyName, String value, int index)
+        {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 }

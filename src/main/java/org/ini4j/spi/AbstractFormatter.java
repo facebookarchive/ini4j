@@ -15,13 +15,11 @@
  */
 package org.ini4j.spi;
 
-import org.ini4j.CommentHandler;
 import org.ini4j.Config;
-import org.ini4j.OptionHandler;
 
 import java.io.PrintWriter;
 
-public abstract class AbstractFormatter implements OptionHandler, CommentHandler
+public abstract class AbstractFormatter implements HandlerBase
 {
     private static final char OPERATOR = '=';
     private static final char COMMENT = '#';
@@ -30,9 +28,9 @@ public abstract class AbstractFormatter implements OptionHandler, CommentHandler
     private Config _config = Config.getGlobal();
     private PrintWriter _output;
 
-    public Config getConfig()
+    public void setConfig(Config value)
     {
-        return _config;
+        _config = value;
     }
 
     @Override public void handleComment(String comment)
@@ -79,9 +77,9 @@ public abstract class AbstractFormatter implements OptionHandler, CommentHandler
         }
     }
 
-    protected void setConfig(Config value)
+    protected Config getConfig()
     {
-        _config = value;
+        return _config;
     }
 
     protected PrintWriter getOutput()

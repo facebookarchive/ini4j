@@ -15,17 +15,16 @@
  */
 package org.ini4j.spi;
 
-import org.ini4j.IniParser;
-
 import org.ini4j.test.Helper;
 
 import org.junit.AfterClass;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
-public class ServiceFinderTest
+@Ignore public class ServiceFinderTest
 {
     static final String DUMMY = "dummy";
     static final String DUMMY_SERVICE = "org.ini4j.Dummy";

@@ -18,15 +18,13 @@ package org.ini4j.spi;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * JUnit test of Convert class.
- */
-public class EscapeToolTest
+@Ignore public class EscapeToolTest
 {
     protected EscapeTool instance;
 

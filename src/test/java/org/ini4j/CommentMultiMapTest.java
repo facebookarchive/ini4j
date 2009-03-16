@@ -17,9 +17,10 @@ package org.ini4j;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
-public class CommentMultiMapTest
+@Ignore public class CommentMultiMapTest
 {
     private static final String KEY = "key";
     private static final String VALUE = "value";
@@ -27,7 +28,7 @@ public class CommentMultiMapTest
 
     @Test public void testClearAndRemove() throws Exception
     {
-        CommentMultiMap<String, String> map = new CommentMultiMapImpl<String, String>();
+        CommentMultiMap<String, String> map = new BasicCommentMultiMap<String, String>();
 
         assertNull(map.removeComment(KEY));
 

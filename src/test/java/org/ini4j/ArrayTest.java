@@ -17,13 +17,14 @@ package org.ini4j;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.StringReader;
 
 import java.net.URI;
 
-public class ArrayTest
+@Ignore public class ArrayTest
 {
     private static final String NORMAL = "[section]\nnumber=1\nlocation=http://www.ini4j.org\nnumber=2\nlocation=http://ini4j.org\n\n";
     private static final String SECTIONS = "[section]\nnumber=1\n\n[section]\nnumber=2\n\n[single]\nnumber=3\n\n";

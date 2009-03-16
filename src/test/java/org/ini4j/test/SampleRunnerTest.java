@@ -39,6 +39,7 @@ import org.ini4j.tutorial.OptTutorial;
 import org.ini4j.tutorial.PrefsTutorial;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -62,7 +63,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RunWith(Parameterized.class)
-public class SampleRunnerTest
+@Ignore public class SampleRunnerTest
 {
     private static final String DOC_PATH = "generated-site/apt";
     private static final String JAVA_SUFFIX = ".java";

@@ -16,8 +16,6 @@
 package org.ini4j.spi;
 
 import org.ini4j.Config;
-import org.ini4j.IniHandler;
-import org.ini4j.IniParser;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;

@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j.addon;
-
-import org.ini4j.Config;
-import org.ini4j.Ini;
-import org.ini4j.InvalidIniFormatException;
+package org.ini4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,25 +35,25 @@ public class Wini extends Ini
         setConfig(cfg);
     }
 
-    public Wini(File input) throws IOException, InvalidIniFormatException
+    public Wini(File input) throws IOException, InvalidFileFormatException
     {
         this();
         load(input);
     }
 
-    public Wini(URL input) throws IOException, InvalidIniFormatException
+    public Wini(URL input) throws IOException, InvalidFileFormatException
     {
         this();
         load(input);
     }
 
-    public Wini(InputStream input) throws IOException, InvalidIniFormatException
+    public Wini(InputStream input) throws IOException, InvalidFileFormatException
     {
         this();
         load(input);
     }
 
-    public Wini(Reader input) throws IOException, InvalidIniFormatException
+    public Wini(Reader input) throws IOException, InvalidFileFormatException
     {
         this();
         load(input);

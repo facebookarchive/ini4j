@@ -30,15 +30,15 @@ interface Persistable
 
     void setFile(File value);
 
-    void load() throws IOException, InvalidIniFormatException;
+    void load() throws IOException, InvalidFileFormatException;
 
-    void load(InputStream input) throws IOException, InvalidIniFormatException;
+    void load(InputStream input) throws IOException, InvalidFileFormatException;
 
-    void load(Reader input) throws IOException, InvalidIniFormatException;
+    void load(Reader input) throws IOException, InvalidFileFormatException;
 
-    void load(File input) throws IOException, InvalidIniFormatException;
+    void load(File input) throws IOException, InvalidFileFormatException;
 
-    void load(URL input) throws IOException, InvalidIniFormatException;
+    void load(URL input) throws IOException, InvalidFileFormatException;
 
     void store() throws IOException;
 

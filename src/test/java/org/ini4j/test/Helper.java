@@ -17,13 +17,13 @@ package org.ini4j.test;
 
 import org.ini4j.Config;
 import org.ini4j.Ini;
-import org.ini4j.IniParser;
 import org.ini4j.Options;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.Dwarfs;
 
 import org.ini4j.spi.IniFormatter;
+import org.ini4j.spi.IniParser;
 
 import org.junit.Assert;
 
@@ -41,7 +41,6 @@ public class Helper
     private static final File _targetDir = new File(System.getProperty("basedir") + "/target");
     public static final String DWARFS_INI = RESOURCE_PREFIX + "dwarfs.ini";
     public static final String DWARFS_OPT = RESOURCE_PREFIX + "dwarfs.opt";
-    public static final String DWARFS_XML = RESOURCE_PREFIX + "dwarfs.xml";
     public static final float DELTA = 0.00000001f;
     private static final String[] CONFIG_PROPERTIES =
         { Config.PROP_EMPTY_OPTION, Config.PROP_GLOBAL_SECTION, Config.PROP_GLOBAL_SECTION_NAME, Config.PROP_INCLUDE, Config.PROP_LOWER_CASE_OPTION, Config.PROP_LOWER_CASE_SECTION, Config.PROP_MULTI_OPTION, Config.PROP_MULTI_SECTION, Config.PROP_STRICT_OPERATOR, Config.PROP_UNNAMED_SECTION, Config.PROP_ESCAPE };
@@ -142,23 +141,23 @@ public class Helper
 
         //
         s = addSection(ini, Dwarfs.PROP_DOPEY, DwarfsData.dopey);
-        s.put(Dwarf.PROP_WEIGHT, "${bashful/weight}", 0);
-        s.put(Dwarf.PROP_HEIGHT, "${doc/height}", 0);
+        s.put(Dwarf.PROP_WEIGHT, DwarfsData.DOPEY_WEIGHT, 0);
+        s.put(Dwarf.PROP_HEIGHT, DwarfsData.DOPEY_HEIGHT, 0);
 
         //
         s = addSection(ini, Dwarfs.PROP_GRUMPY, DwarfsData.grumpy);
-        s.put(Dwarf.PROP_HEIGHT, "${dopey/height}", 0);
+        s.put(Dwarf.PROP_HEIGHT, DwarfsData.GRUMPY_HEIGHT, 0);
 
         //
         addSection(ini, Dwarfs.PROP_HAPPY, DwarfsData.happy);
 
         //
         s = addSection(ini, Dwarfs.PROP_SLEEPY, DwarfsData.sleepy);
-        s.put(Dwarf.PROP_HEIGHT, "${doc/height}8", 0);
+        s.put(Dwarf.PROP_HEIGHT, DwarfsData.SLEEPY_HEIGHT, 0);
 
         //
         s = addSection(ini, Dwarfs.PROP_SNEEZY, DwarfsData.sneezy);
-        s.put(Dwarf.PROP_HOME_PAGE, "${happy/homePage}/~sneezy", 0);
+        s.put(Dwarf.PROP_HOME_PAGE, DwarfsData.SNEEZY_HOME_PAGE, 0);
 
         return ini;
     }

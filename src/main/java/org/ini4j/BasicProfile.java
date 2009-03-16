@@ -21,12 +21,10 @@ import org.ini4j.spi.BeanTool;
 import java.lang.reflect.Array;
 import java.lang.reflect.Proxy;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ProfileImpl extends CommentMultiMapImpl<String, Profile.Section> implements Profile<Profile.Section>
+public class BasicProfile extends BasicCommentMultiMap<String, Profile.Section> implements Profile
 {
     private static final String SECTION_SYSTEM_PROPERTIES = "@prop";
     private static final String SECTION_ENVIRONMENT = "@env";
@@ -35,7 +33,6 @@ public class ProfileImpl extends CommentMultiMapImpl<String, Profile.Section> im
     private static final int G_SECTION_IDX = 4;
     private static final int G_OPTION = 5;
     private static final int G_OPTION_IDX = 7;
-    private Map<Class, Object> _beans;
 
     @Override public Section add(String name)
     {
@@ -101,28 +98,6 @@ public class ProfileImpl extends CommentMultiMapImpl<String, Profile.Section> im
         return (sec == null) ? null : sec.remove(optionName);
     }
 
-    @Override @Deprecated public synchronized <T> T to(Class<T> clazz)
-    {
-        Object bean = null;
-
-        if (_beans == null)
-        {
-            _beans = new HashMap<Class, Object>();
-        }
-        else
-        {
-            bean = _beans.get(clazz);
-        }
-
-        if (bean == null)
-        {
-            bean = as(clazz);
-            _beans.put(clazz, bean);
-        }
-
-        return clazz.cast(bean);
-    }
-
     protected void resolve(StringBuilder buffer, Section owner)
     {
         Matcher m = EXPRESSION.matcher(buffer);
@@ -181,9 +156,8 @@ public class ProfileImpl extends CommentMultiMapImpl<String, Profile.Section> im
         return (m.group(G_SECTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_SECTION_IDX));
     }
 
-    protected class SectionImpl extends OptionMapImpl implements Section
+    protected class SectionImpl extends BasicOptionMap implements Section
     {
-        private Map<Class, Object> _beans;
         private final String _name;
 
         protected SectionImpl(String name)
@@ -197,37 +171,15 @@ public class ProfileImpl extends CommentMultiMapImpl<String, Profile.Section> im
             return _name;
         }
 
-        @Deprecated @Override public synchronized <T> T to(Class<T> clazz)
-        {
-            Object bean = null;
-
-            if (_beans == null)
-            {
-                _beans = new HashMap<Class, Object>();
-            }
-            else
-            {
-                bean = _beans.get(clazz);
-            }
-
-            if (bean == null)
-            {
-                bean = as(clazz);
-                _beans.put(clazz, bean);
-            }
-
-            return clazz.cast(bean);
-        }
-
         @Override protected void resolve(StringBuilder buffer)
         {
-            ProfileImpl.this.resolve(buffer, this);
+            BasicProfile.this.resolve(buffer, this);
         }
     }
 
     private class BeanInvocationHandler extends AbstractBeanInvocationHandler
     {
-        private final MultiMap<String, Object> _sectionBeans = new MultiMapImpl<String, Object>();
+        private final MultiMap<String, Object> _sectionBeans = new BasicMultiMap<String, Object>();
 
         @Override protected Object getPropertySpi(String property, Class<?> clazz)
         {

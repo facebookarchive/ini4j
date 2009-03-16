@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j;
+package org.ini4j.spi;
 
-import org.ini4j.spi.ServiceFinder;
+import org.ini4j.Config;
+import org.ini4j.InvalidFileFormatException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,22 +48,22 @@ public class OptionsParser extends AbstractParser
         return instance;
     }
 
-    public void parse(InputStream input, OptionsHandler handler) throws IOException, InvalidIniFormatException
+    public void parse(InputStream input, OptionsHandler handler) throws IOException, InvalidFileFormatException
     {
         parse(newIniSource(input, handler), handler);
     }
 
-    public void parse(Reader input, OptionsHandler handler) throws IOException, InvalidIniFormatException
+    public void parse(Reader input, OptionsHandler handler) throws IOException, InvalidFileFormatException
     {
         parse(newIniSource(input, handler), handler);
     }
 
-    public void parse(URL input, OptionsHandler handler) throws IOException, InvalidIniFormatException
+    public void parse(URL input, OptionsHandler handler) throws IOException, InvalidFileFormatException
     {
         parse(newIniSource(input, handler), handler);
     }
 
-    private void parse(IniSource source, OptionsHandler handler) throws IOException, InvalidIniFormatException
+    private void parse(IniSource source, OptionsHandler handler) throws IOException, InvalidFileFormatException
     {
         handler.startOptions();
         for (String line = source.readLine(); line != null; line = source.readLine())

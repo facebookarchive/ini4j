@@ -17,6 +17,8 @@ package org.ini4j;
 
 import org.ini4j.spi.EscapeTool;
 import org.ini4j.spi.OptionsFormatter;
+import org.ini4j.spi.OptionsHandler;
+import org.ini4j.spi.OptionsParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,7 +32,7 @@ import java.io.Writer;
 
 import java.net.URL;
 
-public class Options extends OptionMapImpl implements Persistable
+public class Options extends BasicOptionMap implements Persistable
 {
     private String _comment;
     private Config _config;
@@ -42,25 +44,25 @@ public class Options extends OptionMapImpl implements Persistable
         _config.setEmptyOption(true);
     }
 
-    public Options(Reader input) throws IOException, InvalidIniFormatException
+    public Options(Reader input) throws IOException, InvalidFileFormatException
     {
         this();
         load(input);
     }
 
-    public Options(InputStream input) throws IOException, InvalidIniFormatException
+    public Options(InputStream input) throws IOException, InvalidFileFormatException
     {
         this();
         load(input);
     }
 
-    public Options(URL input) throws IOException, InvalidIniFormatException
+    public Options(URL input) throws IOException, InvalidFileFormatException
     {
         this();
         load(input);
     }
 
-    public Options(File input) throws IOException, InvalidIniFormatException
+    public Options(File input) throws IOException, InvalidFileFormatException
     {
         this();
         _file = input;
@@ -92,7 +94,7 @@ public class Options extends OptionMapImpl implements Persistable
         _file = value;
     }
 
-    @Override public void load() throws IOException, InvalidIniFormatException
+    @Override public void load() throws IOException, InvalidFileFormatException
     {
         if (_file == null)
         {
@@ -102,22 +104,22 @@ public class Options extends OptionMapImpl implements Persistable
         load(_file);
     }
 
-    @Override public void load(InputStream input) throws IOException, InvalidIniFormatException
+    @Override public void load(InputStream input) throws IOException, InvalidFileFormatException
     {
         OptionsParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
-    @Override public void load(Reader input) throws IOException, InvalidIniFormatException
+    @Override public void load(Reader input) throws IOException, InvalidFileFormatException
     {
         OptionsParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
-    @Override public void load(URL input) throws IOException, InvalidIniFormatException
+    @Override public void load(URL input) throws IOException, InvalidFileFormatException
     {
         OptionsParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
-    @Override public void load(File input) throws IOException, InvalidIniFormatException
+    @Override public void load(File input) throws IOException, InvalidFileFormatException
     {
         Reader reader = new FileReader(input);
 
@@ -166,10 +168,10 @@ public class Options extends OptionMapImpl implements Persistable
     protected void store(OptionsHandler formatter) throws IOException
     {
         formatter.startOptions();
-        handleComment(formatter, _comment);
+        storeComment(formatter, _comment);
         for (String name : keySet())
         {
-            handleComment(formatter, getComment(name));
+            storeComment(formatter, getComment(name));
             int n = getConfig().isMultiOption() ? length(name) : 1;
 
             for (int i = 0; i < n; i++)
@@ -183,15 +185,15 @@ public class Options extends OptionMapImpl implements Persistable
         formatter.endOptions();
     }
 
-    private void handleComment(OptionsHandler formatter, String comment)
+    private void storeComment(OptionsHandler formatter, String comment)
     {
-        if ((comment != null) && (comment.length() != 0) && (formatter instanceof CommentHandler))
+        if ((comment != null) && (comment.length() != 0))
         {
-            ((CommentHandler) formatter).handleComment(comment);
+            formatter.handleComment(comment);
         }
     }
 
-    private class Builder implements OptionsHandler, CommentHandler
+    private class Builder implements OptionsHandler
     {
         private boolean _header;
         private String _lastComment;

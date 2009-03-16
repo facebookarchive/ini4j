@@ -13,9 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j;
+package org.ini4j.spi;
 
-public interface OptionHandler
+public interface IniHandler extends HandlerBase
 {
-    void handleOption(String optionName, String optionValue);
+    void endIni();
+
+    void endSection();
+
+    void startIni();
+
+    void startSection(String sectionName);
 }

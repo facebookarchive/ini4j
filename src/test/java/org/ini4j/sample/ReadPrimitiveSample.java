@@ -29,7 +29,8 @@ package org.ini4j.sample;
 //|
 //{
 //</editor-fold>
-import org.ini4j.IniFile;
+import org.ini4j.Ini;
+import org.ini4j.IniPreferences;
 
 import java.io.File;
 
@@ -42,7 +43,7 @@ public class ReadPrimitiveSample
     public static void main(String[] args) throws Exception
     {
         String filename = (args.length > 0) ? args[0] : FILENAME;
-        Preferences prefs = new IniFile(new File(filename));
+        Preferences prefs = new IniPreferences(new Ini(new File(filename)));
         Preferences dopey = prefs.node("dopey");
         int age = dopey.getInt("age", 0);
         float weight = dopey.getFloat("weight", 0);

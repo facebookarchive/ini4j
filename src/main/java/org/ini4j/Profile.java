@@ -15,9 +15,9 @@
  */
 package org.ini4j;
 
-public interface Profile<S extends Profile.Section> extends CommentMultiMap<String, S>
+public interface Profile extends CommentMultiMap<String, Profile.Section>
 {
-    S add(String sectionName);
+    Profile.Section add(String sectionName);
 
     void add(String sectionName, String optionName, Object value);
 
@@ -33,16 +33,12 @@ public interface Profile<S extends Profile.Section> extends CommentMultiMap<Stri
 
     String put(String sectionName, String optionName, Object value);
 
-    Section remove(S section);
+    Section remove(Profile.Section section);
 
     String remove(Object sectionName, Object optionName);
-
-    @Deprecated <T> T to(Class<T> clazz);
 
     interface Section extends OptionMap
     {
         String getName();
-
-        @Deprecated <T> T to(Class<T> clazz);
     }
 }

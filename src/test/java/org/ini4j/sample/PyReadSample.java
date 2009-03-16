@@ -30,7 +30,7 @@ package org.ini4j.sample;
 //|
 //</editor-fold>
 //{
-import org.ini4j.addon.ConfigParser;
+import org.ini4j.ConfigParser;
 
 public class PyReadSample
 {

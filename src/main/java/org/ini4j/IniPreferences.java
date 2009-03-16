@@ -52,9 +52,9 @@ public class IniPreferences extends AbstractPreferences
      *
      * @param input the <code>Reader</code> containing <code>Ini</code> data
      * @throws IOException if an I/O error occured
-     * @throws InvalidIniFormatException if <code>Ini</code> parsing error occured
+     * @throws InvalidFileFormatException if <code>Ini</code> parsing error occured
      */
-    public IniPreferences(Reader input) throws IOException, InvalidIniFormatException
+    public IniPreferences(Reader input) throws IOException, InvalidFileFormatException
     {
         super(null, "");
         _ini = new Ini(input);
@@ -68,9 +68,9 @@ public class IniPreferences extends AbstractPreferences
      *
      * @param input the <code>InputStream</code> containing <code>Ini</code> data
      * @throws IOException if an I/O error occured
-     * @throws InvalidIniFormatException if <code>Ini</code> parsing error occured
+     * @throws InvalidFileFormatException if <code>Ini</code> parsing error occured
      */
-    public IniPreferences(InputStream input) throws IOException, InvalidIniFormatException
+    public IniPreferences(InputStream input) throws IOException, InvalidFileFormatException
     {
         super(null, "");
         _ini = new Ini(input);
@@ -84,9 +84,9 @@ public class IniPreferences extends AbstractPreferences
      *
      * @param input the <code>URL</code> containing <code>Ini</code> data
      * @throws IOException if an I/O error occured
-     * @throws InvalidIniFormatException if <code>Ini</code> parsing error occured
+     * @throws InvalidFileFormatException if <code>Ini</code> parsing error occured
      */
-    public IniPreferences(URL input) throws IOException, InvalidIniFormatException
+    public IniPreferences(URL input) throws IOException, InvalidFileFormatException
     {
         super(null, "");
         _ini = new Ini(input);

@@ -16,7 +16,8 @@
 package org.ini4j;
 
 import org.ini4j.spi.IniFormatter;
-import org.ini4j.spi.XMLFormatter;
+import org.ini4j.spi.IniHandler;
+import org.ini4j.spi.IniParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,14 +25,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
 import java.net.URL;
 
-public class Ini extends ProfileImpl implements Persistable
+public class Ini extends BasicProfile implements Persistable
 {
     private String _comment;
     private Config _config = Config.getGlobal();
@@ -42,25 +42,25 @@ public class Ini extends ProfileImpl implements Persistable
         assert true;
     }
 
-    public Ini(Reader input) throws IOException, InvalidIniFormatException
+    public Ini(Reader input) throws IOException, InvalidFileFormatException
     {
         this();
         load(input);
     }
 
-    public Ini(InputStream input) throws IOException, InvalidIniFormatException
+    public Ini(InputStream input) throws IOException, InvalidFileFormatException
     {
         this();
         load(input);
     }
 
-    public Ini(URL input) throws IOException, InvalidIniFormatException
+    public Ini(URL input) throws IOException, InvalidFileFormatException
     {
         this();
         load(input);
     }
 
-    public Ini(File input) throws IOException, InvalidIniFormatException
+    public Ini(File input) throws IOException, InvalidFileFormatException
     {
         this();
         _file = input;
@@ -92,7 +92,7 @@ public class Ini extends ProfileImpl implements Persistable
         _file = value;
     }
 
-    @Override public void load() throws IOException, InvalidIniFormatException
+    @Override public void load() throws IOException, InvalidFileFormatException
     {
         if (_file == null)
         {
@@ -102,17 +102,17 @@ public class Ini extends ProfileImpl implements Persistable
         load(_file);
     }
 
-    @Override public void load(InputStream input) throws IOException, InvalidIniFormatException
+    @Override public void load(InputStream input) throws IOException, InvalidFileFormatException
     {
         IniParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
-    @Override public void load(Reader input) throws IOException, InvalidIniFormatException
+    @Override public void load(Reader input) throws IOException, InvalidFileFormatException
     {
         IniParser.newInstance(getConfig()).parse(input, new Builder());
     }
 
-    @Override public void load(File input) throws IOException, InvalidIniFormatException
+    @Override public void load(File input) throws IOException, InvalidFileFormatException
     {
         Reader reader = new FileReader(input);
 
@@ -120,28 +120,9 @@ public class Ini extends ProfileImpl implements Persistable
         reader.close();
     }
 
-    @Override public void load(URL input) throws IOException, InvalidIniFormatException
+    @Override public void load(URL input) throws IOException, InvalidFileFormatException
     {
         IniParser.newInstance(getConfig()).parse(input, new Builder());
-    }
-
-    public void loadFromXML(InputStream input) throws IOException, InvalidIniFormatException
-    {
-        loadFromXML(new InputStreamReader(input));
-    }
-
-    public void loadFromXML(Reader input) throws IOException, InvalidIniFormatException
-    {
-        Builder builder = new Builder();
-
-        IniParser.newInstance(getConfig()).parseXML(input, builder);
-    }
-
-    public void loadFromXML(URL input) throws IOException, InvalidIniFormatException
-    {
-        Builder builder = new Builder();
-
-        IniParser.newInstance(getConfig()).parseXML(input, builder);
     }
 
     @Override public void store() throws IOException
@@ -172,16 +153,6 @@ public class Ini extends ProfileImpl implements Persistable
         writer.close();
     }
 
-    public void storeToXML(OutputStream output) throws IOException
-    {
-        store(XMLFormatter.newInstance(output));
-    }
-
-    public void storeToXML(Writer output) throws IOException
-    {
-        store(XMLFormatter.newInstance(output));
-    }
-
     protected Config getConfig()
     {
         return _config;
@@ -190,14 +161,14 @@ public class Ini extends ProfileImpl implements Persistable
     protected void store(IniHandler formatter) throws IOException
     {
         formatter.startIni();
-        handleComment(formatter, _comment);
+        storeComment(formatter, _comment);
         for (Ini.Section s : values())
         {
-            handleComment(formatter, getComment(s.getName()));
+            storeComment(formatter, getComment(s.getName()));
             formatter.startSection(s.getName());
             for (String name : s.keySet())
             {
-                handleComment(formatter, s.getComment(name));
+                storeComment(formatter, s.getComment(name));
                 int n = getConfig().isMultiOption() ? s.length(name) : 1;
 
                 for (int i = 0; i < n; i++)
@@ -212,15 +183,15 @@ public class Ini extends ProfileImpl implements Persistable
         formatter.endIni();
     }
 
-    private void handleComment(IniHandler formatter, String comment)
+    private void storeComment(IniHandler formatter, String comment)
     {
-        if ((comment != null) && (comment.length() != 0) && (formatter instanceof CommentHandler))
+        if ((comment != null) && (comment.length() != 0))
         {
-            ((CommentHandler) formatter).handleComment(comment);
+            formatter.handleComment(comment);
         }
     }
 
-    private class Builder implements IniHandler, CommentHandler
+    private class Builder implements IniHandler
     {
         private Section _currentSection;
         private boolean _header;

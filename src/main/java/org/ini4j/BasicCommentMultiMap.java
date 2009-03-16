@@ -18,7 +18,7 @@ package org.ini4j;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommentMultiMapImpl<K, V> extends MultiMapImpl<K, V> implements CommentMultiMap<K, V>
+public class BasicCommentMultiMap<K, V> extends BasicMultiMap<K, V> implements CommentMultiMap<K, V>
 {
     private Map<K, String> _comments;
 
@@ -40,9 +40,9 @@ public class CommentMultiMapImpl<K, V> extends MultiMapImpl<K, V> implements Com
     @Override public void putAll(Map<? extends K, ? extends V> map)
     {
         super.putAll(map);
-        if (map instanceof CommentMultiMapImpl)
+        if (map instanceof BasicCommentMultiMap)
         {
-            Map<K, String> cms = ((CommentMultiMapImpl) map)._comments;
+            Map<K, String> cms = ((BasicCommentMultiMap) map)._comments;
 
             if (cms != null)
             {

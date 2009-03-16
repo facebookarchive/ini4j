@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j;
+package org.ini4j.spi;
 
-import org.ini4j.spi.EscapeTool;
+import org.ini4j.Config;
+import org.ini4j.InvalidFileFormatException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,29 +48,32 @@ public abstract class AbstractParser
         return _config;
     }
 
-    protected int indexOfOperator(String line)
+    protected void parseError(String line, int lineNumber) throws InvalidFileFormatException
     {
-        int idx = -1;
-
-        for (char c : _operators.toCharArray())
-        {
-            int index = line.indexOf(c);
-
-            if ((index >= 0) && ((idx == -1) || (index < idx)))
-            {
-                idx = index;
-            }
-        }
-
-        return idx;
+        throw new InvalidFileFormatException("parse error (at line: " + lineNumber + "): " + line);
     }
 
-    protected void parseError(String line, int lineNumber) throws InvalidIniFormatException
+    protected String unescape(String line)
     {
-        throw new InvalidIniFormatException("parse error (at line: " + lineNumber + "): " + line);
+        return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
     }
 
-    protected void parseOptionLine(String line, OptionHandler handler, int lineNumber) throws InvalidIniFormatException
+    IniSource newIniSource(InputStream input, HandlerBase handler)
+    {
+        return new IniSource(input, handler, getConfig().isInclude(), _comments);
+    }
+
+    IniSource newIniSource(Reader input, HandlerBase handler)
+    {
+        return new IniSource(input, handler, getConfig().isInclude(), _comments);
+    }
+
+    IniSource newIniSource(URL input, HandlerBase handler) throws IOException
+    {
+        return new IniSource(input, handler, getConfig().isInclude(), _comments);
+    }
+
+    void parseOptionLine(String line, HandlerBase handler, int lineNumber) throws InvalidFileFormatException
     {
         int idx = indexOfOperator(line);
         String name = null;
@@ -105,33 +109,20 @@ public abstract class AbstractParser
         handler.handleOption(name, value);
     }
 
-    protected String unescape(String line)
+    private int indexOfOperator(String line)
     {
-        return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
-    }
+        int idx = -1;
 
-    IniSource newIniSource(InputStream input, OptionHandler handler)
-    {
-        return addCommentHandler(new IniSource(input, getConfig().isInclude(), _comments), handler);
-    }
-
-    IniSource newIniSource(Reader input, OptionHandler handler)
-    {
-        return addCommentHandler(new IniSource(input, getConfig().isInclude(), _comments), handler);
-    }
-
-    IniSource newIniSource(URL input, OptionHandler handler) throws IOException
-    {
-        return addCommentHandler(new IniSource(input, getConfig().isInclude(), _comments), handler);
-    }
-
-    private IniSource addCommentHandler(IniSource source, OptionHandler handler)
-    {
-        if (handler instanceof CommentHandler)
+        for (char c : _operators.toCharArray())
         {
-            source.setCommentHandler((CommentHandler) handler);
+            int index = line.indexOf(c);
+
+            if ((index >= 0) && ((idx == -1) || (index < idx)))
+            {
+                idx = index;
+            }
         }
 
-        return source;
+        return idx;
     }
 }

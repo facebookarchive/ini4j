@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j.addon;
+package org.ini4j;
 
-import org.ini4j.Config;
-import org.ini4j.Ini;
-import org.ini4j.IniHandler;
-import org.ini4j.InvalidIniFormatException;
-
+import org.ini4j.spi.IniHandler;
 import org.ini4j.spi.Warnings;
 
 import java.io.File;
@@ -206,7 +202,7 @@ public class ConfigParser
         {
             _ini.load(reader);
         }
-        catch (InvalidIniFormatException x)
+        catch (InvalidFileFormatException x)
         {
             throw new ParsingException(x);
         }
@@ -218,7 +214,7 @@ public class ConfigParser
         {
             _ini.load(url);
         }
-        catch (InvalidIniFormatException x)
+        catch (InvalidFileFormatException x)
         {
             throw new ParsingException(x);
         }
@@ -230,7 +226,7 @@ public class ConfigParser
         {
             _ini.load(new FileReader(file));
         }
-        catch (InvalidIniFormatException x)
+        catch (InvalidFileFormatException x)
         {
             throw new ParsingException(x);
         }
@@ -242,7 +238,7 @@ public class ConfigParser
         {
             _ini.load(stream);
         }
-        catch (InvalidIniFormatException x)
+        catch (InvalidFileFormatException x)
         {
             throw new ParsingException(x);
         }
@@ -448,7 +444,7 @@ public class ConfigParser
             {
                 if (_defaultSection == null)
                 {
-                    _defaultSection = new DefaultSection(name);
+                    _defaultSection = new SectionImpl(name);
                 }
 
                 section = _defaultSection;
@@ -545,14 +541,6 @@ public class ConfigParser
             }
 
             formatter.endSection();
-        }
-
-        protected class DefaultSection extends SectionImpl
-        {
-            protected DefaultSection(String name)
-            {
-                super(name);
-            }
         }
     }
 }

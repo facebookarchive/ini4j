@@ -17,30 +17,16 @@ package org.ini4j;
 
 import java.io.IOException;
 
-public class InvalidIniFormatException extends IOException
+public class InvalidFileFormatException extends IOException
 {
     private static final long serialVersionUID = 6108557026268262787L;
 
-    /**
-     * Példány képzés adott üzenettel.
-     *
-     * Ez a konstruktor rendszerint új exception generálására használatos, amikor is
-     * valamely feltétel ellenőrzése hibát jelez.
-     * @param message hiba szöveges megnevez�se
-     */
-    public InvalidIniFormatException(String message)
+    public InvalidFileFormatException(String message)
     {
         super(message);
     }
 
-    /**
-     * Példány képzés adott kiváltó okkal.
-     *
-     * Ez a konstruktor minden további szöveges magyarázat nélkúl egy exception tovább adására
-     * szolgál.
-     * @param cause a hibát kiváltó exception
-     */
-    public InvalidIniFormatException(Throwable cause)
+    public InvalidFileFormatException(Throwable cause)
     {
         super();
         initCause(cause);

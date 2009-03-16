@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j;
+package org.ini4j.spi;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,47 +33,45 @@ class IniSource
     protected final String commentChars;
     private URL _base;
     private IniSource _chain;
-    private CommentHandler _commentHandler;
+    private final HandlerBase _handler;
     private final LineNumberReader _reader;
 
-    protected IniSource(InputStream input, boolean includeFlag, String comments)
+    IniSource(InputStream input, HandlerBase handler, boolean includeFlag, String comments)
     {
-        _reader = new LineNumberReader(new InputStreamReader(input));
-        allowInclude = includeFlag;
-        commentChars = comments;
+        this(new InputStreamReader(input), handler, includeFlag, comments);
     }
 
-    protected IniSource(Reader input, boolean includeFlag, String comments)
+    IniSource(Reader input, HandlerBase handler, boolean includeFlag, String comments)
     {
         _reader = new LineNumberReader(input);
+        _handler = handler;
         allowInclude = includeFlag;
         commentChars = comments;
     }
 
-    protected IniSource(URL input, boolean includeFlag, String comments) throws IOException
+    IniSource(URL input, HandlerBase handler, boolean includeFlag, String comments) throws IOException
     {
+        this(new InputStreamReader(input.openStream()), handler, includeFlag, comments);
         _base = input;
-        _reader = new LineNumberReader(new InputStreamReader(input.openStream()));
-        allowInclude = includeFlag;
-        commentChars = comments;
     }
 
-    protected void setCommentHandler(CommentHandler value)
+    int getLineNumber()
     {
-        _commentHandler = value;
+        int ret;
+
+        if (_chain == null)
+        {
+            ret = _reader.getLineNumber();
+        }
+        else
+        {
+            ret = _chain.getLineNumber();
+        }
+
+        return ret;
     }
 
-    protected int getLineNumber()
-    {
-        return _reader.getLineNumber();
-    }
-
-    protected void close() throws IOException
-    {
-        _reader.close();
-    }
-
-    protected String readLine() throws IOException
+    String readLine() throws IOException
     {
         String line;
 
@@ -94,16 +92,17 @@ class IniSource
         return line;
     }
 
+    private void close() throws IOException
+    {
+        _reader.close();
+    }
+
     private void handleComment(StringBuilder buff)
     {
         if (buff.length() != 0)
         {
-            if (_commentHandler != null)
-            {
-                buff.deleteCharAt(buff.length() - 1);
-                _commentHandler.handleComment(buff.toString());
-            }
-
+            buff.deleteCharAt(buff.length() - 1);
+            _handler.handleComment(buff.toString());
             buff.delete(0, buff.length());
         }
     }
@@ -128,7 +127,7 @@ class IniSource
             {
                 try
                 {
-                    _chain = new IniSource(loc, allowInclude, commentChars);
+                    _chain = new IniSource(loc, _handler, allowInclude, commentChars);
                 }
                 catch (IOException x)
                 {
@@ -141,7 +140,7 @@ class IniSource
             }
             else
             {
-                _chain = new IniSource(loc, allowInclude, commentChars);
+                _chain = new IniSource(loc, _handler, allowInclude, commentChars);
                 line = readLine();
             }
         }

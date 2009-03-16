@@ -35,6 +35,11 @@ public final class DwarfsData implements Dwarfs
     public static final DwarfData sneezy;
     public static final Dwarfs dwarfs;
     public static final String[] dwarfNames;
+    public static final String DOPEY_WEIGHT = "${bashful/weight}";
+    public static final String DOPEY_HEIGHT = "${doc/height}";
+    public static final String GRUMPY_HEIGHT = "${dopey/height}";
+    public static final String SLEEPY_HEIGHT = "${doc/height}8";
+    public static final String SNEEZY_HOME_PAGE = "${happy/homePage}/~sneezy";
 
     static
     {

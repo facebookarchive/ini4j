@@ -26,16 +26,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class MultiMapImpl<K, V> implements MultiMap<K, V>
+public class BasicMultiMap<K, V> implements MultiMap<K, V>
 {
     private final Map<K, List<V>> _impl;
 
-    public MultiMapImpl()
+    public BasicMultiMap()
     {
         this(new LinkedHashMap<K, List<V>>());
     }
 
-    public MultiMapImpl(Map<K, List<V>> impl)
+    public BasicMultiMap(Map<K, List<V>> impl)
     {
         _impl = impl;
     }

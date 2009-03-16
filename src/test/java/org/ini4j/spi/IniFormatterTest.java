@@ -13,31 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j.addon;
-
-import org.ini4j.Config;
-import org.ini4j.Ini;
-import org.ini4j.IniHandler;
-
-import org.ini4j.spi.IniFormatter;
-
-import org.ini4j.test.Helper;
-
-import org.junit.AfterClass;
+package org.ini4j.spi;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
+import org.junit.Ignore;
 
 @SuppressWarnings("deprecation")
-public class FancyIniFormatterTest
+@Ignore public class IniFormatterTest
 {
+    /*
     private static final String NL = System.getProperty("line.separator");
     private static final String STRICTOPERATOR = "[section]" + NL + "option=value" + NL + NL;
     private static final String NORMALOPERATOR = "[section]" + NL + "option = value" + NL + NL;
@@ -117,4 +102,5 @@ public class FancyIniFormatterTest
             super.store(formatter);
         }
     }
+     */
 }
