@@ -35,7 +35,11 @@ import java.io.StringReader;
 
 public class IniParserTest
 {
-    private static final String[] BAD = { "[section\noption=value\n", "[]\noption=value", "section\noption=value", "[section]\noption\n", "[section]\n=value\n", "[section]\n\\u000d\\u000d=value\n" };
+    private static final String[] BAD =
+        {
+            "[section\noption=value\n", "[]\noption=value", "section\noption=value", "[section]\noption\n", "[section]\n=value\n",
+            "[section]\n\\u000d\\u000d=value\n"
+        };
     private static final String CFG_LOWER = "[SectioN]\n\nOptioN=ValuE\n";
     private static final String CFG_UNNAMED = "[]\noption=value\n";
     private static final String CFG_EMPTY_OPTION = "[section]\noption\n";
@@ -158,8 +162,8 @@ public class IniParserTest
         handler.handleComment(name2comment(Dwarfs.PROP_DOPEY));
         dwarf = DwarfsData.dopey;
         handler.startSection(Dwarfs.PROP_DOPEY);
-        handler.handleOption(Dwarf.PROP_WEIGHT, DwarfsData.DOPEY_WEIGHT);
-        handler.handleOption(Dwarf.PROP_HEIGHT, DwarfsData.DOPEY_HEIGHT);
+        handler.handleOption(Dwarf.PROP_WEIGHT, DwarfsData.INI_DOPEY_WEIGHT);
+        handler.handleOption(Dwarf.PROP_HEIGHT, DwarfsData.INI_DOPEY_HEIGHT);
         handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
@@ -168,7 +172,7 @@ public class IniParserTest
         dwarf = DwarfsData.grumpy;
         handler.startSection(Dwarfs.PROP_GRUMPY);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
-        handler.handleOption(Dwarf.PROP_HEIGHT, DwarfsData.GRUMPY_HEIGHT);
+        handler.handleOption(Dwarf.PROP_HEIGHT, DwarfsData.INI_GRUMPY_HEIGHT);
         handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
@@ -186,7 +190,7 @@ public class IniParserTest
         dwarf = DwarfsData.sleepy;
         handler.startSection(Dwarfs.PROP_SLEEPY);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
-        handler.handleOption(Dwarf.PROP_HEIGHT, DwarfsData.SLEEPY_HEIGHT);
+        handler.handleOption(Dwarf.PROP_HEIGHT, DwarfsData.INI_SLEEPY_HEIGHT);
         handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
@@ -198,7 +202,7 @@ public class IniParserTest
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
         handler.handleOption(Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
         handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
-        handler.handleOption(Dwarf.PROP_HOME_PAGE, DwarfsData.SNEEZY_HOME_PAGE);
+        handler.handleOption(Dwarf.PROP_HOME_PAGE, DwarfsData.INI_SNEEZY_HOME_PAGE);
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[0]));
         handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[1]));

@@ -17,10 +17,12 @@ package org.ini4j;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore public class CommentMultiMapTest
+import java.util.HashMap;
+import java.util.Map;
+
+public class BasicCommentMultiMapTest
 {
     private static final String KEY = "key";
     private static final String VALUE = "value";
@@ -31,6 +33,28 @@ import org.junit.Test;
         CommentMultiMap<String, String> map = new BasicCommentMultiMap<String, String>();
 
         assertNull(map.removeComment(KEY));
+
+        //
+        map.put(KEY, VALUE);
+        map.clear();
+        assertTrue(map.isEmpty());
+
+        //
+        map.put(KEY, VALUE);
+        map.remove(KEY);
+        assertNull(map.getComment(KEY));
+
+        //
+        map.put(KEY, VALUE);
+        map.remove(KEY, 0);
+        assertNull(map.getComment(KEY));
+
+        //
+        map.add(KEY, VALUE);
+        map.add(KEY, VALUE);
+        map.putComment(KEY, COMMENT);
+        map.remove(KEY, 0);
+        assertEquals(COMMENT, map.getComment(KEY));
 
         //
         map.put(KEY, VALUE);
@@ -56,5 +80,32 @@ import org.junit.Test;
         map.putComment(KEY, COMMENT);
         map.remove(KEY, 0);
         assertNull(map.getComment(KEY));
+    }
+
+    @Test public void testPutAll() throws Exception
+    {
+        CommentMultiMap<String, String> map = new BasicCommentMultiMap<String, String>();
+        CommentMultiMap<String, String> copy = new BasicCommentMultiMap<String, String>();
+
+        map.put(KEY, VALUE);
+        map.putComment(KEY, COMMENT);
+        copy.putAll(map);
+        assertEquals(COMMENT, copy.getComment(KEY));
+        Map<String, String> simple = new HashMap<String, String>();
+
+        simple.put(KEY, VALUE);
+        copy.clear();
+        assertTrue(copy.isEmpty());
+        copy.putAll(simple);
+        assertNull(copy.getComment(KEY));
+        assertEquals(VALUE, copy.get(KEY));
+
+        //
+        map = new BasicCommentMultiMap<String, String>();
+        map.put(KEY, VALUE);
+        copy.clear();
+        copy.putAll(map);
+        assertEquals(VALUE, copy.get(KEY));
+        assertNull(copy.getComment(KEY));
     }
 }

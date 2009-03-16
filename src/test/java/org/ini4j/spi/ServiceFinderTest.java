@@ -21,10 +21,9 @@ import org.junit.AfterClass;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore public class ServiceFinderTest
+public class ServiceFinderTest
 {
     static final String DUMMY = "dummy";
     static final String DUMMY_SERVICE = "org.ini4j.Dummy";
@@ -56,11 +55,6 @@ import org.junit.Test;
         assertTrue(flag);
     }
 
-    /**
-     * Test of findServiceClass method.
-     *
-     * @throws Exception on error
-     */
     @Test public void testFindServiceClass() throws Exception
     {
         boolean flag = false;
@@ -80,11 +74,6 @@ import org.junit.Test;
         assertTrue(flag);
     }
 
-    /**
-     * Test of findServiceClassName method.
-     *
-     * @throws Exception on error
-     */
     @Test public void testFindServiceClassName() throws Exception
     {
         System.setProperty(IniParser.class.getName(), DUMMY);

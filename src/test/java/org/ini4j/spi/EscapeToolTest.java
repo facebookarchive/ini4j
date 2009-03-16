@@ -18,13 +18,12 @@ package org.ini4j.spi;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Ignore public class EscapeToolTest
+public class EscapeToolTest
 {
     protected EscapeTool instance;
 
@@ -33,11 +32,6 @@ import java.util.Map;
         instance = EscapeTool.getInstance();
     }
 
-    /**
-     * Test of escape method.
-     *
-     * @throws Exception on error
-     */
     @Test public void testEscape() throws Exception
     {
         Map<String, String> data = new HashMap<String, String>();
@@ -45,6 +39,7 @@ import java.util.Map;
         data.put("simple", "simple");
         data.put("Iv\ufffdn", "Iv\\ufffdn");
         data.put("1\t2\n3\f", "1\\t2\\n3\\f");
+        data.put("Iv\u0017n", "Iv\\u0017n");
         for (String from : data.keySet())
         {
             assertEquals(data.get(from), instance.escape(from));
@@ -56,11 +51,6 @@ import java.util.Map;
         assertEquals(EscapeTool.class, EscapeTool.getInstance().getClass());
     }
 
-    /**
-     * Test of unescape method.
-     *
-     * @throws Exception on error
-     */
     @SuppressWarnings("empty-statement")
     @Test public void testUnescape() throws Exception
     {

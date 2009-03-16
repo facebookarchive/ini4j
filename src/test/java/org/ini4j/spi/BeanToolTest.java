@@ -20,12 +20,12 @@ import org.ini4j.BasicOptionMap;
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.DwarfBean;
 
+import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -35,7 +35,7 @@ import java.net.URL;
 
 import java.util.TimeZone;
 
-@Ignore public class BeanToolTest
+public class BeanToolTest
 {
     protected BeanTool instance;
 
@@ -114,6 +114,24 @@ import java.util.TimeZone;
         {
             ;
         }
+    }
+
+    @Test public void testSetGet() throws Exception
+    {
+        TestMap map = new TestMap();
+        Dwarf proxy = instance.proxy(Dwarf.class, map.newBeanAccess());
+
+        assertNull(proxy.getHomeDir());
+        assertFalse(proxy.hasHomePage());
+        assertNull(proxy.getFortuneNumber());
+        proxy.setAge(DwarfsData.sneezy.age);
+        proxy.setHeight(DwarfsData.sneezy.height);
+        proxy.setWeight(DwarfsData.sneezy.weight);
+        proxy.setHomePage(DwarfsData.sneezy.homePage);
+        proxy.setHomeDir(DwarfsData.sneezy.homeDir);
+        proxy.setFortuneNumber(DwarfsData.sneezy.fortuneNumber);
+        Helper.assertEquals(DwarfsData.sneezy, proxy);
+        assertArrayEquals(DwarfsData.sneezy.fortuneNumber, proxy.getFortuneNumber());
     }
 
     @Test public void testSingleton() throws Exception

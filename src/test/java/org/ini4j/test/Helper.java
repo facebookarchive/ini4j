@@ -43,7 +43,11 @@ public class Helper
     public static final String DWARFS_OPT = RESOURCE_PREFIX + "dwarfs.opt";
     public static final float DELTA = 0.00000001f;
     private static final String[] CONFIG_PROPERTIES =
-        { Config.PROP_EMPTY_OPTION, Config.PROP_GLOBAL_SECTION, Config.PROP_GLOBAL_SECTION_NAME, Config.PROP_INCLUDE, Config.PROP_LOWER_CASE_OPTION, Config.PROP_LOWER_CASE_SECTION, Config.PROP_MULTI_OPTION, Config.PROP_MULTI_SECTION, Config.PROP_STRICT_OPERATOR, Config.PROP_UNNAMED_SECTION, Config.PROP_ESCAPE };
+        {
+            Config.PROP_EMPTY_OPTION, Config.PROP_GLOBAL_SECTION, Config.PROP_GLOBAL_SECTION_NAME, Config.PROP_INCLUDE, Config.PROP_LOWER_CASE_OPTION,
+            Config.PROP_LOWER_CASE_SECTION, Config.PROP_MULTI_OPTION, Config.PROP_MULTI_SECTION, Config.PROP_STRICT_OPERATOR,
+            Config.PROP_UNNAMED_SECTION, Config.PROP_ESCAPE
+        };
     private static final String[] FACTORY_PROPERTIES = { IniFormatter.class.getName(), IniParser.class.getName() };
 
     private Helper()
@@ -141,25 +145,62 @@ public class Helper
 
         //
         s = addSection(ini, Dwarfs.PROP_DOPEY, DwarfsData.dopey);
-        s.put(Dwarf.PROP_WEIGHT, DwarfsData.DOPEY_WEIGHT, 0);
-        s.put(Dwarf.PROP_HEIGHT, DwarfsData.DOPEY_HEIGHT, 0);
+        s.put(Dwarf.PROP_WEIGHT, DwarfsData.INI_DOPEY_WEIGHT, 0);
+        s.put(Dwarf.PROP_HEIGHT, DwarfsData.INI_DOPEY_HEIGHT, 0);
 
         //
         s = addSection(ini, Dwarfs.PROP_GRUMPY, DwarfsData.grumpy);
-        s.put(Dwarf.PROP_HEIGHT, DwarfsData.GRUMPY_HEIGHT, 0);
+        s.put(Dwarf.PROP_HEIGHT, DwarfsData.INI_GRUMPY_HEIGHT, 0);
 
         //
         addSection(ini, Dwarfs.PROP_HAPPY, DwarfsData.happy);
 
         //
         s = addSection(ini, Dwarfs.PROP_SLEEPY, DwarfsData.sleepy);
-        s.put(Dwarf.PROP_HEIGHT, DwarfsData.SLEEPY_HEIGHT, 0);
+        s.put(Dwarf.PROP_HEIGHT, DwarfsData.INI_SLEEPY_HEIGHT, 0);
 
         //
         s = addSection(ini, Dwarfs.PROP_SNEEZY, DwarfsData.sneezy);
-        s.put(Dwarf.PROP_HOME_PAGE, DwarfsData.SNEEZY_HOME_PAGE, 0);
+        s.put(Dwarf.PROP_HOME_PAGE, DwarfsData.INI_SNEEZY_HOME_PAGE, 0);
 
         return ini;
+    }
+
+    public static Options newDwarfsOpt()
+    {
+        Options opts = new Options();
+
+        addPrefixed(opts, null, DwarfsData.dopey);
+        opts.put(Dwarf.PROP_WEIGHT, DwarfsData.OPT_DOPEY_WEIGHT, 0);
+        opts.put(Dwarf.PROP_HEIGHT, DwarfsData.OPT_DOPEY_HEIGHT, 0);
+
+        //
+        addPrefixed(opts, Dwarfs.PROP_BASHFUL, DwarfsData.bashful);
+
+        //
+        addPrefixed(opts, Dwarfs.PROP_DOC, DwarfsData.doc);
+
+        //
+        addPrefixed(opts, Dwarfs.PROP_DOPEY, DwarfsData.dopey);
+        opts.put(Dwarfs.PROP_DOPEY + '.' + Dwarf.PROP_WEIGHT, DwarfsData.OPT_DOPEY_WEIGHT, 0);
+        opts.put(Dwarfs.PROP_DOPEY + '.' + Dwarf.PROP_HEIGHT, DwarfsData.OPT_DOPEY_HEIGHT, 0);
+
+        //
+        addPrefixed(opts, Dwarfs.PROP_GRUMPY, DwarfsData.grumpy);
+        opts.put(Dwarfs.PROP_GRUMPY + '.' + Dwarf.PROP_HEIGHT, DwarfsData.OPT_GRUMPY_HEIGHT, 0);
+
+        //
+        addPrefixed(opts, Dwarfs.PROP_HAPPY, DwarfsData.happy);
+
+        //
+        addPrefixed(opts, Dwarfs.PROP_SLEEPY, DwarfsData.sleepy);
+        opts.put(Dwarfs.PROP_SLEEPY + '.' + Dwarf.PROP_HEIGHT, DwarfsData.OPT_SLEEPY_HEIGHT, 0);
+
+        //
+        addPrefixed(opts, Dwarfs.PROP_SNEEZY, DwarfsData.sneezy);
+        opts.put(Dwarfs.PROP_SNEEZY + '.' + Dwarf.PROP_HOME_PAGE, DwarfsData.OPT_SNEEZY_HOME_PAGE, 0);
+
+        return opts;
     }
 
     public static void resetConfig() throws Exception
@@ -172,6 +213,26 @@ public class Helper
         for (String name : FACTORY_PROPERTIES)
         {
             System.clearProperty(name);
+        }
+    }
+
+    private static void addPrefixed(Options opts, String name, Dwarf dwarf)
+    {
+        String prefix = (name == null) ? "" : (name + '.');
+
+        opts.put(prefix + Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
+        opts.put(prefix + Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
+        opts.put(prefix + Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
+        opts.put(prefix + Dwarf.PROP_HOME_PAGE, dwarf.getHomePage().toString());
+        opts.put(prefix + Dwarf.PROP_HOME_DIR, dwarf.getHomeDir());
+        int[] numbers = dwarf.getFortuneNumber();
+
+        if ((numbers != null) && (numbers.length > 0))
+        {
+            for (int i = 0; i < numbers.length; i++)
+            {
+                opts.add(prefix + Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(numbers[i]));
+            }
         }
     }
 

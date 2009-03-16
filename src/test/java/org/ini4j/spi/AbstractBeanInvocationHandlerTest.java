@@ -35,11 +35,14 @@ import java.lang.reflect.Proxy;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.ini4j.BasicMultiMap;
+import org.ini4j.MultiMap;
 
-@Ignore public class AbstractBeanInvocationHandlerTest
+public class AbstractBeanInvocationHandlerTest
 {
     private static final String PROP_AGE = Dwarf.PROP_AGE;
     private static final String PROP_HEIGHT = Dwarf.PROP_HEIGHT;
+    private static final String PROP_FORTUNE_NUMBER = Dwarf.PROP_FORTUNE_NUMBER;
 
     @Test public void testGetProperty() throws Exception
     {
@@ -62,6 +65,17 @@ import java.util.Map;
             }
         };
         assertFalse(handler.hasProperty(PROP_AGE));
+    }
+
+    @Test public void testGetSetHas() throws Exception
+    {
+        Dwarf dwarf = MapBeanHandler.newBean(Dwarf.class);
+
+        assertFalse(dwarf.hasAge());
+        dwarf.setAge(23);
+        assertEquals(23, dwarf.getAge());
+        assertNull(dwarf.getHomeDir());
+        dwarf.setHomeDir("dummy");
     }
 
     @Test public void testMisc() throws Exception
@@ -88,17 +102,6 @@ import java.util.Map;
         handler.fireVetoableChange(PROP_AGE, Integer.valueOf(1), Integer.valueOf(2));
     }
 
-    /**
-     * Test of newDwarfs method.
-     *
-     * @throws Exception on error
-     */
-    @Test
-    @SuppressWarnings("deprecation")
-    public void testNewDwarfs() throws Exception
-    {
-        Helper.assertEquals(DwarfsData.dwarfs, Helper.loadDwarfsIni().as(Dwarfs.class));
-    }
 
     @Test public void testPropertyChangeListener() throws Exception
     {

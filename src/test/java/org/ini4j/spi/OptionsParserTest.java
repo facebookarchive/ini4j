@@ -88,8 +88,8 @@ public class OptionsParserTest
         handler.handleComment((String) EasyMock.anyObject());
         handler.handleComment((String) EasyMock.anyObject());
         dwarf = DwarfsData.dopey;
-        handler.handleOption(Dwarf.PROP_WEIGHT, DwarfsData.DOPEY_WEIGHT.replace('/', '.'));
-        handler.handleOption(Dwarf.PROP_HEIGHT, DwarfsData.DOPEY_HEIGHT.replace('/', '.'));
+        handler.handleOption(Dwarf.PROP_WEIGHT, DwarfsData.OPT_DOPEY_WEIGHT);
+        handler.handleOption(Dwarf.PROP_HEIGHT, DwarfsData.OPT_DOPEY_HEIGHT);
         handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
@@ -122,8 +122,8 @@ public class OptionsParserTest
         dwarf = DwarfsData.dopey;
         prefix = Dwarfs.PROP_DOPEY + ".";
 
-        handler.handleOption(prefix + Dwarf.PROP_WEIGHT, DwarfsData.DOPEY_WEIGHT.replace('/', '.'));
-        handler.handleOption(prefix + Dwarf.PROP_HEIGHT, DwarfsData.DOPEY_HEIGHT.replace('/', '.'));
+        handler.handleOption(prefix + Dwarf.PROP_WEIGHT, DwarfsData.OPT_DOPEY_WEIGHT);
+        handler.handleOption(prefix + Dwarf.PROP_HEIGHT, DwarfsData.OPT_DOPEY_HEIGHT);
         handler.handleOption(prefix + Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
         handler.handleOption(prefix + Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(prefix + Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
@@ -132,7 +132,7 @@ public class OptionsParserTest
         prefix = Dwarfs.PROP_GRUMPY + ".";
 
         handler.handleOption(prefix + Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
-        handler.handleOption(prefix + Dwarf.PROP_HEIGHT, DwarfsData.GRUMPY_HEIGHT.replace('/', '.'));
+        handler.handleOption(prefix + Dwarf.PROP_HEIGHT, DwarfsData.OPT_GRUMPY_HEIGHT);
         handler.handleOption(prefix + Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
         handler.handleOption(prefix + Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(prefix + Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
@@ -150,7 +150,7 @@ public class OptionsParserTest
         prefix = Dwarfs.PROP_SLEEPY + ".";
 
         handler.handleOption(prefix + Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
-        handler.handleOption(prefix + Dwarf.PROP_HEIGHT, DwarfsData.SLEEPY_HEIGHT.replace('/', '.'));
+        handler.handleOption(prefix + Dwarf.PROP_HEIGHT, DwarfsData.OPT_SLEEPY_HEIGHT);
         handler.handleOption(prefix + Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
         handler.handleOption(prefix + Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(prefix + Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
@@ -162,7 +162,7 @@ public class OptionsParserTest
         handler.handleOption(prefix + Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
         handler.handleOption(prefix + Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
         handler.handleOption(prefix + Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
-        handler.handleOption(prefix + Dwarf.PROP_HOME_PAGE, DwarfsData.SNEEZY_HOME_PAGE.replace("/h", ".h"));
+        handler.handleOption(prefix + Dwarf.PROP_HOME_PAGE, DwarfsData.OPT_SNEEZY_HOME_PAGE);
         handler.handleOption(prefix + Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.handleOption(prefix + Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[0]));
         handler.handleOption(prefix + Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[1]));
