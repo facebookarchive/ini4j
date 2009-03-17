@@ -17,15 +17,17 @@ package org.ini4j;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.DwarfBean;
-import org.ini4j.sample.Dwarfs;
 
 import org.ini4j.test.DwarfsData;
+import org.ini4j.test.DwarfsData.DwarfData;
 import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.net.URI;
 
 public class BasicOptionMapTest
 {
@@ -37,30 +39,127 @@ public class BasicOptionMapTest
         _map.putAll(Helper.newDwarfsOpt());
     }
 
+    @Test public void testAddPutNullAndString()
+    {
+        OptionMap map = new BasicOptionMap();
+        Object o;
+
+        // null
+        o = null;
+        map.add(Dwarf.PROP_AGE, o);
+        assertNull(map.get(Dwarf.PROP_AGE));
+        map.put(Dwarf.PROP_AGE, DwarfsData.doc.age);
+        assertNotNull(map.get(Dwarf.PROP_AGE));
+        map.add(Dwarf.PROP_AGE, o, 0);
+        assertNull(map.get(Dwarf.PROP_AGE, 0));
+        map.put(Dwarf.PROP_AGE, DwarfsData.doc.age, 0);
+        assertNotNull(map.get(Dwarf.PROP_AGE, 0));
+        map.put(Dwarf.PROP_AGE, o, 0);
+        assertNull(map.get(Dwarf.PROP_AGE, 0));
+        map.remove(Dwarf.PROP_AGE);
+        map.put(Dwarf.PROP_AGE, o);
+        assertNull(map.get(Dwarf.PROP_AGE));
+
+        // str
+        map.remove(Dwarf.PROP_AGE);
+        o = String.valueOf(DwarfsData.doc.age);
+        map.add(Dwarf.PROP_AGE, o);
+        assertEquals(o, map.get(Dwarf.PROP_AGE));
+        map.remove(Dwarf.PROP_AGE);
+        map.put(Dwarf.PROP_AGE, o);
+        assertEquals(o, map.get(Dwarf.PROP_AGE));
+        o = String.valueOf(DwarfsData.happy.age);
+        map.add(Dwarf.PROP_AGE, o, 0);
+        assertEquals(DwarfsData.happy.age, (int) map.get(Dwarf.PROP_AGE, 0, int.class));
+        o = String.valueOf(DwarfsData.doc.age);
+        map.put(Dwarf.PROP_AGE, o, 0);
+        assertEquals(DwarfsData.doc.age, (int) map.get(Dwarf.PROP_AGE, 0, int.class));
+    }
+
+    @Test public void testFetch()
+    {
+        OptionMap map = new BasicOptionMap();
+
+        Helper.addDwarf(map, DwarfsData.dopey, false);
+        Helper.addDwarf(map, DwarfsData.bashful);
+        Helper.addDwarf(map, DwarfsData.doc);
+
+        // dopey
+        assertEquals(DwarfsData.dopey.weight, map.fetch(Dwarf.PROP_WEIGHT, double.class), Helper.DELTA);
+        map.add(Dwarf.PROP_HEIGHT, map.get(Dwarf.PROP_HEIGHT));
+        assertEquals(DwarfsData.dopey.height, map.fetch(Dwarf.PROP_HEIGHT, 1, double.class), Helper.DELTA);
+
+        // sneezy
+        map.clear();
+        Helper.addDwarf(map, DwarfsData.happy);
+        Helper.addDwarf(map, DwarfsData.sneezy, false);
+        assertEquals(DwarfsData.sneezy.homePage, map.fetch(Dwarf.PROP_HOME_PAGE, URI.class));
+
+        // null
+        map = new BasicOptionMap();
+        map.add(Dwarf.PROP_AGE, null);
+        assertNull(map.fetch(Dwarf.PROP_AGE, 0));
+    }
+
     @Test public void testFromToAs() throws Exception
     {
         DwarfBean bean = new DwarfBean();
 
-        _map.to(bean, Dwarfs.PROP_BASHFUL + '.');
-        Helper.assertEquals(DwarfsData.bashful, bean);
+        _map.to(bean);
+        Helper.assertEquals(DwarfsData.dopey, bean);
         OptionMap map = new BasicOptionMap();
 
-        map.from(bean, Dwarfs.PROP_BASHFUL + '.');
+        map.from(bean);
         bean = new DwarfBean();
-        map.to(bean, Dwarfs.PROP_BASHFUL + '.');
-        Helper.assertEquals(DwarfsData.bashful, bean);
-        Helper.assertEquals(DwarfsData.dopey, _map.as(Dwarf.class));
+        map.to(bean);
+        Helper.assertEquals(DwarfsData.dopey, bean);
+        Dwarf proxy = map.as(Dwarf.class);
+
+        Helper.assertEquals(DwarfsData.dopey, proxy);
+        map.clear();
+        _map.to(proxy);
+        Helper.assertEquals(DwarfsData.dopey, proxy);
     }
 
-    @Test public void testPrefixed() throws Exception
+    @Test public void testFromToAsPrefixed() throws Exception
     {
-        Helper.assertEquals(DwarfsData.bashful, _map.as(Dwarf.class, Dwarfs.PROP_BASHFUL + '.'));
-        Helper.assertEquals(DwarfsData.doc, _map.as(Dwarf.class, Dwarfs.PROP_DOC + '.'));
-        Helper.assertEquals(DwarfsData.dopey, _map.as(Dwarf.class, Dwarfs.PROP_DOPEY + '.'));
-        Helper.assertEquals(DwarfsData.grumpy, _map.as(Dwarf.class, Dwarfs.PROP_GRUMPY + '.'));
-        Helper.assertEquals(DwarfsData.happy, _map.as(Dwarf.class, Dwarfs.PROP_HAPPY + '.'));
-        Helper.assertEquals(DwarfsData.sleepy, _map.as(Dwarf.class, Dwarfs.PROP_SLEEPY + '.'));
-        Helper.assertEquals(DwarfsData.sneezy, _map.as(Dwarf.class, Dwarfs.PROP_SNEEZY + '.'));
+        fromToAs(DwarfsData.bashful);
+        fromToAs(DwarfsData.doc);
+        fromToAs(DwarfsData.dopey);
+        fromToAs(DwarfsData.grumpy);
+        fromToAs(DwarfsData.happy);
+        fromToAs(DwarfsData.sleepy);
+        fromToAs(DwarfsData.sneezy);
+    }
+
+    @Test public void testGet()
+    {
+        OptionMap map = new BasicOptionMap();
+
+        // bashful
+        Helper.addDwarf(map, DwarfsData.bashful, false);
+        assertEquals(DwarfsData.bashful.weight, map.get(Dwarf.PROP_WEIGHT, double.class), Helper.DELTA);
+        map.add(Dwarf.PROP_HEIGHT, map.get(Dwarf.PROP_HEIGHT));
+        assertEquals(DwarfsData.bashful.height, map.get(Dwarf.PROP_HEIGHT, 1, double.class), Helper.DELTA);
+        assertEquals(DwarfsData.bashful.homePage, map.fetch(Dwarf.PROP_HOME_PAGE, URI.class));
+    }
+
+    @Test public void testPut()
+    {
+        OptionMap map = new BasicOptionMap();
+
+        map.add(Dwarf.PROP_AGE, DwarfsData.sneezy.age);
+        map.put(Dwarf.PROP_HEIGHT, DwarfsData.sneezy.height);
+        map.add(Dwarf.PROP_HOME_DIR, DwarfsData.sneezy.homeDir);
+        map.add(Dwarf.PROP_WEIGHT, DwarfsData.sneezy.weight, 0);
+        map.put(Dwarf.PROP_HOME_PAGE, null);
+        map.put(Dwarf.PROP_HOME_PAGE, DwarfsData.sneezy.homePage);
+        map.add(Dwarf.PROP_FORTUNE_NUMBER, DwarfsData.sneezy.fortuneNumber[1]);
+        map.add(Dwarf.PROP_FORTUNE_NUMBER, DwarfsData.sneezy.fortuneNumber[2]);
+        map.add(Dwarf.PROP_FORTUNE_NUMBER, 0);
+        map.put(Dwarf.PROP_FORTUNE_NUMBER, DwarfsData.sneezy.fortuneNumber[3], 2);
+        map.add(Dwarf.PROP_FORTUNE_NUMBER, DwarfsData.sneezy.fortuneNumber[0], 0);
+        Helper.assertEquals(DwarfsData.sneezy, map.as(Dwarf.class));
     }
 
     @Test public void testResolve() throws Exception
@@ -133,5 +232,26 @@ public class BasicOptionMapTest
         buffer = new StringBuilder(input);
 
         assertEquals(input, buffer.toString());
+    }
+
+    private void fromToAs(DwarfData dwarf)
+    {
+        String prefix = dwarf.name + '.';
+        DwarfBean bean = new DwarfBean();
+
+        _map.to(bean, prefix);
+        Helper.assertEquals(dwarf, bean);
+        OptionMap map = new BasicOptionMap();
+
+        map.from(bean, prefix);
+        bean = new DwarfBean();
+        map.to(bean, prefix);
+        Helper.assertEquals(dwarf, bean);
+        Dwarf proxy = map.as(Dwarf.class, prefix);
+
+        Helper.assertEquals(dwarf, proxy);
+        map.clear();
+        _map.to(proxy, prefix);
+        Helper.assertEquals(dwarf, proxy);
     }
 }

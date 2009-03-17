@@ -17,6 +17,7 @@ package org.ini4j.test;
 
 import org.ini4j.Config;
 import org.ini4j.Ini;
+import org.ini4j.OptionMap;
 import org.ini4j.Options;
 
 import org.ini4j.sample.Dwarf;
@@ -24,6 +25,8 @@ import org.ini4j.sample.Dwarfs;
 
 import org.ini4j.spi.IniFormatter;
 import org.ini4j.spi.IniParser;
+
+import org.ini4j.test.DwarfsData.DwarfData;
 
 import org.junit.Assert;
 
@@ -43,12 +46,12 @@ public class Helper
     public static final String DWARFS_OPT = RESOURCE_PREFIX + "dwarfs.opt";
     public static final float DELTA = 0.00000001f;
     private static final String[] CONFIG_PROPERTIES =
-        {
-            Config.PROP_EMPTY_OPTION, Config.PROP_GLOBAL_SECTION, Config.PROP_GLOBAL_SECTION_NAME, Config.PROP_INCLUDE, Config.PROP_LOWER_CASE_OPTION,
-            Config.PROP_LOWER_CASE_SECTION, Config.PROP_MULTI_OPTION, Config.PROP_MULTI_SECTION, Config.PROP_STRICT_OPERATOR,
-            Config.PROP_UNNAMED_SECTION, Config.PROP_ESCAPE
-        };
+        { Config.PROP_EMPTY_OPTION, Config.PROP_GLOBAL_SECTION, Config.PROP_GLOBAL_SECTION_NAME, Config.PROP_INCLUDE, Config.PROP_LOWER_CASE_OPTION, Config.PROP_LOWER_CASE_SECTION, Config.PROP_MULTI_OPTION, Config.PROP_MULTI_SECTION, Config.PROP_STRICT_OPERATOR, Config.PROP_UNNAMED_SECTION, Config.PROP_ESCAPE };
     private static final String[] FACTORY_PROPERTIES = { IniFormatter.class.getName(), IniParser.class.getName() };
+    public static final String HEADER_COMMENT = " Copyright 2005,2009 Ivan SZKIBA\n" + "\n" + " Licensed under the Apache License, Version 2.0 (the \"License\");\n"
+        + " you may not use this file except in compliance with the License.\n" + " You may obtain a copy of the License at\n" + "\n" + "      http://www.apache.org/licenses/LICENSE-2.0\n" + "\n"
+        + " Unless required by applicable law or agreed to in writing, software\n" + " distributed under the License is distributed on an \"AS IS\" BASIS,\n"
+        + " WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" + " See the License for the specific language governing permissions and\n" + " limitations under the License.";
 
     private Helper()
     {
@@ -77,6 +80,63 @@ public class Helper
     public static File getSourceFile(String path) throws Exception
     {
         return new File(_sourceDir, path).getCanonicalFile();
+    }
+
+    public static void addDwarf(OptionMap opts, DwarfData dwarf)
+    {
+        addDwarf(opts, dwarf, true);
+    }
+
+    public static Ini.Section addDwarf(Ini ini, DwarfData dwarf)
+    {
+        Ini.Section s = ini.add(dwarf.name);
+
+        ini.putComment(dwarf.name, " " + dwarf.name);
+        inject(s, dwarf, "");
+        if (dwarf.name.equals(Dwarfs.PROP_DOPEY))
+        {
+            s.put(Dwarf.PROP_WEIGHT, DwarfsData.INI_DOPEY_WEIGHT, 0);
+            s.put(Dwarf.PROP_HEIGHT, DwarfsData.INI_DOPEY_HEIGHT, 0);
+        }
+        else if (dwarf.name.equals(Dwarfs.PROP_GRUMPY))
+        {
+            s.put(Dwarf.PROP_HEIGHT, DwarfsData.INI_GRUMPY_HEIGHT, 0);
+        }
+        else if (dwarf.name.equals(Dwarfs.PROP_SLEEPY))
+        {
+            s.put(Dwarf.PROP_HEIGHT, DwarfsData.INI_SLEEPY_HEIGHT, 0);
+        }
+        else if (dwarf.name.equals(Dwarfs.PROP_SNEEZY))
+        {
+            s.put(Dwarf.PROP_HOME_PAGE, DwarfsData.INI_SNEEZY_HOME_PAGE, 0);
+        }
+
+        return s;
+    }
+
+    public static void addDwarf(OptionMap opts, DwarfData dwarf, boolean addNamePrefix)
+    {
+        String prefix = addNamePrefix ? (dwarf.name + '.') : "";
+
+        opts.putComment(prefix + Dwarf.PROP_WEIGHT, " " + dwarf.name);
+        inject(opts, dwarf, prefix);
+        if (dwarf.name.equals(Dwarfs.PROP_DOPEY))
+        {
+            opts.put(prefix + Dwarf.PROP_WEIGHT, DwarfsData.OPT_DOPEY_WEIGHT, 0);
+            opts.put(prefix + Dwarf.PROP_HEIGHT, DwarfsData.OPT_DOPEY_HEIGHT, 0);
+        }
+        else if (dwarf.name.equals(Dwarfs.PROP_GRUMPY))
+        {
+            opts.put(prefix + Dwarf.PROP_HEIGHT, DwarfsData.OPT_GRUMPY_HEIGHT, 0);
+        }
+        else if (dwarf.name.equals(Dwarfs.PROP_SLEEPY))
+        {
+            opts.put(prefix + Dwarf.PROP_HEIGHT, DwarfsData.OPT_SLEEPY_HEIGHT, 0);
+        }
+        else if (dwarf.name.equals(Dwarfs.PROP_SNEEZY))
+        {
+            opts.put(prefix + Dwarf.PROP_HOME_PAGE, DwarfsData.OPT_SNEEZY_HOME_PAGE, 0);
+        }
     }
 
     public static void assertEquals(Dwarfs expected, Dwarfs actual) throws Exception
@@ -136,32 +196,15 @@ public class Helper
     public static Ini newDwarfsIni()
     {
         Ini ini = new Ini();
-        Ini.Section s;
 
-        addSection(ini, Dwarfs.PROP_BASHFUL, DwarfsData.bashful);
-
-        //
-        addSection(ini, Dwarfs.PROP_DOC, DwarfsData.doc);
-
-        //
-        s = addSection(ini, Dwarfs.PROP_DOPEY, DwarfsData.dopey);
-        s.put(Dwarf.PROP_WEIGHT, DwarfsData.INI_DOPEY_WEIGHT, 0);
-        s.put(Dwarf.PROP_HEIGHT, DwarfsData.INI_DOPEY_HEIGHT, 0);
-
-        //
-        s = addSection(ini, Dwarfs.PROP_GRUMPY, DwarfsData.grumpy);
-        s.put(Dwarf.PROP_HEIGHT, DwarfsData.INI_GRUMPY_HEIGHT, 0);
-
-        //
-        addSection(ini, Dwarfs.PROP_HAPPY, DwarfsData.happy);
-
-        //
-        s = addSection(ini, Dwarfs.PROP_SLEEPY, DwarfsData.sleepy);
-        s.put(Dwarf.PROP_HEIGHT, DwarfsData.INI_SLEEPY_HEIGHT, 0);
-
-        //
-        s = addSection(ini, Dwarfs.PROP_SNEEZY, DwarfsData.sneezy);
-        s.put(Dwarf.PROP_HOME_PAGE, DwarfsData.INI_SNEEZY_HOME_PAGE, 0);
+        ini.setComment(HEADER_COMMENT);
+        addDwarf(ini, DwarfsData.bashful);
+        addDwarf(ini, DwarfsData.doc);
+        addDwarf(ini, DwarfsData.dopey);
+        addDwarf(ini, DwarfsData.grumpy);
+        addDwarf(ini, DwarfsData.happy);
+        addDwarf(ini, DwarfsData.sleepy);
+        addDwarf(ini, DwarfsData.sneezy);
 
         return ini;
     }
@@ -170,35 +213,15 @@ public class Helper
     {
         Options opts = new Options();
 
-        addPrefixed(opts, null, DwarfsData.dopey);
-        opts.put(Dwarf.PROP_WEIGHT, DwarfsData.OPT_DOPEY_WEIGHT, 0);
-        opts.put(Dwarf.PROP_HEIGHT, DwarfsData.OPT_DOPEY_HEIGHT, 0);
-
-        //
-        addPrefixed(opts, Dwarfs.PROP_BASHFUL, DwarfsData.bashful);
-
-        //
-        addPrefixed(opts, Dwarfs.PROP_DOC, DwarfsData.doc);
-
-        //
-        addPrefixed(opts, Dwarfs.PROP_DOPEY, DwarfsData.dopey);
-        opts.put(Dwarfs.PROP_DOPEY + '.' + Dwarf.PROP_WEIGHT, DwarfsData.OPT_DOPEY_WEIGHT, 0);
-        opts.put(Dwarfs.PROP_DOPEY + '.' + Dwarf.PROP_HEIGHT, DwarfsData.OPT_DOPEY_HEIGHT, 0);
-
-        //
-        addPrefixed(opts, Dwarfs.PROP_GRUMPY, DwarfsData.grumpy);
-        opts.put(Dwarfs.PROP_GRUMPY + '.' + Dwarf.PROP_HEIGHT, DwarfsData.OPT_GRUMPY_HEIGHT, 0);
-
-        //
-        addPrefixed(opts, Dwarfs.PROP_HAPPY, DwarfsData.happy);
-
-        //
-        addPrefixed(opts, Dwarfs.PROP_SLEEPY, DwarfsData.sleepy);
-        opts.put(Dwarfs.PROP_SLEEPY + '.' + Dwarf.PROP_HEIGHT, DwarfsData.OPT_SLEEPY_HEIGHT, 0);
-
-        //
-        addPrefixed(opts, Dwarfs.PROP_SNEEZY, DwarfsData.sneezy);
-        opts.put(Dwarfs.PROP_SNEEZY + '.' + Dwarf.PROP_HOME_PAGE, DwarfsData.OPT_SNEEZY_HOME_PAGE, 0);
+        opts.setComment(HEADER_COMMENT);
+        addDwarf(opts, DwarfsData.dopey, false);
+        addDwarf(opts, DwarfsData.bashful);
+        addDwarf(opts, DwarfsData.doc);
+        addDwarf(opts, DwarfsData.dopey);
+        addDwarf(opts, DwarfsData.grumpy);
+        addDwarf(opts, DwarfsData.happy);
+        addDwarf(opts, DwarfsData.sleepy);
+        addDwarf(opts, DwarfsData.sneezy);
 
         return opts;
     }
@@ -216,45 +239,21 @@ public class Helper
         }
     }
 
-    private static void addPrefixed(Options opts, String name, Dwarf dwarf)
+    private static void inject(OptionMap map, Dwarf dwarf, String prefix)
     {
-        String prefix = (name == null) ? "" : (name + '.');
-
-        opts.put(prefix + Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
-        opts.put(prefix + Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
-        opts.put(prefix + Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
-        opts.put(prefix + Dwarf.PROP_HOME_PAGE, dwarf.getHomePage().toString());
-        opts.put(prefix + Dwarf.PROP_HOME_DIR, dwarf.getHomeDir());
+        map.put(prefix + Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
+        map.put(prefix + Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
+        map.put(prefix + Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
+        map.put(prefix + Dwarf.PROP_HOME_PAGE, dwarf.getHomePage().toString());
+        map.put(prefix + Dwarf.PROP_HOME_DIR, dwarf.getHomeDir());
         int[] numbers = dwarf.getFortuneNumber();
 
         if ((numbers != null) && (numbers.length > 0))
         {
             for (int i = 0; i < numbers.length; i++)
             {
-                opts.add(prefix + Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(numbers[i]));
+                map.add(prefix + Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(numbers[i]));
             }
         }
-    }
-
-    private static Ini.Section addSection(Ini ini, String name, Dwarf dwarf)
-    {
-        Ini.Section s = ini.add(name);
-
-        s.put(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
-        s.put(Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
-        s.put(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
-        s.put(Dwarf.PROP_HOME_PAGE, dwarf.getHomePage().toString());
-        s.put(Dwarf.PROP_HOME_DIR, dwarf.getHomeDir());
-        int[] numbers = dwarf.getFortuneNumber();
-
-        if ((numbers != null) && (numbers.length > 0))
-        {
-            for (int i = 0; i < numbers.length; i++)
-            {
-                s.add(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(numbers[i]));
-            }
-        }
-
-        return s;
     }
 }

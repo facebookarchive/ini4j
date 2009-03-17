@@ -28,7 +28,7 @@ public class IniFormatter extends AbstractFormatter implements IniHandler
     {
         IniFormatter instance = newInstance();
 
-        instance.setOutput(new PrintWriter(out));
+        instance.setOutput((out instanceof PrintWriter) ? (PrintWriter) out : new PrintWriter(out));
 
         return instance;
     }
@@ -69,6 +69,7 @@ public class IniFormatter extends AbstractFormatter implements IniHandler
 
     @Override public void startSection(String sectionName)
     {
+        setHeader(false);
         getOutput().print(IniParser.SECTION_BEGIN);
         getOutput().print(escape(sectionName));
         getOutput().println(IniParser.SECTION_END);

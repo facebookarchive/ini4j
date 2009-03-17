@@ -35,11 +35,7 @@ import java.io.StringReader;
 
 public class IniParserTest
 {
-    private static final String[] BAD =
-        {
-            "[section\noption=value\n", "[]\noption=value", "section\noption=value", "[section]\noption\n", "[section]\n=value\n",
-            "[section]\n\\u000d\\u000d=value\n"
-        };
+    private static final String[] BAD = { "[section\noption=value\n", "[]\noption=value", "section\noption=value", "[section]\noption\n", "[section]\n=value\n", "[section]\n\\u000d\\u000d=value\n" };
     private static final String CFG_LOWER = "[SectioN]\n\nOptioN=ValuE\n";
     private static final String CFG_UNNAMED = "[]\noption=value\n";
     private static final String CFG_EMPTY_OPTION = "[section]\noption\n";
@@ -139,9 +135,9 @@ public class IniParserTest
         Dwarf dwarf;
 
         handler.startIni();
+        handler.handleComment(Helper.HEADER_COMMENT);
         handler.handleComment((String) EasyMock.anyObject());
-        handler.handleComment((String) EasyMock.anyObject());
-        handler.handleComment(name2comment(Dwarfs.PROP_BASHFUL));
+        handler.handleComment(" " + Dwarfs.PROP_BASHFUL);
         dwarf = DwarfsData.bashful;
         handler.startSection(Dwarfs.PROP_BASHFUL);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
@@ -150,7 +146,7 @@ public class IniParserTest
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.endSection();
-        handler.handleComment(name2comment(Dwarfs.PROP_DOC));
+        handler.handleComment(" " + Dwarfs.PROP_DOC);
         dwarf = DwarfsData.doc;
         handler.startSection(Dwarfs.PROP_DOC);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
@@ -159,7 +155,7 @@ public class IniParserTest
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.endSection();
-        handler.handleComment(name2comment(Dwarfs.PROP_DOPEY));
+        handler.handleComment(" " + Dwarfs.PROP_DOPEY);
         dwarf = DwarfsData.dopey;
         handler.startSection(Dwarfs.PROP_DOPEY);
         handler.handleOption(Dwarf.PROP_WEIGHT, DwarfsData.INI_DOPEY_WEIGHT);
@@ -167,8 +163,11 @@ public class IniParserTest
         handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[0]));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[1]));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[2]));
         handler.endSection();
-        handler.handleComment(name2comment(Dwarfs.PROP_GRUMPY));
+        handler.handleComment(" " + Dwarfs.PROP_GRUMPY);
         dwarf = DwarfsData.grumpy;
         handler.startSection(Dwarfs.PROP_GRUMPY);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
@@ -177,7 +176,7 @@ public class IniParserTest
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.endSection();
-        handler.handleComment(name2comment(Dwarfs.PROP_HAPPY));
+        handler.handleComment(" " + Dwarfs.PROP_HAPPY);
         dwarf = DwarfsData.happy;
         handler.startSection(Dwarfs.PROP_HAPPY);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
@@ -186,7 +185,7 @@ public class IniParserTest
         handler.handleOption(EasyMock.eq(Dwarf.PROP_HOME_PAGE), (String) EasyMock.anyObject());
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.endSection();
-        handler.handleComment(name2comment(Dwarfs.PROP_SLEEPY));
+        handler.handleComment(" " + Dwarfs.PROP_SLEEPY);
         dwarf = DwarfsData.sleepy;
         handler.startSection(Dwarfs.PROP_SLEEPY);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
@@ -196,7 +195,7 @@ public class IniParserTest
         handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[0]));
         handler.endSection();
-        handler.handleComment(name2comment(Dwarfs.PROP_SNEEZY));
+        handler.handleComment(" " + Dwarfs.PROP_SNEEZY);
         dwarf = DwarfsData.sneezy;
         handler.startSection(Dwarfs.PROP_SNEEZY);
         handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
@@ -209,7 +208,7 @@ public class IniParserTest
         handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[2]));
         handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[3]));
         handler.endSection();
-        handler.handleComment(name2comment(Dwarfs.PROP_HAPPY) + " again");
+        handler.handleComment(" " + Dwarfs.PROP_HAPPY + " again");
         dwarf = DwarfsData.happy;
         handler.startSection(Dwarfs.PROP_HAPPY);
         handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
@@ -266,16 +265,5 @@ public class IniParserTest
                 ;
             }
         }
-    }
-
-    private String name2comment(String name)
-    {
-        StringBuilder buff = new StringBuilder(name.length() + 1);
-
-        buff.append(' ');
-        buff.append(Character.toUpperCase(name.charAt(0)));
-        buff.append(name.substring(1));
-
-        return buff.toString();
     }
 }

@@ -15,92 +15,215 @@
  */
 package org.ini4j.spi;
 
+import org.easymock.EasyMock;
+
+import org.ini4j.Config;
+import org.ini4j.Ini;
+
+import org.ini4j.sample.Dwarf;
+import org.ini4j.sample.Dwarfs;
+
+import org.ini4j.test.DwarfsData;
+import org.ini4j.test.Helper;
+
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
+import org.junit.Test;
 
-@SuppressWarnings("deprecation")
-@Ignore public class IniFormatterTest
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+
+public class IniFormatterTest
 {
-    /*
     private static final String NL = System.getProperty("line.separator");
-    private static final String STRICTOPERATOR = "[section]" + NL + "option=value" + NL + NL;
-    private static final String NORMALOPERATOR = "[section]" + NL + "option = value" + NL + NL;
-    private static final String WITHDUMMY = "[section]" + NL + "option=value" + NL + "dummy=" + NL + NL;
-    public static final String DUMMY = "dummy";
-    public static final String SECTION = "section";
-    private IniFormatter formatter;
-    private StringWriter output;
+    private static final String DUMMY = "dummy";
 
-    @AfterClass public static void tearDownClass() throws Exception
+    @Test public void testFormat() throws Exception
     {
-        Helper.resetConfig();
+        Ini ini = Helper.newDwarfsIni();
+        IniHandler handler = EasyMock.createMock(IniHandler.class);
+        Dwarf dwarf;
+
+        handler.startIni();
+        handler.handleComment(Helper.HEADER_COMMENT);
+        handler.handleComment(" " + Dwarfs.PROP_BASHFUL);
+        dwarf = DwarfsData.bashful;
+        handler.startSection(Dwarfs.PROP_BASHFUL);
+        handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
+        handler.handleOption(Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
+        handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
+        handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
+        handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
+        handler.endSection();
+        handler.handleComment(" " + Dwarfs.PROP_DOC);
+        dwarf = DwarfsData.doc;
+        handler.startSection(Dwarfs.PROP_DOC);
+        handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
+        handler.handleOption(Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
+        handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
+        handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
+        handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
+        handler.endSection();
+        handler.handleComment(" " + Dwarfs.PROP_DOPEY);
+        dwarf = DwarfsData.dopey;
+        handler.startSection(Dwarfs.PROP_DOPEY);
+        handler.handleOption(Dwarf.PROP_WEIGHT, DwarfsData.INI_DOPEY_WEIGHT);
+        handler.handleOption(Dwarf.PROP_HEIGHT, DwarfsData.INI_DOPEY_HEIGHT);
+        handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
+        handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
+        handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[0]));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[1]));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[2]));
+        handler.endSection();
+        handler.handleComment(" " + Dwarfs.PROP_GRUMPY);
+        dwarf = DwarfsData.grumpy;
+        handler.startSection(Dwarfs.PROP_GRUMPY);
+        handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
+        handler.handleOption(Dwarf.PROP_HEIGHT, DwarfsData.INI_GRUMPY_HEIGHT);
+        handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
+        handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
+        handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
+        handler.endSection();
+        handler.handleComment(" " + Dwarfs.PROP_HAPPY);
+        dwarf = DwarfsData.happy;
+        handler.startSection(Dwarfs.PROP_HAPPY);
+        handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
+        handler.handleOption(Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
+        handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
+        handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
+        handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
+        handler.endSection();
+        handler.handleComment(" " + Dwarfs.PROP_SLEEPY);
+        dwarf = DwarfsData.sleepy;
+        handler.startSection(Dwarfs.PROP_SLEEPY);
+        handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
+        handler.handleOption(Dwarf.PROP_HEIGHT, DwarfsData.INI_SLEEPY_HEIGHT);
+        handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
+        handler.handleOption(Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
+        handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[0]));
+        handler.endSection();
+        handler.handleComment(" " + Dwarfs.PROP_SNEEZY);
+        dwarf = DwarfsData.sneezy;
+        handler.startSection(Dwarfs.PROP_SNEEZY);
+        handler.handleOption(Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
+        handler.handleOption(Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
+        handler.handleOption(Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
+        handler.handleOption(Dwarf.PROP_HOME_PAGE, DwarfsData.INI_SNEEZY_HOME_PAGE);
+        handler.handleOption(Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[0]));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[1]));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[2]));
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[3]));
+        handler.endSection();
+        handler.endIni();
+        EasyMock.replay(handler);
+        verify(ini, handler);
     }
 
-    @Before public void setUp() throws Exception
+    @Test public void testNewInstance() throws Exception
     {
-        System.setProperty(IniFormatter.class.getName(), FancyIniFormatter.class.getName());
-        output = new StringWriter();
-        formatter = (FancyIniFormatter) IniFormatter.newInstance(output);
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Config cfg = new Config();
+        IniFormatter instance;
+
+        instance = IniFormatter.newInstance(stream);
+        instance.getOutput().print(DUMMY);
+        instance.getOutput().flush();
+        assertEquals(DUMMY, stream.toString());
+
+        //
+        instance = IniFormatter.newInstance(stream, cfg);
+        assertSame(cfg, instance.getConfig());
+
+        //
+        instance = IniFormatter.newInstance(stringWriter);
+        instance.getOutput().print(DUMMY);
+        instance.getOutput().flush();
+        assertEquals(DUMMY, stringWriter.toString());
+
+        //
+        instance = IniFormatter.newInstance(printWriter);
+        assertSame(printWriter, instance.getOutput());
     }
 
-    @Test public void testDefaults() throws Exception
+    @Test public void testWithEmptyOption() throws Exception
     {
-        ((FancyIniFormatter) formatter).setConfig(new Config());
-        assertTrue(((FancyIniFormatter) formatter).isAllowStrictOperator());
-        assertTrue(((FancyIniFormatter) formatter).isAllowEmptyOption());
+        Config cfg = new Config();
+
+        cfg.setEmptyOption(true);
+        Ini ini = new Ini();
+        Ini.Section sec = ini.add(Dwarfs.PROP_BASHFUL);
+
+        sec.put(Dwarf.PROP_FORTUNE_NUMBER, null);
+        ini.setConfig(cfg);
+        IniHandler handler = EasyMock.createMock(IniHandler.class);
+
+        handler.startIni();
+        handler.startSection(Dwarfs.PROP_BASHFUL);
+        handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, "");
+        handler.endSection();
+        handler.endIni();
+        EasyMock.replay(handler);
+        verify(ini, handler);
     }
 
-    @Test public void testEmptyOption() throws Exception
+    @Test public void testWithoutConfig() throws Exception
     {
-        ((FancyIniFormatter) formatter).setAllowEmptyOption(true);
-        IniHelper ini = new IniHelper(new StringReader(STRICTOPERATOR));
+        Ini ini = new Ini();
+        Ini.Section sec = ini.add(Dwarfs.PROP_BASHFUL);
 
-        ini.get(SECTION).put(DUMMY, null);
-        ini.store(formatter);
-        assertEquals(WITHDUMMY, output.toString());
+        sec.put(Dwarf.PROP_FORTUNE_NUMBER, null);
+        IniHandler handler = EasyMock.createMock(IniHandler.class);
+
+        handler.startIni();
+        handler.startSection(Dwarfs.PROP_BASHFUL);
+        handler.endSection();
+        handler.endIni();
+        EasyMock.replay(handler);
+        verify(ini, handler);
     }
 
-    @Test public void testNoEmptyOption() throws Exception
+    @Test public void testWithStrictOperator() throws Exception
     {
-        ((FancyIniFormatter) formatter).setAllowEmptyOption(false);
-        IniHelper ini = new IniHelper(new StringReader(STRICTOPERATOR));
+        Config cfg = new Config();
 
-        ini.get(SECTION).put(DUMMY, null);
-        ini.store(formatter);
-        System.err.println(output.toString());
-        assertEquals(STRICTOPERATOR, output.toString());
+        cfg.setStrictOperator(true);
+        Ini ini = new Ini();
+        Ini.Section sec = ini.add(Dwarfs.PROP_BASHFUL);
+
+        sec.put(Dwarf.PROP_AGE, DwarfsData.bashful.age);
+        ini.setConfig(cfg);
+        StringWriter writer = new StringWriter();
+
+        ini.store(writer);
+        StringBuilder exp = new StringBuilder();
+
+        exp.append(IniParser.SECTION_BEGIN);
+        exp.append(Dwarfs.PROP_BASHFUL);
+        exp.append(IniParser.SECTION_END);
+        exp.append(NL);
+        exp.append(Dwarf.PROP_AGE);
+        exp.append('=');
+        exp.append(DwarfsData.bashful.age);
+        exp.append(NL);
+        exp.append(NL);
+        assertEquals(exp.toString(), writer.toString());
     }
 
-    @Test public void testNoStrictOperator() throws Exception
+    private void verify(Ini ini, IniHandler mock) throws Exception
     {
-        ((FancyIniFormatter) formatter).setAllowStrictOperator(false);
-        IniHelper ini = new IniHelper(new StringReader(NORMALOPERATOR));
+        StringWriter writer = new StringWriter();
 
-        ini.store(formatter);
-        assertEquals(NORMALOPERATOR, output.toString());
+        ini.store(writer);
+        IniParser parser = new IniParser();
+
+        parser.parse(new StringReader(writer.toString()), mock);
+        EasyMock.verify(mock);
     }
-
-    @Test public void testStrictOperator() throws Exception
-    {
-        ((FancyIniFormatter) formatter).setAllowStrictOperator(true);
-        IniHelper ini = new IniHelper(new StringReader(STRICTOPERATOR));
-
-        ini.store(formatter);
-        assertEquals(STRICTOPERATOR, output.toString());
-    }
-
-    protected static class IniHelper extends Ini
-    {
-        public IniHelper(Reader input) throws IOException
-        {
-            super(input);
-        }
-
-        @Override protected void store(IniHandler formatter) throws IOException
-        {
-            super.store(formatter);
-        }
-    }
-     */
 }

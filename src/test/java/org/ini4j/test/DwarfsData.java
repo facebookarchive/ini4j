@@ -50,13 +50,13 @@ public final class DwarfsData implements Dwarfs
     {
 
         // age, fortuneNumber, height, homeDir, homePage, weight
-        bashful = new DwarfData(67, null, 98.8, "/home/bashful", "http://snowwhite.tale/~bashful", 45.7);
-        doc = new DwarfData(63, null, 87.7, "c:Documents and Settingsdoc", "http://doc.dwarfs", 49.5);
-        dopey = new DwarfData(23, null, doc.height, "c:\\Documents and Settings\\dopey", "http://dopey.snowwhite.tale/", bashful.weight);
-        grumpy = new DwarfData(76, null, dopey.height, "/home/grumpy", "http://snowwhite.tale/~grumpy/", 65.3);
-        happy = new DwarfData(99, null, 77.66, "/home/happy", "http://happy.smurf", 56.4);
-        sleepy = new DwarfData(121, new int[] { 99 }, doc.height + 0.08, "/home/sleepy", "http://snowwhite.tale/~sleepy", 76.11);
-        sneezy = new DwarfData(64, new int[] { 11, 22, 33, 44 }, 76.88, "/home/sneezy", happy.homePage.toString() + "/~sneezy", 69.7);
+        bashful = new DwarfData(PROP_BASHFUL, 67, null, 98.8, "/home/bashful", "http://snowwhite.tale/~bashful", 45.7);
+        doc = new DwarfData(PROP_DOC, 63, null, 87.7, "c:Documents and Settingsdoc", "http://doc.dwarfs", 49.5);
+        dopey = new DwarfData(PROP_DOPEY, 23, new int[] { 11, 33, 55 }, doc.height, "c:\\Documents and Settings\\dopey", "http://dopey.snowwhite.tale/", bashful.weight);
+        grumpy = new DwarfData(PROP_GRUMPY, 76, null, dopey.height, "/home/grumpy", "http://snowwhite.tale/~grumpy/", 65.3);
+        happy = new DwarfData(PROP_HAPPY, 99, null, 77.66, "/home/happy", "http://happy.smurf", 56.4);
+        sleepy = new DwarfData(PROP_SLEEPY, 121, new int[] { 99 }, doc.height + 0.08, "/home/sleepy", "http://snowwhite.tale/~sleepy", 76.11);
+        sneezy = new DwarfData(PROP_SNEEZY, 64, new int[] { 11, 22, 33, 44 }, 76.88, "/home/sneezy", happy.homePage.toString() + "/~sneezy", 69.7);
         dwarfs = new DwarfsData();
         dwarfNames = new String[] { "bashful", "doc", "dopey", "grumpy", "happy", "sleepy", "sneezy" };
     }
@@ -110,10 +110,12 @@ public final class DwarfsData implements Dwarfs
         public final double height;
         public final String homeDir;
         public final URI homePage;
+        public final String name;
         public final double weight;
 
-        public DwarfData(int age, int[] fortuneNumber, double height, String homeDir, String homePage, double weight)
+        public DwarfData(String name, int age, int[] fortuneNumber, double height, String homeDir, String homePage, double weight)
         {
+            this.name = name;
             this.age = age;
             this.fortuneNumber = fortuneNumber;
             this.height = height;

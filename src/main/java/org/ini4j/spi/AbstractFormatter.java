@@ -26,6 +26,7 @@ public abstract class AbstractFormatter implements HandlerBase
     private static final char SPACE = ' ';
     private static final String NEWLINE = "\n";
     private Config _config = Config.getGlobal();
+    private boolean _header = true;
     private PrintWriter _output;
 
     public void setConfig(Config value)
@@ -39,6 +40,12 @@ public abstract class AbstractFormatter implements HandlerBase
         {
             getOutput().print(COMMENT);
             getOutput().println(line);
+        }
+
+        if (_header)
+        {
+            getOutput().println();
+            setHeader(false);
         }
     }
 
@@ -75,11 +82,18 @@ public abstract class AbstractFormatter implements HandlerBase
                 getOutput().println(escape(value));
             }
         }
+
+        setHeader(false);
     }
 
     protected Config getConfig()
     {
         return _config;
+    }
+
+    protected void setHeader(boolean value)
+    {
+        _header = value;
     }
 
     protected PrintWriter getOutput()

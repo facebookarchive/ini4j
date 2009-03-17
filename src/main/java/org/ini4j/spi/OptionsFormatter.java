@@ -28,7 +28,7 @@ public class OptionsFormatter extends AbstractFormatter implements OptionsHandle
     {
         OptionsFormatter instance = newInstance();
 
-        instance.setOutput(new PrintWriter(out));
+        instance.setOutput((out instanceof PrintWriter) ? (PrintWriter) out : new PrintWriter(out));
 
         return instance;
     }

@@ -18,7 +18,7 @@ package org.ini4j.spi;
 import org.easymock.EasyMock;
 
 import org.ini4j.Config;
-import org.ini4j.InvalidFileFormatException;
+import org.ini4j.Options;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.Dwarfs;
@@ -30,62 +30,25 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 
-public class OptionsParserTest
+public class OptionsFormatterTest
 {
-    private static final String CFG_EMPTY_OPTION = "option\n";
-    private static final String NONAME = "=value\n";
-    private static final String OPTION = "option";
+    private static final String NL = System.getProperty("line.separator");
+    private static final String DUMMY = "dummy";
 
-    @Test(expected = InvalidFileFormatException.class)
-    public void testBad() throws Exception
+    @Test public void testFormat() throws Exception
     {
-        OptionsParser parser = new OptionsParser();
-        OptionsHandler handler = EasyMock.createNiceMock(OptionsHandler.class);
-
-        parser.parse(new ByteArrayInputStream(NONAME.getBytes()), handler);
-    }
-
-    @Test public void testEmptyOption() throws Exception
-    {
-        OptionsParser parser = new OptionsParser();
-        OptionsHandler handler = EasyMock.createMock(OptionsHandler.class);
-
-        handler.startOptions();
-        handler.handleOption(OPTION, null);
-        handler.endOptions();
-        EasyMock.replay(handler);
-        Config cfg = new Config();
-
-        cfg.setEmptyOption(true);
-        parser.setConfig(cfg);
-        parser.parse(new StringReader(CFG_EMPTY_OPTION), handler);
-        EasyMock.verify(handler);
-    }
-
-    @Test public void testNewInstance() throws Exception
-    {
-        Config cfg = new Config();
-        OptionsParser parser = OptionsParser.newInstance();
-
-        assertEquals(OptionsParser.class, parser.getClass());
-        parser = OptionsParser.newInstance(cfg);
-        assertEquals(OptionsParser.class, parser.getClass());
-        assertSame(cfg, parser.getConfig());
-    }
-
-    @Test public void testParse() throws Exception
-    {
-        OptionsParser parser = new OptionsParser();
+        Options opts = Helper.newDwarfsOpt();
         OptionsHandler handler = EasyMock.createMock(OptionsHandler.class);
         Dwarf dwarf;
         String prefix;
 
         handler.startOptions();
         handler.handleComment(Helper.HEADER_COMMENT);
-        handler.handleComment((String) EasyMock.anyObject());
         handler.handleComment((String) EasyMock.anyObject());
         dwarf = DwarfsData.dopey;
         handler.handleOption(Dwarf.PROP_WEIGHT, DwarfsData.OPT_DOPEY_WEIGHT);
@@ -97,7 +60,6 @@ public class OptionsParserTest
         handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, "33");
         handler.handleOption(Dwarf.PROP_FORTUNE_NUMBER, "55");
 //
-        handler.handleComment((String) EasyMock.anyObject());
 
         //
         handler.handleComment(" " + Dwarfs.PROP_BASHFUL);
@@ -146,7 +108,7 @@ public class OptionsParserTest
         handler.handleOption(prefix + Dwarf.PROP_WEIGHT, String.valueOf(dwarf.getWeight()));
         handler.handleOption(prefix + Dwarf.PROP_HEIGHT, String.valueOf(dwarf.getHeight()));
         handler.handleOption(prefix + Dwarf.PROP_AGE, String.valueOf(dwarf.getAge()));
-        handler.handleOption(EasyMock.eq(prefix + Dwarf.PROP_HOME_PAGE), (String) EasyMock.anyObject());
+        handler.handleOption(prefix + Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
         handler.handleOption(prefix + Dwarf.PROP_HOME_DIR, String.valueOf(dwarf.getHomeDir()));
         handler.handleComment(" " + Dwarfs.PROP_SLEEPY);
         dwarf = DwarfsData.sleepy;
@@ -171,17 +133,98 @@ public class OptionsParserTest
         handler.handleOption(prefix + Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[1]));
         handler.handleOption(prefix + Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[2]));
         handler.handleOption(prefix + Dwarf.PROP_FORTUNE_NUMBER, String.valueOf(dwarf.getFortuneNumber()[3]));
-        handler.handleComment(" " + Dwarfs.PROP_HAPPY + " again");
-        dwarf = DwarfsData.happy;
-        prefix = Dwarfs.PROP_HAPPY + ".";
-
-        handler.handleOption(prefix + Dwarf.PROP_HOME_PAGE, String.valueOf(dwarf.getHomePage()));
-        handler.handleComment("}");
         handler.endOptions();
 
         //
         EasyMock.replay(handler);
-        parser.parse(Helper.getResourceURL(Helper.DWARFS_OPT), handler);
-        EasyMock.verify(handler);
+        verify(opts, handler);
+    }
+
+    @Test public void testNewInstance() throws Exception
+    {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Config cfg = new Config();
+        OptionsFormatter instance;
+
+        instance = OptionsFormatter.newInstance(stream);
+        instance.getOutput().print(DUMMY);
+        instance.getOutput().flush();
+        assertEquals(DUMMY, stream.toString());
+
+        //
+        instance = OptionsFormatter.newInstance(stream, cfg);
+        assertSame(cfg, instance.getConfig());
+
+        //
+        instance = OptionsFormatter.newInstance(stringWriter);
+        instance.getOutput().print(DUMMY);
+        instance.getOutput().flush();
+        assertEquals(DUMMY, stringWriter.toString());
+
+        //
+        instance = OptionsFormatter.newInstance(printWriter);
+        assertSame(printWriter, instance.getOutput());
+    }
+
+    @Test public void testWithStrictOperatorEmptyOptions() throws Exception
+    {
+        Config cfg = new Config();
+
+        cfg.setStrictOperator(true);
+        cfg.setEmptyOption(true);
+        Options opts = new Options();
+
+        opts.setConfig(cfg);
+        opts.put(Dwarf.PROP_AGE, DwarfsData.bashful.age);
+        opts.put(Dwarf.PROP_WEIGHT, null);
+        StringWriter writer = new StringWriter();
+
+        opts.store(writer);
+        StringBuilder exp = new StringBuilder();
+
+        exp.append(Dwarf.PROP_AGE);
+        exp.append('=');
+        exp.append(DwarfsData.bashful.age);
+        exp.append(NL);
+        exp.append(Dwarf.PROP_WEIGHT);
+        exp.append('=');
+        exp.append(NL);
+        assertEquals(exp.toString(), writer.toString());
+    }
+
+    @Test public void testWithStrictOperatorNoEmptyOptions() throws Exception
+    {
+        Config cfg = new Config();
+
+        cfg.setStrictOperator(true);
+        cfg.setEmptyOption(false);
+        Options opts = new Options();
+
+        opts.setConfig(cfg);
+        opts.put(Dwarf.PROP_AGE, DwarfsData.bashful.age);
+        opts.put(Dwarf.PROP_WEIGHT, null);
+        StringWriter writer = new StringWriter();
+
+        opts.store(writer);
+        StringBuilder exp = new StringBuilder();
+
+        exp.append(Dwarf.PROP_AGE);
+        exp.append('=');
+        exp.append(DwarfsData.bashful.age);
+        exp.append(NL);
+        assertEquals(exp.toString(), writer.toString());
+    }
+
+    private void verify(Options opts, OptionsHandler mock) throws Exception
+    {
+        StringWriter writer = new StringWriter();
+
+        opts.store(writer);
+        OptionsParser parser = new OptionsParser();
+
+        parser.parse(new StringReader(writer.toString()), mock);
+        EasyMock.verify(mock);
     }
 }
