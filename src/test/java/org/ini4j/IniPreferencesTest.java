@@ -26,12 +26,11 @@ import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.prefs.Preferences;
 
-@Ignore public class IniPreferencesTest
+public class IniPreferencesTest
 {
     private static final String DUMMY = "dummy";
 

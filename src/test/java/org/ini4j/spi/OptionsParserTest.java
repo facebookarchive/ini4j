@@ -30,7 +30,13 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.StringReader;
 
 public class OptionsParserTest
@@ -38,6 +44,7 @@ public class OptionsParserTest
     private static final String CFG_EMPTY_OPTION = "option\n";
     private static final String NONAME = "=value\n";
     private static final String OPTION = "option";
+    private static final String UNICODE_STRING = "áÁéÉíÍóÓöÖőŐúÚüÜűŰ-ÄÖÜäöü";
 
     @Test(expected = InvalidFileFormatException.class)
     public void testBad() throws Exception
@@ -183,5 +190,19 @@ public class OptionsParserTest
         EasyMock.replay(handler);
         parser.parse(Helper.getResourceURL(Helper.DWARFS_OPT), handler);
         EasyMock.verify(handler);
+    }
+
+    @Test public void testUnicode() throws Exception
+    {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        OptionsFormatter formatter = new OptionsFormatter();
+
+        formatter.setOutput(new PrintWriter(new OutputStreamWriter(out)));
+        formatter.handleOption(OPTION, UNICODE_STRING);
+        formatter.getOutput().flush();
+        Reader in = new InputStreamReader(new ByteArrayInputStream(out.toByteArray()));
+        String line = new BufferedReader(in).readLine();
+
+        assertEquals(OPTION + " = " + UNICODE_STRING, EscapeTool.getInstance().unescape(line));
     }
 }

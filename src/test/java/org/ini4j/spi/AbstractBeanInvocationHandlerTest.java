@@ -16,14 +16,9 @@
 package org.ini4j.spi;
 
 import org.ini4j.sample.Dwarf;
-import org.ini4j.sample.Dwarfs;
-
-import org.ini4j.test.DwarfsData;
-import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.beans.PropertyChangeEvent;
@@ -35,14 +30,12 @@ import java.lang.reflect.Proxy;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.ini4j.BasicMultiMap;
-import org.ini4j.MultiMap;
+import org.ini4j.test.Helper;
 
 public class AbstractBeanInvocationHandlerTest
 {
     private static final String PROP_AGE = Dwarf.PROP_AGE;
     private static final String PROP_HEIGHT = Dwarf.PROP_HEIGHT;
-    private static final String PROP_FORTUNE_NUMBER = Dwarf.PROP_FORTUNE_NUMBER;
 
     @Test public void testGetProperty() throws Exception
     {

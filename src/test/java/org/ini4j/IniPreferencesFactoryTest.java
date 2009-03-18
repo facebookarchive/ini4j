@@ -21,12 +21,11 @@ import org.junit.AfterClass;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.prefs.Preferences;
 
-@Ignore public class IniPreferencesFactoryTest
+public class IniPreferencesFactoryTest
 {
     private static final String DUMMY = "dummy";
 

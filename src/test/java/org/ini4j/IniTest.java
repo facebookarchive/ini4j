@@ -15,18 +15,13 @@
  */
 package org.ini4j;
 
-import org.ini4j.sample.Dwarf;
-import org.ini4j.sample.DwarfBean;
 import org.ini4j.sample.Dwarfs;
 
 import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
 
-import org.junit.AfterClass;
-
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -35,73 +30,30 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 
-@Ignore public class IniTest
+public class IniTest
 {
-    private static final String UNICODE_STRING = "áÁéÉíÍóÓöÖőŐúÚüÜűŰ-ÄÖÜäöü";
-    private static final String DOC_HOME_DIR = "c:\\Documents and Settings\\doc";
-    private static final String DOPEY_HOME_DIR = "c:\\\\Documents and Settings\\\\dopey";
+    private static final String COMMENT_ONLY = "# first line\n# second line\n";
+    private static final String COMMENT_ONLY_VALUE = " first line\n second line";
+    private static final String INI_ONE_HEADER = COMMENT_ONLY + "\n\n[section]\nkey=value\n";
+    private static final String COMMENTED_OPTION = COMMENT_ONLY + "\n\n[section]\n;comment\nkey=value\n";
+    private static final String MULTI = "[section]\noption=value\noption=value2\n[section]\noption=value3\noption=value4\noption=value5\n";
 
-    @AfterClass public static void tearDownClass() throws Exception
+    @Test public void testCommentedOption() throws Exception
     {
-        Helper.resetConfig();
+        Ini ini = new Ini(new StringReader(COMMENTED_OPTION));
+
+        assertEquals("comment", ini.get("section").getComment("key"));
     }
 
-    @SuppressWarnings("deprecation")
-    @Test public void testBeanInterface() throws Exception
+    @Test public void testCommentOnly() throws Exception
     {
-        Ini ini = Helper.newDwarfsIni();
-        Ini.Section sec = ini.get(Dwarfs.PROP_DOC);
-        Dwarf bean = new DwarfBean();
+        Ini ini = new Ini(new StringReader(COMMENT_ONLY));
 
-        sec.to(bean);
-        Helper.assertEquals(DwarfsData.doc, bean);
-        sec.clear();
-        sec.from(bean);
-        assertEquals(5, sec.size());
-        Helper.assertEquals(DwarfsData.doc, sec.as(Dwarf.class));
+        assertEquals(COMMENT_ONLY_VALUE, ini.getComment());
     }
 
-    @Test public void testConfig() throws Exception
-    {
-        Config cfg = Config.getGlobal().clone();
-
-        cfg.setMultiSection(true);
-        Ini ini = Helper.loadDwarfsIni(cfg);
-
-        assertEquals(2, ini.length(Dwarfs.PROP_HAPPY));
-        Ini.Section happy1 = ini.get(Dwarfs.PROP_HAPPY, 0);
-        Ini.Section happy2 = ini.get(Dwarfs.PROP_HAPPY, 1);
-
-        assertEquals(5, happy1.size());
-        assertEquals(1, happy2.size());
-        cfg.setMultiSection(false);
-        cfg.setMultiOption(true);
-        ini = Helper.loadDwarfsIni(cfg);
-        Ini.Section happy = ini.get(Dwarfs.PROP_HAPPY);
-
-        assertEquals(5, happy.size());
-        assertEquals(2, happy.length(Dwarf.PROP_HOME_PAGE));
-    }
-
-    @Test public void testEscape() throws Exception
-    {
-        Config config = new Config();
-
-        config.setEscape(false);
-        Ini ini = Helper.loadDwarfsIni(config);
-        Ini.Section doc = ini.get(Dwarfs.PROP_DOC);
-        Ini.Section dopey = ini.get(Dwarfs.PROP_DOPEY);
-
-        assertEquals(DOC_HOME_DIR, doc.get(Dwarf.PROP_HOME_DIR));
-        assertEquals(DOPEY_HOME_DIR, dopey.get(Dwarf.PROP_HOME_DIR));
-    }
-
-    /**
-     * Test of load method.
-     *
-     * @throws Exception on error
-     */
     @Test public void testLoad() throws Exception
     {
         Ini ini;
@@ -128,108 +80,33 @@ import java.io.OutputStreamWriter;
         ini.load();
     }
 
-    @Test public void testRemove() throws Exception
+    @Test public void testMulti() throws Exception
     {
-        Ini ini = Helper.newDwarfsIni();
+        Ini ini = new Ini(new StringReader(MULTI));
+        Ini.Section sec;
 
-        ini.remove(ini.get(Dwarfs.PROP_DOC));
-        assertNull(ini.get(Dwarfs.PROP_DOC));
+        assertEquals(1, ini.length("section"));
+        assertEquals(5, ini.get("section", 0).length("option"));
+        ini.clear();
+        Config cfg = new Config();
+
+        cfg.setMultiSection(true);
+        ini.setConfig(cfg);
+        ini.load(new StringReader(MULTI));
+        assertEquals(2, ini.get("section", 0).length("option"));
+        assertEquals(3, ini.get("section", 1).length("option"));
+        ini.clear();
+        cfg.setMultiOption(false);
+        ini.load(new StringReader(MULTI));
+        assertEquals(1, ini.get("section", 0).length("option"));
+        assertEquals(1, ini.get("section", 1).length("option"));
     }
 
-    @Test public void testResolve() throws Exception
+    @Test public void testOneHeaderOnly() throws Exception
     {
-        Ini ini = Helper.newDwarfsIni();
-        Ini.Section doc = ini.get(Dwarfs.PROP_DOC);
-        Dwarfs dwarfs = ini.as(Dwarfs.class);
-        StringBuilder buffer;
-        String input;
+        Ini ini = new Ini(new StringReader(INI_ONE_HEADER));
 
-        // other sections's value
-        input = "${happy/weight}";
-        buffer = new StringBuilder(input);
-
-        ini.resolve(buffer, doc);
-        assertEquals(String.valueOf(dwarfs.getHappy().getWeight()), buffer.toString());
-
-        // same sections's value
-        input = "${height}";
-        buffer = new StringBuilder(input);
-
-        ini.resolve(buffer, doc);
-        assertEquals(String.valueOf(dwarfs.getDoc().getHeight()), buffer.toString());
-
-        // system property
-        input = "${@prop/user.home}";
-        buffer = new StringBuilder(input);
-
-        ini.resolve(buffer, doc);
-        assertEquals(System.getProperty("user.home"), buffer.toString());
-
-        // system environment
-        input = "${@env/PATH}";
-        buffer = new StringBuilder(input);
-        try
-        {
-            ini.resolve(buffer, doc);
-            assertEquals(System.getenv("PATH"), buffer.toString());
-        }
-        catch (Error e)
-        {
-            // retroweaver + JDK 1.4 throws Error on getenv
-        }
-
-        // unknown variable
-        input = "${no such name}";
-        buffer = new StringBuilder(input);
-
-        ini.resolve(buffer, doc);
-        assertEquals(input, buffer.toString());
-
-        // unknown section's unknown variable
-        input = "${no such section/no such name}";
-        buffer = new StringBuilder(input);
-
-        ini.resolve(buffer, doc);
-        assertEquals(input, buffer.toString());
-
-        // other section's unknown variable
-        input = "${happy/no such name}";
-        buffer = new StringBuilder(input);
-
-        ini.resolve(buffer, doc);
-        assertEquals(input, buffer.toString());
-
-        // small input
-        input = "${";
-        buffer = new StringBuilder(input);
-
-        ini.resolve(buffer, doc);
-        assertEquals(input, buffer.toString());
-
-        // incorrect references
-        input = "${doc/weight";
-        buffer = new StringBuilder(input);
-
-        ini.resolve(buffer, doc);
-        assertEquals(input, buffer.toString());
-
-        // empty references
-        input = "jim${}";
-        buffer = new StringBuilder(input);
-
-        ini.resolve(buffer, doc);
-        assertEquals(input, buffer.toString());
-
-        // escaped references
-        input = "${happy/weight}";
-        buffer = new StringBuilder(input);
-
-        ini.resolve(buffer, doc);
-        assertEquals("" + dwarfs.getHappy().getWeight(), buffer.toString());
-        input = "\\" + input;
-        buffer = new StringBuilder(input);
-
-        assertEquals(input, buffer.toString());
+        assertEquals(COMMENT_ONLY_VALUE, ini.getComment());
     }
 
     @Test public void testStore() throws Exception
@@ -268,43 +145,5 @@ import java.io.OutputStreamWriter;
         Ini ini = new Ini();
 
         ini.store();
-    }
-
-    @Test public void testToBean() throws Exception
-    {
-        Ini ini = Helper.newDwarfsIni();
-        Ini.Section sec = ini.get(Dwarfs.PROP_DOC);
-        Dwarf doc = sec.as(Dwarf.class);
-    }
-
-    @Test public void testUnicode() throws Exception
-    {
-        Ini orig = new Ini();
-        Ini.Section bashful = orig.add(Dwarfs.PROP_BASHFUL);
-
-        bashful.put(Dwarf.PROP_HOME_PAGE, UNICODE_STRING);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        orig.store(out);
-        Ini saved = new Ini(new ByteArrayInputStream(out.toByteArray()));
-        Ini.Section bashfulSaved = saved.get(Dwarfs.PROP_BASHFUL);
-
-        assertEquals(bashful.get(Dwarf.PROP_HOME_PAGE), bashfulSaved.get(Dwarf.PROP_HOME_PAGE));
-    }
-
-    static interface Tale extends Dwarfs
-    {
-        Snowwhite getSnowwhite();
-
-        void setSnowwhite(Snowwhite s);
-
-        boolean hasSnowwhite();
-
-        static interface Snowwhite
-        {
-            String getEmail();
-
-            void setEmail(String email);
-        }
     }
 }

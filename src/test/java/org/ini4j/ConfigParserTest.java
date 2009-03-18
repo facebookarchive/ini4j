@@ -26,25 +26,27 @@ import org.junit.After;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Ignore public class ConfigParserTest
+public class ConfigParserTest
 {
     private static final String SECTION = "section";
     private static final String OPTION = "option";
     private static final String DWARFS_PATH = "org/ini4j/addon/dwarfs-py.ini";
-    private static final String BAD_INI_PATH = "org/ini4j/addon/dwarfs-py-bad.ini";
+    private static final String BAD = "[bashful\nage=3";
     private static final String TEST_DATA_PATH = "src/test/resources";
     private static final String TEST_WORK_PATH = "target";
     private static final String MISSING = "missing";
@@ -177,8 +179,7 @@ import java.util.Map;
         instance.get(SECTION, OPTION);
     }
 
-    @Test
-    @SuppressWarnings("empty-statement")
+    @Test @SuppressWarnings("empty-statement")
     public void testGetVars() throws Exception
     {
         Map<String, String> vars = new HashMap<String, String>();
@@ -222,7 +223,7 @@ import java.util.Map;
         List<Map.Entry<String, String>> items = instance.items(Dwarfs.PROP_DOPEY);
 
         assertEquals(5, items.size());
-        assertEquals(5, dopey.size());
+        assertEquals(6, dopey.size());
         for (Map.Entry<String, String> entry : items)
         {
             assertEquals(dopey.get(entry.getKey()), entry.getValue());
@@ -264,25 +265,25 @@ import java.util.Map;
     @Test(expected = ConfigParser.ParsingException.class)
     public void testReadFileException() throws Exception
     {
-        instance.read(newTestFile(BAD_INI_PATH));
+        instance.read(badFile());
     }
 
     @Test(expected = ConfigParser.ParsingException.class)
     public void testReadReaderException() throws Exception
     {
-        instance.read(new FileReader(newTestFile(BAD_INI_PATH)));
+        instance.read(new StringReader(BAD));
     }
 
     @Test(expected = ConfigParser.ParsingException.class)
     public void testReadStreamException() throws Exception
     {
-        instance.read(new FileInputStream(newTestFile(BAD_INI_PATH)));
+        instance.read(new ByteArrayInputStream(BAD.getBytes()));
     }
 
     @Test(expected = ConfigParser.ParsingException.class)
     public void testReadURLException() throws Exception
     {
-        instance.read(newTestFile(BAD_INI_PATH).toURI().toURL());
+        instance.read(badFile().toURI().toURL());
     }
 
     @Test public void testSections() throws Exception
@@ -344,6 +345,19 @@ import java.util.Map;
     protected void readDwarfs() throws Exception
     {
         instance.read(newTestFile(DWARFS_PATH));
+    }
+
+    private File badFile() throws IOException
+    {
+        File f = File.createTempFile("test", "ini");
+
+        f.deleteOnExit();
+        FileWriter w = new FileWriter(f);
+
+        w.append(BAD);
+        w.close();
+
+        return f;
     }
 
     private void checkEquals(Map<String, String> a, Map<String, String> b) throws Exception
