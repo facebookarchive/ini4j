@@ -179,43 +179,23 @@ public class BasicProfile extends BasicCommentMultiMap<String, Profile.Section> 
 
     private class BeanInvocationHandler extends AbstractBeanInvocationHandler
     {
-        private final MultiMap<String, Object> _sectionBeans = new BasicMultiMap<String, Object>();
-
         @Override protected Object getPropertySpi(String property, Class<?> clazz)
         {
             Object o = null;
 
-            if (clazz.isArray())
+            if (containsKey(property))
             {
-                if (!_sectionBeans.containsKey(property) && containsKey(property))
+                if (clazz.isArray())
                 {
+                    o = Array.newInstance(clazz.getComponentType(), length(property));
                     for (int i = 0; i < length(property); i++)
                     {
-                        _sectionBeans.add(property, get(property, i).as(clazz.getComponentType()));
+                        Array.set(o, i, get(property, i).as(clazz.getComponentType()));
                     }
                 }
-
-                if (_sectionBeans.containsKey(property))
+                else
                 {
-                    o = Array.newInstance(clazz.getComponentType(), _sectionBeans.length(property));
-                    for (int i = 0; i < _sectionBeans.length(property); i++)
-                    {
-                        Array.set(o, i, _sectionBeans.get(property, i));
-                    }
-                }
-            }
-            else
-            {
-                o = _sectionBeans.get(property);
-                if (o == null)
-                {
-                    Section section = get(property);
-
-                    if (section != null)
-                    {
-                        o = section.as(clazz);
-                        _sectionBeans.put(property, o);
-                    }
+                    o = get(property).as(clazz);
                 }
             }
 

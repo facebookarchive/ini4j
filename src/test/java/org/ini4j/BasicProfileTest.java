@@ -32,6 +32,12 @@ import java.net.URI;
 public class BasicProfileTest
 {
     private static final String SECTION = "section";
+    private static final String NUMBER = "number";
+    private static final String SINGLE = "single";
+    private static final String SOLO = "solo";
+    private static final String LOCATION = "location";
+    private static final String LOCATION_1 = "http://www.ini4j.org";
+    private static final String LOCATION_2 = "http://ini4j.org";
 
     @Test public void testAddPut()
     {
@@ -80,9 +86,11 @@ public class BasicProfileTest
 
         //
         prof.remove(Dwarfs.PROP_BASHFUL);
-//        assertNull(dwarfs.getBashful());
+        assertNull(prof.get(Dwarfs.PROP_BASHFUL));
+        assertEquals(0, prof.length(Dwarfs.PROP_BASHFUL));
+        assertNull(dwarfs.getBashful());
         dwarfs.setBashful(DwarfsData.dopey);
-        // XXX     Helper.assertEquals(DwarfsData.dopey, dwarfs.getBashful());
+        Helper.assertEquals(DwarfsData.dopey, dwarfs.getBashful());
     }
 
     @Test public void testIniGetFetch()
@@ -110,6 +118,30 @@ public class BasicProfileTest
         assertEquals(0.0, prof.fetch(SECTION, Dwarf.PROP_WEIGHT, double.class), Helper.DELTA);
         assertNull(prof.fetch(SECTION, Dwarf.PROP_HOME_PAGE));
         assertNull(prof.fetch(SECTION, Dwarf.PROP_HOME_PAGE, URI.class));
+    }
+
+    @Test public void testOptionArray() throws Exception
+    {
+        BasicProfile prof = new BasicProfile();
+        Profile.Section sec = prof.add(SECTION);
+
+        sec.add(NUMBER, 1);
+        sec.add(LOCATION, LOCATION_1);
+        sec.add(NUMBER, 2);
+        sec.add(LOCATION, LOCATION_2);
+        Section s = prof.get(SECTION).as(Section.class);
+
+        assertNotNull(s);
+        assertEquals(2, s.getNumber().length);
+        assertEquals(1, s.getNumber()[0]);
+        assertEquals(2, s.getNumber()[1]);
+        assertEquals(2, s.getLocation().length);
+        assertEquals(new URI(LOCATION_1), s.getLocation()[0]);
+        assertNull(s.getMissing());
+        int[] numbers = new int[] { 1, 2, 3, 4, 5 };
+
+        s.setNumber(numbers);
+        assertEquals(5, sec.length(NUMBER));
     }
 
     @Test public void testResolve() throws Exception
@@ -209,6 +241,79 @@ public class BasicProfileTest
         assertEquals(input, buffer.toString());
     }
 
+    @Test public void testResolveArray() throws Exception
+    {
+        StringBuilder buffer;
+        BasicProfile prof = new BasicProfile();
+
+        prof.add(SECTION).add(NUMBER, 1);
+        prof.add(SECTION).add(NUMBER, 2);
+        Profile.Section sec = prof.get(SECTION);
+
+        //
+        buffer = new StringBuilder("${section[0]/number}");
+        prof.resolve(buffer, sec);
+        assertEquals("1", buffer.toString());
+        buffer = new StringBuilder("${section[1]/number}");
+        prof.resolve(buffer, sec);
+        assertEquals("2", buffer.toString());
+        buffer = new StringBuilder("${section[0]/number}-${section[1]/number}");
+        prof.resolve(buffer, sec);
+        assertEquals("1-2", buffer.toString());
+
+        //
+        prof.clear();
+        sec = prof.add(SECTION);
+        sec.add(NUMBER, 1);
+        sec.add(NUMBER, 2);
+        sec = prof.get(SECTION);
+        assertEquals(2, sec.length(NUMBER));
+        buffer = new StringBuilder("${number}");
+        prof.resolve(buffer, sec);
+        assertEquals("2", buffer.toString());
+        buffer = new StringBuilder("${number[0]}-${section/number[1]}-${section[0]/number}");
+        prof.resolve(buffer, sec);
+        assertEquals("1-2-2", buffer.toString());
+    }
+
+    @Test public void testSectionArray() throws Exception
+    {
+        BasicProfile prof = new BasicProfile();
+
+        prof.add(SECTION).add(NUMBER, 1);
+        prof.add(SECTION).add(NUMBER, 2);
+        prof.add(SINGLE).add(NUMBER, 3);
+        Global g = prof.as(Global.class);
+
+        assertNotNull(g);
+        assertEquals(2, g.getSection().length);
+        assertEquals(1, g.getSingle().length);
+        assertNull(g.getMissing());
+        assertTrue(g.hasSection());
+    }
+
+    @Test public void testSetter()
+    {
+        Config cfg = new Config();
+
+        cfg.setMultiSection(true);
+        Ini ini = new Ini();
+
+        ini.setConfig(cfg);
+        Global g = ini.as(Global.class);
+        Section s1 = new SectionBean();
+        Section s2 = new SectionBean();
+        Section[] all = new Section[] { s1, s2 };
+
+        g.setSection(all);
+        assertEquals(2, ini.length("section"));
+        assertNull(g.getSolo());
+        g.setSolo(s1);
+        assertNotNull(g.getSolo());
+        g.setSolo(null);
+        assertEquals(0, ini.length("solo"));
+    }
+
     private void fromToAs(BasicProfile prof, DwarfData dwarf)
     {
         Profile.Section sec = prof.get(dwarf.name);
@@ -233,5 +338,74 @@ public class BasicProfileTest
     public static interface DwarfsRW extends Dwarfs
     {
         void setBashful(Dwarf value);
+    }
+
+    public static interface Global
+    {
+        Section[] getMissing();
+
+        Section[] getSection();
+
+        void setSection(Section[] value);
+
+        Section[] getSingle();
+
+        Section getSolo();
+
+        void setSolo(Section value);
+
+        boolean hasSection();
+    }
+
+    public static interface Section
+    {
+        URI[] getLocation();
+
+        void setLocation(URI[] value);
+
+        String[] getMissing();
+
+        void setMissing(String[] value);
+
+        int[] getNumber();
+
+        void setNumber(int[] value);
+    }
+
+    public static class SectionBean implements Section
+    {
+        private URI[] _location;
+        private String[] _missing;
+        private int[] _number;
+
+        @Override public URI[] getLocation()
+        {
+            return _location;
+        }
+
+        @Override public void setLocation(URI[] value)
+        {
+            _location = value;
+        }
+
+        @Override public String[] getMissing()
+        {
+            return _missing;
+        }
+
+        @Override public void setMissing(String[] value)
+        {
+            _missing = value;
+        }
+
+        @Override public int[] getNumber()
+        {
+            return _number;
+        }
+
+        @Override public void setNumber(int[] value)
+        {
+            _number = value;
+        }
     }
 }
