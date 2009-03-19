@@ -7,8 +7,6 @@ TODO list
 
   * Improve BeanTool (handle constructor with String arg as converter from String)
 
-  * Add Wini for reading real Windows ini files (with similar backslashes, similar spi, etc)
-
-  * Add comment support (at least Ini.Section and Ini level)
+  * backslash at end of line as cont. character
 
   * Add live demo (applet)

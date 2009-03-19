@@ -15,36 +15,16 @@
  */
 package org.ini4j.spi;
 
-import java.nio.charset.Charset;
-
 public class WinEscapeTool extends EscapeTool
 {
     private static final int ANSI_HEX_DIGITS = 2;
     private static final int ANSI_OCTAL_DIGITS = 3;
     private static final int OCTAL_RADIX = 8;
     private static final WinEscapeTool INSTANCE = new WinEscapeTool();
-    private static final Charset DEFAULT_CHARSET = Charset.forName("ISO-8859-1");
 
     public static WinEscapeTool getInstance()
     {
         return INSTANCE;
-    }
-
-    @Override public String escape(String line)
-    {
-        return escape(line, DEFAULT_CHARSET);
-    }
-
-    public String escape(String line, Charset charset)
-    {
-        return super.escape(new String(line.getBytes(charset), charset));
-    }
-
-    public String escape(String line, String charsetName)
-    {
-        Charset charset = Charset.forName(charsetName);
-
-        return super.escape(new String(line.getBytes(charset), charset));
     }
 
     @Override protected void escapeBinary(StringBuilder buff, char c)

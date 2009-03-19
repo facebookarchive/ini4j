@@ -18,21 +18,20 @@ package org.ini4j.spi;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class WinEscapeToolTest
 {
-    private static final String VALUE1 = "simple";
-    private static final String ESCAPE1 = "simple";
-    private static final String VALUE2 = "Iván";
-    private static final String ESCAPE2 = "Iv\\xe1n";
-    private static final String VALUE3 = "1\t2\n3\f4\b5\r6";
-    private static final String ESCAPE3 = "1\\t2\\n3\\f4\\b5\\r6";
-    private static final String VALUE4 = "Iv\u0017n";
-    private static final String ESCAPE4 = "Iv\\x17n";
-    private static final String VALUE5 = "Árvíztűrőtükörfúrógép";
-    private static final String ESCAPE5 = "\\xc1rv\\xedzt\\x71r\\x51t\\xfck\\xf6rf\\xfar\\xf3g\\xe9p";
+    public static final String VALUE1 = "simple";
+    public static final String ESCAPE1 = "simple";
+    public static final String VALUE2 = "Iván";
+    public static final String ESCAPE2 = "Iv\\xe1n";
+    public static final String VALUE3 = "1\t2\n3\f4\b5\r6";
+    public static final String ESCAPE3 = "1\\t2\\n3\\f4\\b5\\r6";
+    public static final String VALUE4 = "Iv\u0017n";
+    public static final String ESCAPE4 = "Iv\\x17n";
+    public static final String VALUE5 = "Árvíztrtükörfúrógép";
+    public static final String ESCAPE5 = "\\xc1rv\\xedztrt\\xfck\\xf6rf\\xfar\\xf3g\\xe9p";
     private static final String INVALID_HEX = "\\x1_";
     private static final String INVALID_OCT = "\\o19_";
     protected WinEscapeTool instance;
@@ -48,7 +47,7 @@ public class WinEscapeToolTest
         assertEquals(ESCAPE2, instance.escape(VALUE2));
         assertEquals(ESCAPE3, instance.escape(VALUE3));
         assertEquals(ESCAPE4, instance.escape(VALUE4));
-        assertEquals(ESCAPE5, instance.escape(VALUE5, "ISO-8859-2"));
+        assertEquals(ESCAPE5, instance.escape(VALUE5));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -68,8 +67,7 @@ public class WinEscapeToolTest
         assertEquals(WinEscapeTool.class, WinEscapeTool.getInstance().getClass());
     }
 
-    @SuppressWarnings("empty-statement")
-    @Ignore @Test public void testUnescape() throws Exception
+    @Test public void testUnescape() throws Exception
     {
         assertEquals(VALUE1, instance.unescape(ESCAPE1));
         assertEquals(VALUE2, instance.unescape(ESCAPE2));
