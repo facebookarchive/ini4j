@@ -88,17 +88,6 @@ public class OptionsTest
         file.delete();
     }
 
-    @Test public void testEscape() throws Exception
-    {
-        Options opts = new Options();
-        Config cfg = new Config();
-
-        assertEquals("c:\\\\dummy", opts.escape("c:\\dummy"));
-        cfg.setEscape(false);
-        opts.setConfig(cfg);
-        assertEquals("c:\\dummy", opts.escape("c:\\dummy"));
-    }
-
     @Test public void testLoad() throws Exception
     {
         Options o1 = new Options(Helper.getResourceURL(Helper.DWARFS_OPT));
@@ -172,7 +161,8 @@ public class OptionsTest
         assertEquals(COMMENT_ONLY_VALUE, opt.getComment());
     }
 
-    @Test @SuppressWarnings("empty-statement")
+    @Test
+    @SuppressWarnings("empty-statement")
     public void testParseError() throws Exception
     {
         for (String s : _badOptions)

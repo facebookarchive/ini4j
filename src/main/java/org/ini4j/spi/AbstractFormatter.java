@@ -55,13 +55,13 @@ public abstract class AbstractFormatter implements HandlerBase
         {
             if (getConfig().isEmptyOption() || (optionValue != null))
             {
-                getOutput().print(escape(optionName));
+                getOutput().print(escapeFilter(optionName));
                 getOutput().print(OPERATOR);
             }
 
             if (optionValue != null)
             {
-                getOutput().print(escape(optionValue));
+                getOutput().print(escapeFilter(optionValue));
             }
 
             if (getConfig().isEmptyOption() || (optionValue != null))
@@ -75,11 +75,11 @@ public abstract class AbstractFormatter implements HandlerBase
 
             if (value != null)
             {
-                getOutput().print(escape(optionName));
+                getOutput().print(escapeFilter(optionName));
                 getOutput().print(SPACE);
                 getOutput().print(OPERATOR);
                 getOutput().print(SPACE);
-                getOutput().println(escape(value));
+                getOutput().println(escapeFilter(value));
             }
         }
 
@@ -106,7 +106,7 @@ public abstract class AbstractFormatter implements HandlerBase
         _output = value;
     }
 
-    protected String escape(String input)
+    protected String escapeFilter(String input)
     {
         return getConfig().isEscape() ? EscapeTool.getInstance().escape(input) : input;
     }

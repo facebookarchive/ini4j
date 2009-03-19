@@ -71,7 +71,7 @@ public class IniFormatter extends AbstractFormatter implements IniHandler
     {
         setHeader(false);
         getOutput().print(IniParser.SECTION_BEGIN);
-        getOutput().print(escape(sectionName));
+        getOutput().print(escapeFilter(sectionName));
         getOutput().println(IniParser.SECTION_END);
     }
 

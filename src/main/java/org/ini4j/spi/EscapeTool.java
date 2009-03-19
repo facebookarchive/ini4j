@@ -17,16 +17,31 @@ package org.ini4j.spi;
 
 public class EscapeTool
 {
-    private static final char[] HEX = "0123456789abcdef".toCharArray();
+    private static final String ESCAPE_LETTERS = "\\tnfbr";
+    private static final String ESCAPEABLE_CHARS = "\\\t\n\f\b\r";
+    protected static final char[] HEX = "0123456789abcdef".toCharArray();
     private static final EscapeTool INSTANCE = ServiceFinder.findService(EscapeTool.class);
     private static final char ASCII_MIN = 0x20;
     private static final char ASCII_MAX = 0x7e;
-    private static final int HEX_DIGIT_MASK = 0x0f;
-    private static final int DIGIT_3_OFFSET = 4;
-    private static final int DIGIT_2_OFFSET = 8;
-    private static final int DIGIT_1_OFFSET = 12;
-    private static final int HEX_RADIX = 16;
+    protected static final int HEX_DIGIT_MASK = 0x0f;
+    protected static final int HEX_DIGIT_3_OFFSET = 4;
+    protected static final int HEX_DIGIT_2_OFFSET = 8;
+    protected static final int HEX_DIGIT_1_OFFSET = 12;
+    protected static final int HEX_RADIX = 16;
     private static final int UNICODE_HEX_DIGITS = 4;
+    private final String _escapeableChars;
+    private final String _escapeLetters;
+
+    public EscapeTool()
+    {
+        this(ESCAPEABLE_CHARS, ESCAPE_LETTERS);
+    }
+
+    protected EscapeTool(String escapeableChars, String escapeLetters)
+    {
+        _escapeLetters = escapeLetters;
+        _escapeableChars = escapeableChars;
+    }
 
     public static EscapeTool getInstance()
     {
@@ -41,22 +56,18 @@ public class EscapeTool
         for (int i = 0; i < len; i++)
         {
             char c = line.charAt(i);
-            int idx = "\\\t\n\f".indexOf(c);
+            int idx = _escapeableChars.indexOf(c);
 
             if (idx >= 0)
             {
                 buffer.append('\\');
-                buffer.append("\\tnf".charAt(idx));
+                buffer.append(_escapeLetters.charAt(idx));
             }
             else
             {
                 if ((c < ASCII_MIN) || (c > ASCII_MAX))
                 {
-                    buffer.append("\\u");
-                    buffer.append(HEX[(c >>> DIGIT_1_OFFSET) & HEX_DIGIT_MASK]);
-                    buffer.append(HEX[(c >>> DIGIT_2_OFFSET) & HEX_DIGIT_MASK]);
-                    buffer.append(HEX[(c >>> DIGIT_3_OFFSET) & HEX_DIGIT_MASK]);
-                    buffer.append(HEX[c & HEX_DIGIT_MASK]);
+                    escapeBinary(buffer, c);
                 }
                 else
                 {
@@ -81,32 +92,59 @@ public class EscapeTool
             if (c == '\\')
             {
                 c = line.charAt(i++);
-                if (c == 'u')
+                int next = unescapeBinary(buffer, c, line, i);
+
+                if (next == i)
                 {
-                    try
-                    {
-                        c = (char) Integer.parseInt(line.substring(i, i + UNICODE_HEX_DIGITS), HEX_RADIX);
-                        i += UNICODE_HEX_DIGITS;
-                    }
-                    catch (Exception x)
-                    {
-                        throw new IllegalArgumentException("Malformed \\uxxxx encoding.", x);
-                    }
-                }
-                else
-                {
-                    int idx = "\\tnf".indexOf(c);
+                    int idx = _escapeLetters.indexOf(c);
 
                     if (idx >= 0)
                     {
-                        c = "\\\t\n\f".charAt(idx);
+                        c = _escapeableChars.charAt(idx);
                     }
+
+                    buffer.append(c);
+                }
+                else
+                {
+                    i = next;
                 }
             }
-
-            buffer.append(c);
+            else
+            {
+                buffer.append(c);
+            }
         }
 
         return buffer.toString();
+    }
+
+    protected void escapeBinary(StringBuilder buff, char c)
+    {
+        buff.append("\\u");
+        buff.append(HEX[(c >>> HEX_DIGIT_1_OFFSET) & HEX_DIGIT_MASK]);
+        buff.append(HEX[(c >>> HEX_DIGIT_2_OFFSET) & HEX_DIGIT_MASK]);
+        buff.append(HEX[(c >>> HEX_DIGIT_3_OFFSET) & HEX_DIGIT_MASK]);
+        buff.append(HEX[c & HEX_DIGIT_MASK]);
+    }
+
+    protected int unescapeBinary(StringBuilder buff, char escapeType, String line, int index)
+    {
+        int ret = index;
+
+        if (escapeType == 'u')
+        {
+            try
+            {
+                buff.append((char) Integer.parseInt(line.substring(index, index + UNICODE_HEX_DIGITS), HEX_RADIX));
+                ret = index + UNICODE_HEX_DIGITS;
+            }
+            catch (Exception x)
+            {
+                throw new IllegalArgumentException("Malformed \\uxxxx encoding.", x);
+            }
+        }
+
+        return ret;
     }
 }

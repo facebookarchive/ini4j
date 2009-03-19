@@ -53,7 +53,7 @@ public abstract class AbstractParser
         throw new InvalidFileFormatException("parse error (at line: " + lineNumber + "): " + line);
     }
 
-    protected String unescape(String line)
+    protected String unescapeFilter(String line)
     {
         return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
     }
@@ -92,8 +92,8 @@ public abstract class AbstractParser
         }
         else
         {
-            name = unescape(line.substring(0, idx)).trim();
-            value = unescape(line.substring(idx + 1)).trim();
+            name = unescapeFilter(line.substring(0, idx)).trim();
+            value = unescapeFilter(line.substring(idx + 1)).trim();
         }
 
         if (name.length() == 0)

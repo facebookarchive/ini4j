@@ -15,6 +15,8 @@
  */
 package org.ini4j;
 
+import org.ini4j.spi.WinEscapeTool;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,5 +59,15 @@ public class Wini extends Ini
     {
         this();
         load(input);
+    }
+
+    public String escape(String value)
+    {
+        return WinEscapeTool.getInstance().escape(value);
+    }
+
+    public String unescape(String value)
+    {
+        return WinEscapeTool.getInstance().unescape(value);
     }
 }

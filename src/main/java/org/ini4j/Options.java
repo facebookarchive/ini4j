@@ -15,7 +15,6 @@
  */
 package org.ini4j;
 
-import org.ini4j.spi.EscapeTool;
 import org.ini4j.spi.OptionsFormatter;
 import org.ini4j.spi.OptionsHandler;
 import org.ini4j.spi.OptionsParser;
@@ -158,11 +157,6 @@ public class Options extends BasicOptionMap implements Persistable
     protected Config getConfig()
     {
         return _config;
-    }
-
-    protected String escape(String input)
-    {
-        return getConfig().isEscape() ? EscapeTool.getInstance().escape(input) : input;
     }
 
     protected void store(OptionsHandler formatter) throws IOException
