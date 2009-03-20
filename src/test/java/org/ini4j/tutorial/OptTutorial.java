@@ -37,10 +37,6 @@ import java.util.Set;
 //|
 //|Options Tutorial
 //|
-//| "Failure is not an option" (Gene Kranz, Apollo 13)
-//|
-//|* What is Options
-//|
 //| Options (org.ini4j.Options) is a java.util.Properties replacement with
 //| several useful features, like:
 //|

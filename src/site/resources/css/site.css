@@ -16,7 +16,7 @@
 h1,h2,h3,h4,h5,h6
 {
     border: none;
-    border-bottom: 1px solid darkgray;
+/*    border-bottom: 1px solid #808080; */
     background-color: white;
     font-family: Palatino, Linotype, Georgia, "Times New Roman", Times, serif;
     font-weight: normal;
@@ -24,19 +24,42 @@ h1,h2,h3,h4,h5,h6
 
 h1,h2
 {
-    border-bottom: 3px double darkgray;
+   /* border-bottom: 3px double #808080;*/
 }
 
 #breadcrumbs
 {
-    background-color: lightgrey;
-    border-top: 1px solid darkgray;
-    border-bottom: 1px solid darkgray;
+    border: none;
+    background-color: #f0f0f0;
+    border-top: 1px solid #a0a0a0;
+    color: #c0c0c0;
+    /*border-bottom: 1px solid #a0a0a0;*/
+}
+
+a:link
+{
+    color: #409040;
+}
+
+a:visited
+{
+    color: #408040;
+}
+
+a:hover, a:active
+{
+    color: #20c020;
+}
+
+#footer
+{
+    border-top: 1px solid #e0e0e0;
+    color: #a0a0a0;
 }
 
 .source
 {
-    background-color: lightyellow;
+    background-color: #fffff0;
 }
 
 #leftColumn
@@ -55,3 +78,29 @@ h1,h2
 {
     margin-left: 170px;
 }
+
+#leftcol, .docs #toc, .docs .courtesylinks, #leftColumn, #navColumn {
+/*	display: none !important;*/
+}
+#bodyColumn, body.docs div.docs {
+	/*margin: 0 !important;
+	border: none !important;*/
+}
+
+div[class~=section] ul li
+{
+   list-style: none;
+   display: inline;
+   padding: 10px;
+}
+
+div[class~=section]  ul li img
+{
+   vertical-align: middle;
+}
+
+div[class~=section]  ul
+{
+    padding-top: 20px;
+}
+

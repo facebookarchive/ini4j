@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright 2005,2009 Ivan SZKIBA
@@ -15,11 +16,11 @@
     limitations under the License.
 
 -->
-<project name="[ini4j]">
+<project name="[ini4j]" xmlns="http://maven.apache.org/DECORATION/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
     <bannerLeft>
         <name>[ini4j]</name>
-        <src>ini4j-banner.png</src>
-        <href>http://www.ini4j.org</href>
+        <src>img/ini4j-banner.png</src>
+        <href>/index.html</href>
     </bannerLeft>
     <bannerRight>
         <name>SourceForge</name>
@@ -27,11 +28,11 @@
         <href>http://sourceforge.net</href>
     </bannerRight>
     <poweredBy>
-      <logo name="java.net" href="http://www.java.net"
+        <logo name="java.net" href="http://www.java.net"
           img="http://java.net/images/javanet_button_90.gif"/>
     </poweredBy>
-    <publishDate position="left" format="yyyy-MM-dd"/>
-    <version position="left"/>
+    <publishDate position="bottom" format="yyyy-MM-dd"/>
+    <version position="bottom"/>
     <body>
         <head>
             <link rel="shortcut icon" href="/favicon.ico"/>
@@ -43,24 +44,34 @@
                     try { var pageTracker = _gat._getTracker("UA-7815137-3"); pageTracker._trackPageview(); } catch(err) {}
             </script>
         </head>
-        
+
+        <links>
+            <item name="SourceForge" href="http://sourceforge.net/projects/ini4j"/>
+        </links>
+
+        <breadcrumbs>
+            <item name="Tutorials" href="tutorials.html"/>
+            <item name="Samples" href="samples.html"/>
+            <item name="Download" href="download.html"/>
+        </breadcrumbs>
+
         <menu name="[ini4j]">
-            <item name="Overview" href="index.html"/>
-            <item name="Tutorials" href="tutorials.html">
-                <item name="Ini" href="tutorial/IniTutorial.java.html"/>
-                <item name="Bean" href="tutorial/BeanTutorial.java.html"/>
-                <item name="Options" href="tutorial/OptTutorial.java.html"/>
-                <item name="Preferences" href="tutorial/PrefsTutorial.java.html"/>
-            </item>
+            <item name="Overview" href="overview.html" />
             <item name="Samples" href="samples.html" />
-            <item name="Quick Download" href="http://sourceforge.net/project/showfiles.php?group_id=129580"/>
             <item name="Goals" href="design.html"/>
             <item name="TODO" href="todo.html"/>
             <item name="Project" href="http://sourceforge.net/projects/ini4j"/>
             <item name="Who using" href="using.html" />
             <item name="Links" href="links.html" />
             <item name="Download" href="download.html"/>
-        </menu>    
-        <menu ref="reports" />
+        </menu>
+        <menu name="Tutorials">
+            <item name="One minute" href="tutorial/OneMinuteTutorial.java.html"/>
+            <item name="Ini" href="tutorial/IniTutorial.java.html"/>
+            <item name="Bean" href="tutorial/BeanTutorial.java.html"/>
+            <item name="Options" href="tutorial/OptTutorial.java.html"/>
+            <item name="Preferences" href="tutorial/PrefsTutorial.java.html"/>
+        </menu>
+        <menu ref="reports"/>
     </body>
 </project>
