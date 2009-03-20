@@ -34,13 +34,13 @@
  <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/prefs/Preferences.html">Java Preferences API</a>
  implementation based on the .ini file.
             </p>
-            <ul>
-                <li><a href="tutorials.html"><img src="img/tutorial.png" alt="tutorials"/> Tutorial</a></li>
-                <li><a href="download.html"><img src="img/download.png" alt="download"/> Download</a></li>
-                <li><a href="contribute.html"><img src="img/contribute.png" alt="contribute"/> Contribute</a></li>
-            </ul>
+            <menu>
+                <li><a href="tutorials.html"><img src="img/tutorial.png"/> Tutorials</a></li>
+                <li><a href="documents.html"><img src="img/docs.png"/> Documents</a></li>
+                <li><a href="download.html"><img src="img/download.png"/> Download</a></li>
+                <li><a href="community.html"><img src="img/community.png"/> Community</a></li>
+            </menu>
         </section>
-
     </body>
 
 </document>

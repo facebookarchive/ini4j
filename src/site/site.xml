@@ -46,24 +46,23 @@
         </head>
 
         <links>
-            <item name="SourceForge" href="http://sourceforge.net/projects/ini4j"/>
+            <item name="SourceForge project page" href="http://sourceforge.net/projects/ini4j"/>
         </links>
 
         <breadcrumbs>
             <item name="Tutorials" href="tutorials.html"/>
-            <item name="Samples" href="samples.html"/>
+            <item name="Documents" href="documents.html"/>
             <item name="Download" href="download.html"/>
+            <item name="Community" href="community.html"/>
         </breadcrumbs>
 
-        <menu name="[ini4j]">
+        <menu name="Documents">
             <item name="Overview" href="overview.html" />
             <item name="Samples" href="samples.html" />
             <item name="Goals" href="design.html"/>
             <item name="TODO" href="todo.html"/>
-            <item name="Project" href="http://sourceforge.net/projects/ini4j"/>
             <item name="Who using" href="using.html" />
             <item name="Links" href="links.html" />
-            <item name="Download" href="download.html"/>
         </menu>
         <menu name="Tutorials">
             <item name="One minute" href="tutorial/OneMinuteTutorial.java.html"/>
@@ -71,6 +70,12 @@
             <item name="Bean" href="tutorial/BeanTutorial.java.html"/>
             <item name="Options" href="tutorial/OptTutorial.java.html"/>
             <item name="Preferences" href="tutorial/PrefsTutorial.java.html"/>
+        </menu>
+        <menu name="Community">
+            <item name="Bug report" href="http://sourceforge.net/tracker2/?func=add&amp;group_id=129580&amp;atid=715133"/>
+            <item name="Feature request" href="http://sourceforge.net/tracker2/?func=add&amp;group_id=129580&amp;atid=715136"/>
+            <item name="Forums" href="http://sourceforge.net/forum/?group_id=129580"/>
+            <item name="Project page" href="http://sourceforge.net/projects/ini4j"/>
         </menu>
         <menu ref="reports"/>
     </body>

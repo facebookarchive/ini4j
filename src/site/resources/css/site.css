@@ -87,19 +87,19 @@ a:hover, a:active
 	border: none !important;*/
 }
 
-div[class~=section] ul li
+menu li
 {
    list-style: none;
    display: inline;
    padding: 10px;
 }
 
-div[class~=section]  ul li img
+menu li img
 {
    vertical-align: middle;
 }
 
-div[class~=section]  ul
+menu
 {
     padding-top: 20px;
 }
