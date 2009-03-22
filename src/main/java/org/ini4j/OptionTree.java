@@ -15,11 +15,23 @@
  */
 package org.ini4j;
 
-public interface CommentMultiMap<K, V> extends MultiMap<K, V>
+import javax.naming.Name;
+
+public interface OptionTree extends CommentedMap<String, OptionTree>
 {
-    String getComment(Object key);
+    OptionTree add(String key);
 
-    String putComment(K key, String comment);
+    OptionTree lookup(Name path);
 
-    String removeComment(Object key);
+    OptionTree lookup(String path);
+
+    Name name(String path);
+
+    Name name(String... part);
+
+    OptionMap options();
+
+    OptionMap options(Name path);
+
+    OptionMap options(String path);
 }

@@ -17,6 +17,8 @@ package org.ini4j;
 
 import org.ini4j.spi.Warnings;
 
+import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,8 +28,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class BasicMultiMap<K, V> implements MultiMap<K, V>
+public class BasicMultiMap<K, V> implements MultiMap<K, V>, Serializable
 {
+    private static final long serialVersionUID = 4716749660560043989L;
     private final Map<K, List<V>> _impl;
 
     public BasicMultiMap()

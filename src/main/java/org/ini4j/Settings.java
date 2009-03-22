@@ -31,37 +31,42 @@ import java.io.Writer;
 
 import java.net.URL;
 
-public class Ini extends BasicOptionBundle implements Persistable
+import javax.naming.Name;
+
+public class Settings extends BasicOptionTree implements Persistable
 {
-    private static final long serialVersionUID = -6029486578113700585L;
+    private static final long serialVersionUID = -2821168167655687834L;
+    private static final String GLOBAL_SECTION_NAME = "";
     private String _comment;
     private Config _config;
     private File _file;
 
-    public Ini()
+    public Settings()
     {
-        _config = Config.getGlobal();
+        _config = Config.getGlobal().clone();
+        _config.setGlobalSection(true);
+        _config.setGlobalSectionName(GLOBAL_SECTION_NAME);
     }
 
-    public Ini(Reader input) throws IOException, InvalidFileFormatException
-    {
-        this();
-        load(input);
-    }
-
-    public Ini(InputStream input) throws IOException, InvalidFileFormatException
+    public Settings(Reader input) throws IOException, InvalidFileFormatException
     {
         this();
         load(input);
     }
 
-    public Ini(URL input) throws IOException, InvalidFileFormatException
+    public Settings(InputStream input) throws IOException, InvalidFileFormatException
     {
         this();
         load(input);
     }
 
-    public Ini(File input) throws IOException, InvalidFileFormatException
+    public Settings(URL input) throws IOException, InvalidFileFormatException
+    {
+        this();
+        load(input);
+    }
+
+    public Settings(File input) throws IOException, InvalidFileFormatException
     {
         this();
         _file = input;
@@ -163,30 +168,41 @@ public class Ini extends BasicOptionBundle implements Persistable
     {
         formatter.startIni();
         storeComment(formatter, _comment);
-        for (Ini.Section s : values())
-        {
-            if (!getConfig().isEmptySection() && (s.size() == 0))
-            {
-                continue;
-            }
+        storeComment(formatter, getComment(getConfig().getGlobalSectionName()));
+        store(getConfig().getGlobalSectionName(), this, formatter);
+        formatter.endIni();
+    }
 
-            storeComment(formatter, getComment(s.getName()));
-            formatter.startSection(s.getName());
-            for (String name : s.keySet())
+    protected void store(String name, OptionTree node, IniHandler formatter) throws IOException
+    {
+        if (getConfig().isEmptySection() || (node.options().size() != 0))
+        {
+            formatter.startSection(name);
+            OptionMap opts = node.options();
+
+            for (String optionName : opts.keySet())
             {
-                storeComment(formatter, s.getComment(name));
-                int n = getConfig().isMultiOption() ? s.length(name) : 1;
+                storeComment(formatter, opts.getComment(optionName));
+                int n = getConfig().isMultiOption() ? opts.length(optionName) : 1;
 
                 for (int i = 0; i < n; i++)
                 {
-                    formatter.handleOption(name, s.get(name, i));
+                    formatter.handleOption(optionName, opts.get(optionName, i));
                 }
             }
 
             formatter.endSection();
         }
 
-        formatter.endIni();
+        boolean topLevel = name.equals(getConfig().getGlobalSectionName());
+
+        for (String childKey : node.keySet())
+        {
+            String childName = topLevel ? childKey : (name + getConfig().getPathSeparator() + childKey);
+
+            storeComment(formatter, node.getComment(childKey));
+            store(childName, node.get(childKey), formatter);
+        }
     }
 
     private void storeComment(IniHandler formatter, String comment)
@@ -199,11 +215,11 @@ public class Ini extends BasicOptionBundle implements Persistable
 
     private class Builder implements IniHandler
     {
-        private Section _currentSection;
+        private OptionTree _currentNode;
         private boolean _header;
         private String _lastComment;
 
-        @Override public void endIni()
+        public void endIni()
         {
 
             // comment only .ini files....
@@ -213,12 +229,12 @@ public class Ini extends BasicOptionBundle implements Persistable
             }
         }
 
-        @Override public void endSection()
+        public void endSection()
         {
-            _currentSection = null;
+            _currentNode = null;
         }
 
-        @Override public void handleComment(String comment)
+        public void handleComment(String comment)
         {
             if ((_lastComment != null) && _header)
             {
@@ -229,41 +245,43 @@ public class Ini extends BasicOptionBundle implements Persistable
             _lastComment = comment;
         }
 
-        @Override public void handleOption(String name, String value)
+        public void handleOption(String name, String value)
         {
             _header = false;
             if (getConfig().isMultiOption())
             {
-                _currentSection.add(name, value);
+                _currentNode.options().add(name, value);
             }
             else
             {
-                _currentSection.put(name, value);
+                _currentNode.options().put(name, value);
             }
 
             if (_lastComment != null)
             {
-                _currentSection.putComment(name, _lastComment);
+                _currentNode.putComment(name, _lastComment);
                 _lastComment = null;
             }
         }
 
-        @Override public void startIni()
+        public void startIni()
         {
             _header = true;
         }
 
-        @Override public void startSection(String sectionName)
+        public void startSection(String sectionName)
         {
+            Name name = name(sectionName.replace(getConfig().getPathSeparator(), JNDI_PATH_SEPARATOR));
+
             if (getConfig().isMultiSection())
             {
-                _currentSection = add(sectionName);
+                _currentNode = addNode(name);
             }
             else
             {
-                Section s = get(sectionName);
+                OptionTree node = lookup(sectionName);
 
-                _currentSection = (s == null) ? add(sectionName) : s;
+                _currentNode = (node == null) ? addNode(name) : node;
             }
 
             if (_lastComment != null)
@@ -274,13 +292,32 @@ public class Ini extends BasicOptionBundle implements Persistable
                 }
                 else
                 {
-                    putComment(sectionName, _lastComment);
+                    ((BasicOptionTree) _currentNode).getParent().putComment(name.get(name.size() - 1), _lastComment);
                 }
 
                 _lastComment = null;
             }
 
             _header = false;
+        }
+
+        private OptionTree addNode(Name name)
+        {
+            OptionTree parent = Settings.this;
+
+            for (int i = 0; i < (name.size() - 1); i++)
+            {
+                OptionTree node = parent.get(name.get(i));
+
+                if (node == null)
+                {
+                    node = parent.add(name.get(i));
+                }
+
+                parent = node;
+            }
+
+            return parent.add(name.get(name.size() - 1));
         }
     }
 }

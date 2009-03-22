@@ -28,6 +28,8 @@ import java.util.Locale;
 
 public abstract class AbstractParser
 {
+    private static final char DOUBLE_QUOTE = '"';
+    private static final char QUOTE = '\'';
     private final String _comments;
     private Config _config = Config.getGlobal();
     private final String _operators;
@@ -48,6 +50,13 @@ public abstract class AbstractParser
         return _config;
     }
 
+    protected String nameFilter(String orig)
+    {
+        String ret = unescapeFilter(orig).trim();
+
+        return getConfig().isStripOptionNameQuotes() ? unquote(ret) : ret;
+    }
+
     protected void parseError(String line, int lineNumber) throws InvalidFileFormatException
     {
         throw new InvalidFileFormatException("parse error (at line: " + lineNumber + "): " + line);
@@ -56,6 +65,29 @@ public abstract class AbstractParser
     protected String unescapeFilter(String line)
     {
         return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
+    }
+
+    protected String unquote(String orig)
+    {
+        String ret = orig;
+
+        if ((orig != null) && (orig.length() > 2))
+        {
+            if (((orig.charAt(0) == DOUBLE_QUOTE) && (orig.charAt(orig.length() - 1) == DOUBLE_QUOTE))
+                  || ((orig.charAt(0) == QUOTE) && (orig.charAt(orig.length() - 1) == QUOTE)))
+            {
+                ret = orig.substring(1, orig.length() - 1);
+            }
+        }
+
+        return ret;
+    }
+
+    protected String valueFilter(String orig)
+    {
+        String ret = unescapeFilter(orig).trim();
+
+        return getConfig().isStripOptionValueQuotes() ? unquote(ret) : ret;
     }
 
     IniSource newIniSource(InputStream input, HandlerBase handler)
@@ -92,8 +124,8 @@ public abstract class AbstractParser
         }
         else
         {
-            name = unescapeFilter(line.substring(0, idx)).trim();
-            value = unescapeFilter(line.substring(idx + 1)).trim();
+            name = nameFilter(line.substring(0, idx));
+            value = valueFilter(line.substring(idx + 1));
         }
 
         if (name.length() == 0)

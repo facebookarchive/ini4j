@@ -18,8 +18,9 @@ package org.ini4j;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BasicCommentMultiMap<K, V> extends BasicMultiMap<K, V> implements CommentMultiMap<K, V>
+public class BasicCommentedMultiMap<K, V> extends BasicMultiMap<K, V> implements CommentedMap<K, V>
 {
+    private static final long serialVersionUID = -3191166132698733784L;
     private Map<K, String> _comments;
 
     @Override public String getComment(Object key)
@@ -40,9 +41,9 @@ public class BasicCommentMultiMap<K, V> extends BasicMultiMap<K, V> implements C
     @Override public void putAll(Map<? extends K, ? extends V> map)
     {
         super.putAll(map);
-        if (map instanceof BasicCommentMultiMap)
+        if (map instanceof BasicCommentedMultiMap)
         {
-            Map<K, String> cms = ((BasicCommentMultiMap) map)._comments;
+            Map<K, String> cms = ((BasicCommentedMultiMap) map)._comments;
 
             if (cms != null)
             {

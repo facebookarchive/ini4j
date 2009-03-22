@@ -70,9 +70,12 @@ public class IniFormatter extends AbstractFormatter implements IniHandler
     @Override public void startSection(String sectionName)
     {
         setHeader(false);
-        getOutput().print(IniParser.SECTION_BEGIN);
-        getOutput().print(escapeFilter(sectionName));
-        getOutput().println(IniParser.SECTION_END);
+        if (!getConfig().isGlobalSection() || !sectionName.equals(getConfig().getGlobalSectionName()))
+        {
+            getOutput().print(IniParser.SECTION_BEGIN);
+            getOutput().print(escapeFilter(sectionName));
+            getOutput().println(IniParser.SECTION_END);
+        }
     }
 
     protected static IniFormatter newInstance()

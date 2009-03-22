@@ -33,6 +33,7 @@ import java.net.URL;
 
 public class Options extends BasicOptionMap implements Persistable
 {
+    private static final long serialVersionUID = -1119753444859181822L;
     private String _comment;
     private Config _config;
     private File _file;

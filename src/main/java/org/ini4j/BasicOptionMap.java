@@ -22,7 +22,7 @@ import org.ini4j.spi.Warnings;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BasicOptionMap extends BasicCommentMultiMap<String, String> implements OptionMap
+public class BasicOptionMap extends BasicCommentedMultiMap<String, String> implements OptionMap
 {
     private static final char SUBST_CHAR = '$';
     private static final String SYSTEM_PROPERTY_PREFIX = "@prop/";
@@ -32,6 +32,7 @@ public class BasicOptionMap extends BasicCommentMultiMap<String, String> impleme
     private static final Pattern EXPRESSION = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?)\\}");
     private static final int G_OPTION = 2;
     private static final int G_INDEX = 4;
+    private static final long serialVersionUID = 325469712293707584L;
     private BeanAccess _defaultBeanAccess;
 
     @Override public void add(String key, Object value)

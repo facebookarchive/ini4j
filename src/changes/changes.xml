@@ -29,10 +29,10 @@
       continous comment bleck before option is an option comment.
       </action>
       <action type="update" dev="szkiba">
-      Refactor Ini class, extract Profile interface and ProfileImpl superclass.
+      Refactor Ini class, extract OptionBundle interface and BasicOptionBundle superclass.
       </action>
       <action type="add" dev="szkiba">
-      Comfortable access methods for Profile and Options.
+      Comfortable access methods for OptionBundle and OptionMap.
       </action>
     </release>
     <release version="0.4.1" date="2009-03-11" description="Python like ConfigParser Options as java.util.Properties replacement">

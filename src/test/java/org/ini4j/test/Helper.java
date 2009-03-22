@@ -17,9 +17,11 @@ package org.ini4j.test;
 
 import org.ini4j.Config;
 import org.ini4j.Ini;
+import org.ini4j.OptionBundle;
 import org.ini4j.OptionMap;
+import org.ini4j.OptionTree;
 import org.ini4j.Options;
-import org.ini4j.Profile;
+import org.ini4j.Settings;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.Dwarfs;
@@ -44,6 +46,7 @@ public class Helper
     private static final File _sourceDir = new File(System.getProperty("basedir") + "/src/test/java/");
     private static final File _targetDir = new File(System.getProperty("basedir") + "/target");
     public static final String DWARFS_INI = RESOURCE_PREFIX + "dwarfs.ini";
+    public static final String TALE_INI = RESOURCE_PREFIX + "tale.ini";
     public static final String DWARFS_OPT = RESOURCE_PREFIX + "dwarfs.opt";
     public static final float DELTA = 0.00000001f;
     private static final String[] CONFIG_PROPERTIES =
@@ -95,9 +98,9 @@ public class Helper
         addDwarf(opts, dwarf, true);
     }
 
-    public static Profile.Section addDwarf(Profile prof, DwarfData dwarf)
+    public static OptionBundle.Section addDwarf(OptionBundle prof, DwarfData dwarf)
     {
-        Profile.Section s = prof.add(dwarf.name);
+        OptionBundle.Section s = prof.add(dwarf.name);
 
         inject(s, dwarf, "");
         if (dwarf.name.equals(Dwarfs.PROP_DOPEY))
@@ -121,9 +124,18 @@ public class Helper
         return s;
     }
 
+    public static OptionTree addDwarf(OptionTree parent, DwarfData dwarf)
+    {
+        OptionTree child = parent.add(dwarf.name);
+
+        addDwarf(child.options(), dwarf, false);
+
+        return child;
+    }
+
     public static Ini.Section addDwarf(Ini ini, DwarfData dwarf)
     {
-        Ini.Section s = addDwarf((Profile) ini, dwarf);
+        Ini.Section s = addDwarf((OptionBundle) ini, dwarf);
 
         ini.putComment(dwarf.name, " " + dwarf.name);
 
@@ -155,7 +167,7 @@ public class Helper
         }
     }
 
-    public static void addDwarfs(Profile prof)
+    public static void addDwarfs(OptionBundle prof)
     {
         addDwarf(prof, DwarfsData.bashful);
         addDwarf(prof, DwarfsData.doc);
@@ -218,6 +230,21 @@ public class Helper
         opt.load(Helper.class.getClassLoader().getResourceAsStream(DWARFS_OPT));
 
         return opt;
+    }
+
+    public static Settings loadTaleIni() throws Exception
+    {
+        return new Settings(Helper.class.getClassLoader().getResourceAsStream(TALE_INI));
+    }
+
+    public static Settings loadTaleIni(Config config) throws Exception
+    {
+        Settings settings = new Settings();
+
+        settings.setConfig(config);
+        settings.load(Helper.class.getClassLoader().getResourceAsStream(TALE_INI));
+
+        return settings;
     }
 
     public static Ini newDwarfsIni()

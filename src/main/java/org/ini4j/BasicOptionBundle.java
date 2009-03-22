@@ -24,7 +24,7 @@ import java.lang.reflect.Proxy;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BasicProfile extends BasicCommentMultiMap<String, Profile.Section> implements Profile
+public class BasicOptionBundle extends BasicCommentedMultiMap<String, OptionBundle.Section> implements OptionBundle
 {
     private static final String SECTION_SYSTEM_PROPERTIES = "@prop";
     private static final String SECTION_ENVIRONMENT = "@env";
@@ -33,6 +33,7 @@ public class BasicProfile extends BasicCommentMultiMap<String, Profile.Section> 
     private static final int G_SECTION_IDX = 4;
     private static final int G_OPTION = 5;
     private static final int G_OPTION_IDX = 7;
+    private static final long serialVersionUID = -1817521505004015256L;
 
     @Override public Section add(String name)
     {
@@ -158,6 +159,7 @@ public class BasicProfile extends BasicCommentMultiMap<String, Profile.Section> 
 
     protected class SectionImpl extends BasicOptionMap implements Section
     {
+        private static final long serialVersionUID = 7166889844043725591L;
         private final String _name;
 
         protected SectionImpl(String name)
@@ -173,7 +175,7 @@ public class BasicProfile extends BasicCommentMultiMap<String, Profile.Section> 
 
         @Override protected void resolve(StringBuilder buffer)
         {
-            BasicProfile.this.resolve(buffer, this);
+            BasicOptionBundle.this.resolve(buffer, this);
         }
     }
 

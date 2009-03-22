@@ -42,6 +42,7 @@ public class ConfigTest
         Config exp = newInverseConfig();
 
         setBoolean(Config.PROP_EMPTY_OPTION, exp.isEmptyOption());
+        setBoolean(Config.PROP_EMPTY_SECTION, exp.isEmptySection());
         setBoolean(Config.PROP_GLOBAL_SECTION, exp.isGlobalSection());
         setString(Config.PROP_GLOBAL_SECTION_NAME, exp.getGlobalSectionName());
         setBoolean(Config.PROP_INCLUDE, exp.isInclude());
@@ -52,12 +53,22 @@ public class ConfigTest
         setBoolean(Config.PROP_STRICT_OPERATOR, exp.isStrictOperator());
         setBoolean(Config.PROP_UNNAMED_SECTION, exp.isUnnamedSection());
         setBoolean(Config.PROP_ESCAPE, exp.isEscape());
+        setChar(Config.PROP_PATH_SEPARATOR, exp.getPathSeparator());
+        setBoolean(Config.PROP_STRIP_OPTION_NAME_QUOTES, exp.isStripOptionNameQuotes());
+        setBoolean(Config.PROP_STRIP_OPTION_VALUE_QUOTES, exp.isStripOptionValueQuotes());
+        setBoolean(Config.PROP_QUOTE_OPTION_NAME, exp.isQuoteOptionName());
+        setBoolean(Config.PROP_QUOTE_OPTION_VALUE, exp.isQuoteOptionValue());
         Config cfg = new Config();
 
         assertEquals(exp, cfg);
     }
 
     private void setBoolean(String prop, boolean value)
+    {
+        System.setProperty(Config.KEY_PREFIX + prop, String.valueOf(value));
+    }
+
+    private void setChar(String prop, char value)
     {
         System.setProperty(Config.KEY_PREFIX + prop, String.valueOf(value));
     }
@@ -70,6 +81,7 @@ public class ConfigTest
     private void assertEquals(Config exp, Config act)
     {
         Assert.assertEquals(exp.isEmptyOption(), act.isEmptyOption());
+        Assert.assertEquals(exp.isEmptySection(), act.isEmptySection());
         Assert.assertEquals(exp.isEscape(), act.isEscape());
         Assert.assertEquals(exp.isGlobalSection(), act.isGlobalSection());
         Assert.assertEquals(exp.isInclude(), act.isInclude());
@@ -80,6 +92,11 @@ public class ConfigTest
         Assert.assertEquals(exp.isStrictOperator(), act.isStrictOperator());
         Assert.assertEquals(exp.isUnnamedSection(), act.isUnnamedSection());
         Assert.assertEquals(exp.getGlobalSectionName(), act.getGlobalSectionName());
+        Assert.assertEquals(exp.getPathSeparator(), act.getPathSeparator());
+        Assert.assertEquals(exp.isQuoteOptionName(), act.isQuoteOptionName());
+        Assert.assertEquals(exp.isQuoteOptionValue(), act.isQuoteOptionValue());
+        Assert.assertEquals(exp.isStripOptionNameQuotes(), act.isStripOptionNameQuotes());
+        Assert.assertEquals(exp.isStripOptionValueQuotes(), act.isStripOptionValueQuotes());
     }
 
     private Config newDefaultConfig()
@@ -87,6 +104,7 @@ public class ConfigTest
         Config cfg = new Config();
 
         cfg.setEmptyOption(false);
+        cfg.setEmptySection(false);
         cfg.setEscape(true);
         cfg.setGlobalSection(false);
         cfg.setGlobalSectionName("?");
@@ -97,6 +115,11 @@ public class ConfigTest
         cfg.setMultiOption(true);
         cfg.setStrictOperator(false);
         cfg.setUnnamedSection(false);
+        cfg.setPathSeparator('/');
+        cfg.setQuoteOptionName(false);
+        cfg.setQuoteOptionValue(false);
+        cfg.setStripOptionNameQuotes(false);
+        cfg.setStripOptionValueQuotes(false);
 
         return cfg;
     }
@@ -106,6 +129,7 @@ public class ConfigTest
         Config cfg = newDefaultConfig();
 
         cfg.setEmptyOption(!cfg.isEmptyOption());
+        cfg.setEmptySection(!cfg.isEmptySection());
         cfg.setEscape(!cfg.isEscape());
         cfg.setGlobalSection(!cfg.isGlobalSection());
         cfg.setGlobalSectionName("+");
@@ -116,6 +140,11 @@ public class ConfigTest
         cfg.setMultiOption(!cfg.isMultiOption());
         cfg.setStrictOperator(!cfg.isStrictOperator());
         cfg.setUnnamedSection(!cfg.isUnnamedSection());
+        cfg.setPathSeparator('?');
+        cfg.setQuoteOptionName(!cfg.isQuoteOptionName());
+        cfg.setQuoteOptionValue(!cfg.isQuoteOptionValue());
+        cfg.setStripOptionNameQuotes(!cfg.isStripOptionNameQuotes());
+        cfg.setStripOptionValueQuotes(!cfg.isStripOptionValueQuotes());
 
         return cfg;
     }

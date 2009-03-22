@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.Writer;
 
 import java.net.URL;
@@ -37,8 +38,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ConfigParser
+public class ConfigParser implements Serializable
 {
+    private static final long serialVersionUID = 9118857036229164353L;
     private PyIni _ini;
 
     @SuppressWarnings(Warnings.UNCHECKED)
@@ -124,7 +126,8 @@ public class ConfigParser
         return get(section, option, raw, Collections.EMPTY_MAP);
     }
 
-    public String get(String sectionName, String optionName, boolean raw, Map<String, String> variables) throws NoSectionException, NoOptionException, InterpolationException
+    public String get(String sectionName, String optionName, boolean raw, Map<String, String> variables) throws NoSectionException, NoOptionException,
+        InterpolationException
     {
         String value = requireOption(sectionName, optionName);
 
@@ -160,7 +163,8 @@ public class ConfigParser
         return items(sectionName, raw, Collections.EMPTY_MAP);
     }
 
-    public List<Map.Entry<String, String>> items(String sectionName, boolean raw, Map<String, String> variables) throws NoSectionException, InterpolationMissingOptionException
+    public List<Map.Entry<String, String>> items(String sectionName, boolean raw, Map<String, String> variables) throws NoSectionException,
+        InterpolationMissingOptionException
     {
         Ini.Section section = requireSection(sectionName);
         Map<String, String> ret;
@@ -410,6 +414,7 @@ public class ConfigParser
         private static final Pattern EXPRESSION = Pattern.compile("(?<!\\\\)\\%\\(([^\\)]+)\\)");
         private static final int G_OPTION = 1;
         protected static final String DEFAULT_SECTION_NAME = "DEFAULT";
+        private static final long serialVersionUID = -7152857626328996122L;
         private final Map<String, String> _defaults;
         private Ini.Section _defaultSection;
 

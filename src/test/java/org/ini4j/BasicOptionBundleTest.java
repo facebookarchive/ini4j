@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import java.net.URI;
 
-public class BasicProfileTest
+public class BasicOptionBundleTest
 {
     private static final String SECTION = "section";
     private static final String NUMBER = "number";
@@ -41,7 +41,7 @@ public class BasicProfileTest
 
     @Test public void testAddPut()
     {
-        Profile prof = new BasicProfile();
+        OptionBundle prof = new BasicOptionBundle();
 
         prof.add(SECTION, Dwarf.PROP_AGE, DwarfsData.sneezy.age);
         prof.put(SECTION, Dwarf.PROP_HEIGHT, DwarfsData.sneezy.height);
@@ -62,7 +62,7 @@ public class BasicProfileTest
 
     @Test public void testFromToAs() throws Exception
     {
-        BasicProfile prof = new BasicProfile();
+        BasicOptionBundle prof = new BasicOptionBundle();
 
         Helper.addDwarfs(prof);
         fromToAs(prof, DwarfsData.bashful);
@@ -95,8 +95,8 @@ public class BasicProfileTest
 
     @Test public void testIniGetFetch()
     {
-        Profile prof = new BasicProfile();
-        Profile.Section sec = Helper.addDwarf(prof, DwarfsData.dopey);
+        OptionBundle prof = new BasicOptionBundle();
+        OptionBundle.Section sec = Helper.addDwarf(prof, DwarfsData.dopey);
 
         Helper.addDwarf(prof, DwarfsData.bashful);
         Helper.addDwarf(prof, DwarfsData.doc);
@@ -122,8 +122,8 @@ public class BasicProfileTest
 
     @Test public void testOptionArray() throws Exception
     {
-        BasicProfile prof = new BasicProfile();
-        Profile.Section sec = prof.add(SECTION);
+        BasicOptionBundle prof = new BasicOptionBundle();
+        OptionBundle.Section sec = prof.add(SECTION);
 
         sec.add(NUMBER, 1);
         sec.add(LOCATION, LOCATION_1);
@@ -146,10 +146,10 @@ public class BasicProfileTest
 
     @Test public void testResolve() throws Exception
     {
-        BasicProfile prof = new BasicProfile();
+        BasicOptionBundle prof = new BasicOptionBundle();
 
         Helper.addDwarf(prof, DwarfsData.happy);
-        Profile.Section doc = Helper.addDwarf(prof, DwarfsData.doc);
+        OptionBundle.Section doc = Helper.addDwarf(prof, DwarfsData.doc);
         StringBuilder buffer;
         String input;
 
@@ -238,17 +238,18 @@ public class BasicProfileTest
         input = "\\" + input;
         buffer = new StringBuilder(input);
 
+        prof.resolve(buffer, doc);
         assertEquals(input, buffer.toString());
     }
 
     @Test public void testResolveArray() throws Exception
     {
         StringBuilder buffer;
-        BasicProfile prof = new BasicProfile();
+        BasicOptionBundle prof = new BasicOptionBundle();
 
         prof.add(SECTION).add(NUMBER, 1);
         prof.add(SECTION).add(NUMBER, 2);
-        Profile.Section sec = prof.get(SECTION);
+        OptionBundle.Section sec = prof.get(SECTION);
 
         //
         buffer = new StringBuilder("${section[0]/number}");
@@ -278,7 +279,7 @@ public class BasicProfileTest
 
     @Test public void testSectionArray() throws Exception
     {
-        BasicProfile prof = new BasicProfile();
+        BasicOptionBundle prof = new BasicOptionBundle();
 
         prof.add(SECTION).add(NUMBER, 1);
         prof.add(SECTION).add(NUMBER, 2);
@@ -314,10 +315,10 @@ public class BasicProfileTest
         assertEquals(0, ini.length("solo"));
     }
 
-    private void fromToAs(BasicProfile prof, DwarfData dwarf)
+    private void fromToAs(BasicOptionBundle prof, DwarfData dwarf)
     {
-        Profile.Section sec = prof.get(dwarf.name);
-        Profile.Section dup = prof.new SectionImpl(SECTION);
+        OptionBundle.Section sec = prof.get(dwarf.name);
+        OptionBundle.Section dup = prof.new SectionImpl(SECTION);
         DwarfBean bean = new DwarfBean();
 
         sec.to(bean);
