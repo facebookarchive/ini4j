@@ -31,7 +31,7 @@ import java.io.Writer;
 
 import java.net.URL;
 
-public class Ini extends BasicOptionBundle implements Persistable
+public class Ini extends BasicProfile implements Persistable
 {
     private static final long serialVersionUID = -6029486578113700585L;
     private String _comment;
@@ -157,6 +157,16 @@ public class Ini extends BasicOptionBundle implements Persistable
     protected Config getConfig()
     {
         return _config;
+    }
+
+    @Override protected boolean isTreeMode()
+    {
+        return getConfig().isTree();
+    }
+
+    @Override protected char getPathSeparator()
+    {
+        return getConfig().getPathSeparator();
     }
 
     protected void store(IniHandler formatter) throws IOException

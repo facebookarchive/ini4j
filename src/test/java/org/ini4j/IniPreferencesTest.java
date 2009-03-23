@@ -23,6 +23,7 @@ import org.ini4j.spi.BeanTool;
 
 import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
+import org.ini4j.test.TaleData;
 
 import static org.junit.Assert.*;
 
@@ -102,6 +103,30 @@ public class IniPreferencesTest
         assertNull(ini.get(Dwarfs.PROP_DOC));
     }
 
+    @Test public void testTaleTree() throws Exception
+    {
+        Ini ini = Helper.newTaleIni();
+        IniPreferences prefs = new IniPreferences(ini);
+        Preferences dwarfs = prefs.node(TaleData.PROP_DWARFS);
+
+        Helper.assertEquals(DwarfsData.doc, newDwarf(dwarfs.node(Dwarfs.PROP_DOC)));
+        assertArrayEquals(DwarfsData.dwarfNames, dwarfs.childrenNames());
+        assertEquals(1, prefs.childrenNames().length);
+    }
+
+    @Test public void testTree() throws Exception
+    {
+        Ini ini = new Ini();
+        IniPreferences prefs = new IniPreferences(ini);
+        IniPreferences.SectionPreferences sec = (IniPreferences.SectionPreferences) prefs.node(Dwarfs.PROP_DOC);
+        Preferences child = sec.node(DUMMY);
+
+        assertNotNull(child);
+        assertNotNull(sec.node(DUMMY));
+        assertNotNull(ini.get(Dwarfs.PROP_DOC).getChild(DUMMY));
+        assertEquals(1, prefs.childrenNames().length);
+    }
+
     @SuppressWarnings("empty-statement")
     @Test public void testUnsupported() throws Exception
     {
@@ -141,19 +166,6 @@ public class IniPreferencesTest
         try
         {
             prefs.removeSpi(DUMMY);
-            fail();
-        }
-        catch (UnsupportedOperationException x)
-        {
-            ;
-        }
-
-        // SectionPreferences
-        IniPreferences.SectionPreferences sec = (IniPreferences.SectionPreferences) prefs.node(Dwarfs.PROP_DOC);
-
-        try
-        {
-            sec.childSpi(DUMMY);
             fail();
         }
         catch (UnsupportedOperationException x)

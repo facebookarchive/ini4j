@@ -126,8 +126,7 @@ public class ConfigParser implements Serializable
         return get(section, option, raw, Collections.EMPTY_MAP);
     }
 
-    public String get(String sectionName, String optionName, boolean raw, Map<String, String> variables) throws NoSectionException, NoOptionException,
-        InterpolationException
+    public String get(String sectionName, String optionName, boolean raw, Map<String, String> variables) throws NoSectionException, NoOptionException, InterpolationException
     {
         String value = requireOption(sectionName, optionName);
 
@@ -163,8 +162,7 @@ public class ConfigParser implements Serializable
         return items(sectionName, raw, Collections.EMPTY_MAP);
     }
 
-    public List<Map.Entry<String, String>> items(String sectionName, boolean raw, Map<String, String> variables) throws NoSectionException,
-        InterpolationMissingOptionException
+    public List<Map.Entry<String, String>> items(String sectionName, boolean raw, Map<String, String> variables) throws NoSectionException, InterpolationMissingOptionException
     {
         Ini.Section section = requireSection(sectionName);
         Map<String, String> ret;
@@ -449,7 +447,7 @@ public class ConfigParser implements Serializable
             {
                 if (_defaultSection == null)
                 {
-                    _defaultSection = new SectionImpl(name);
+                    _defaultSection = new BasicSection(this, name);
                 }
 
                 section = _defaultSection;

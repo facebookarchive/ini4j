@@ -58,7 +58,7 @@ public final class DwarfsData implements Dwarfs
         sleepy = new DwarfData(PROP_SLEEPY, 121, new int[] { 99 }, doc.height + 0.08, "/home/sleepy", "http://snowwhite.tale/~sleepy", 76.11);
         sneezy = new DwarfData(PROP_SNEEZY, 64, new int[] { 11, 22, 33, 44 }, 76.88, "/home/sneezy", happy.homePage.toString() + "/~sneezy", 69.7);
         dwarfs = new DwarfsData();
-        dwarfNames = new String[] { "bashful", "doc", "dopey", "grumpy", "happy", "sleepy", "sneezy" };
+        dwarfNames = new String[] { bashful.name, doc.name, dopey.name, grumpy.name, happy.name, sleepy.name, sneezy.name };
     }
 
     @SuppressWarnings("empty-statement")

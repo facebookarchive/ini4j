@@ -24,24 +24,51 @@ import java.lang.reflect.Proxy;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BasicOptionBundle extends BasicCommentedMultiMap<String, OptionBundle.Section> implements OptionBundle
+public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section> implements Profile
 {
     private static final String SECTION_SYSTEM_PROPERTIES = "@prop";
     private static final String SECTION_ENVIRONMENT = "@env";
-    private static final Pattern EXPRESSION = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?/)?([^\\[]+)(\\[(([0-9]+))\\])?\\}");
+    private static final Pattern EXPRESSION = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?/)?([^\\[^/]+)(\\[(([0-9]+))\\])?\\}");
     private static final int G_SECTION = 2;
     private static final int G_SECTION_IDX = 4;
     private static final int G_OPTION = 5;
     private static final int G_OPTION_IDX = 7;
     private static final long serialVersionUID = -1817521505004015256L;
+    protected static final char JNDI_PATH_SEPARATOR = '/';
+    private final boolean _treeMode;
+
+    public BasicProfile()
+    {
+        this(false);
+    }
+
+    public BasicProfile(boolean treeMode)
+    {
+        _treeMode = treeMode;
+    }
 
     @Override public Section add(String name)
     {
-        Section s = new SectionImpl(name);
+        if (isTreeMode())
+        {
+            int idx = name.lastIndexOf(getPathSeparator());
 
-        add(name, s);
+            if (idx > 0)
+            {
+                String parent = name.substring(0, idx);
 
-        return s;
+                if (!containsKey(parent))
+                {
+                    add(parent);
+                }
+            }
+        }
+
+        Section section = new BasicSection(this, name);
+
+        add(name, section);
+
+        return section;
     }
 
     @Override public void add(String section, String option, Object value)
@@ -97,6 +124,16 @@ public class BasicOptionBundle extends BasicCommentedMultiMap<String, OptionBund
         Section sec = get(sectionName);
 
         return (sec == null) ? null : sec.remove(optionName);
+    }
+
+    protected boolean isTreeMode()
+    {
+        return _treeMode;
+    }
+
+    protected char getPathSeparator()
+    {
+        return JNDI_PATH_SEPARATOR;
     }
 
     protected void resolve(StringBuilder buffer, Section owner)
@@ -155,28 +192,6 @@ public class BasicOptionBundle extends BasicCommentedMultiMap<String, OptionBund
     private int parseSectionIndex(Matcher m)
     {
         return (m.group(G_SECTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_SECTION_IDX));
-    }
-
-    protected class SectionImpl extends BasicOptionMap implements Section
-    {
-        private static final long serialVersionUID = 7166889844043725591L;
-        private final String _name;
-
-        protected SectionImpl(String name)
-        {
-            super();
-            _name = name;
-        }
-
-        @Override public String getName()
-        {
-            return _name;
-        }
-
-        @Override protected void resolve(StringBuilder buffer)
-        {
-            BasicOptionBundle.this.resolve(buffer, this);
-        }
     }
 
     private class BeanInvocationHandler extends AbstractBeanInvocationHandler

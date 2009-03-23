@@ -45,7 +45,11 @@
     <rule ref="rulesets/strictexception.xml/AvoidCatchingThrowable"/>
     <rule ref="rulesets/design.xml/AvoidConstantsInterface"/>
     <rule ref="rulesets/basic.xml/AvoidDecimalLiteralsInBigDecimalConstructor"/>
-    <rule ref="rulesets/design.xml/AvoidDeeplyNestedIfStmts"/>
+    <rule ref="rulesets/design.xml/AvoidDeeplyNestedIfStmts">
+        <properties>
+            <property name="problemDepth" value="4"/>
+        </properties>
+    </rule>
     <rule ref="rulesets/naming.xml/AvoidDollarSigns"/>
     <rule ref="rulesets/strings.xml/AvoidDuplicateLiterals"/>
     <rule ref="rulesets/migrating.xml/AvoidEnumAsIdentifier"/>
@@ -166,7 +170,7 @@
     <rule ref="rulesets/migrating.xml/LongInstantiation"/>
     <rule ref="rulesets/naming.xml/LongVariable">
         <properties>
-            <property name="minimum" value="32"/>
+            <property name="minimum" value="48"/>
         </properties>
     </rule>
     <rule ref="rulesets/coupling.xml/LooseCoupling"/>
@@ -233,7 +237,11 @@
     <rule ref="rulesets/logging-java.xml/SystemPrintln"/>
     <rule ref="rulesets/junit.xml/TestClassWithoutTestCases"/>
     <rule ref="rulesets/design.xml/TooFewBranchesForASwitchStatement"/>
-    <rule ref="rulesets/codesize.xml/TooManyFields"/>
+    <rule ref="rulesets/codesize.xml/TooManyFields">
+        <properties>
+            <property name="maxfields" value="24"/>
+        </properties>
+    </rule>
     <rule ref="rulesets/codesize.xml/TooManyMethods">
         <properties>
             <property name="maxmethods" value="32"/>

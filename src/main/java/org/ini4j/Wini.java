@@ -30,12 +30,13 @@ public class Wini extends Ini
 
     public Wini()
     {
-        Config cfg = new Config();
+        Config cfg = Config.getGlobal().clone();
 
         cfg.setEscape(false);
         cfg.setGlobalSection(true);
         cfg.setEmptyOption(true);
         cfg.setMultiOption(false);
+        cfg.setPathSeparator('\\');
         setConfig(cfg);
     }
 

@@ -71,13 +71,10 @@ public abstract class AbstractParser
     {
         String ret = orig;
 
-        if ((orig != null) && (orig.length() > 2))
+        if ((orig != null) && (orig.length() > 2)
+              && (((orig.charAt(0) == DOUBLE_QUOTE) && (orig.charAt(orig.length() - 1) == DOUBLE_QUOTE)) || ((orig.charAt(0) == QUOTE) && (orig.charAt(orig.length() - 1) == QUOTE))))
         {
-            if (((orig.charAt(0) == DOUBLE_QUOTE) && (orig.charAt(orig.length() - 1) == DOUBLE_QUOTE))
-                  || ((orig.charAt(0) == QUOTE) && (orig.charAt(orig.length() - 1) == QUOTE)))
-            {
-                ret = orig.substring(1, orig.length() - 1);
-            }
+            ret = orig.substring(1, orig.length() - 1);
         }
 
         return ret;

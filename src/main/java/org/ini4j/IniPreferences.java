@@ -21,6 +21,8 @@ import java.io.Reader;
 
 import java.net.URL;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
 
@@ -125,7 +127,17 @@ public class IniPreferences extends AbstractPreferences
      */
     @Override protected String[] childrenNamesSpi() throws BackingStoreException
     {
-        return _ini.keySet().toArray(EMPTY);
+        List<String> names = new ArrayList<String>();
+
+        for (String name : _ini.keySet())
+        {
+            if (name.indexOf(_ini.getPathSeparator()) < 0)
+            {
+                names.add(name);
+            }
+        }
+
+        return names.toArray(EMPTY);
     }
 
     /**
@@ -239,9 +251,9 @@ public class IniPreferences extends AbstractPreferences
          * @parem section underlaying Ini.Section instance
          * @param isNew indicate is this a new node or already existing one
          */
-        SectionPreferences(IniPreferences parent, Ini.Section section, boolean isNew)
+        SectionPreferences(AbstractPreferences parent, Ini.Section section, boolean isNew)
         {
-            super(parent, section.getName());
+            super(parent, section.getSimpleName());
             _section = section;
             newNode = isNew;
         }
@@ -294,7 +306,7 @@ public class IniPreferences extends AbstractPreferences
          */
         @Override protected String[] childrenNamesSpi() throws BackingStoreException
         {
-            return EMPTY;
+            return _section.childrenNames();
         }
 
         /**
@@ -307,9 +319,17 @@ public class IniPreferences extends AbstractPreferences
          * @param name child name
          * @return child node
          */
-        @Override protected IniPreferences childSpi(String name) throws UnsupportedOperationException
+        @Override protected SectionPreferences childSpi(String name) throws UnsupportedOperationException
         {
-            throw new UnsupportedOperationException();
+            Ini.Section child = _section.getChild(name);
+            boolean isNew = child == null;
+
+            if (isNew)
+            {
+                child = _section.addChild(name);
+            }
+
+            return new SectionPreferences(this, child, isNew);
         }
 
         /**

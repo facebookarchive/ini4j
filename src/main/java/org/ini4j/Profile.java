@@ -15,7 +15,7 @@
  */
 package org.ini4j;
 
-public interface OptionBundle extends MultiMap<String, OptionBundle.Section>, CommentedMap<String, OptionBundle.Section>
+public interface Profile extends MultiMap<String, Profile.Section>, CommentedMap<String, Profile.Section>
 {
     Section add(String sectionName);
 
@@ -33,12 +33,26 @@ public interface OptionBundle extends MultiMap<String, OptionBundle.Section>, Co
 
     String put(String sectionName, String optionName, Object value);
 
-    Section remove(OptionBundle.Section section);
+    Section remove(Profile.Section section);
 
     String remove(Object sectionName, Object optionName);
 
     interface Section extends OptionMap
     {
+        Section getChild(String key);
+
         String getName();
+
+        Section getParent();
+
+        String getSimpleName();
+
+        Section addChild(String key);
+
+        String[] childrenNames();
+
+        Section lookup(String... path);
+
+        void removeChild(String key);
     }
 }

@@ -17,7 +17,6 @@ package org.ini4j;
 
 import org.ini4j.spi.BeanAccess;
 import org.ini4j.spi.BeanTool;
-import org.ini4j.spi.Warnings;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,16 +76,14 @@ public class BasicOptionMap extends BasicCommentedMultiMap<String, String> imple
         return value;
     }
 
-    @SuppressWarnings(Warnings.UNCHECKED)
     @Override public <T> T fetch(Object key, Class<T> clazz)
     {
-        return (T) BeanTool.getInstance().parse(fetch(key), clazz);
+        return BeanTool.getInstance().parse(fetch(key), clazz);
     }
 
-    @SuppressWarnings(Warnings.UNCHECKED)
     @Override public <T> T fetch(Object key, int index, Class<T> clazz)
     {
-        return (T) BeanTool.getInstance().parse(fetch(key, index), clazz);
+        return BeanTool.getInstance().parse(fetch(key, index), clazz);
     }
 
     @Override public void from(Object bean)
@@ -99,16 +96,14 @@ public class BasicOptionMap extends BasicCommentedMultiMap<String, String> imple
         BeanTool.getInstance().inject(newBeanAccess(keyPrefix), bean);
     }
 
-    @SuppressWarnings(Warnings.UNCHECKED)
     @Override public <T> T get(Object key, Class<T> clazz)
     {
-        return (T) BeanTool.getInstance().parse(get(key), clazz);
+        return BeanTool.getInstance().parse(get(key), clazz);
     }
 
-    @SuppressWarnings(Warnings.UNCHECKED)
     @Override public <T> T get(Object key, int index, Class<T> clazz)
     {
-        return (T) BeanTool.getInstance().parse(get(key, index), clazz);
+        return BeanTool.getInstance().parse(get(key, index), clazz);
     }
 
     @Override public String put(String key, Object value)

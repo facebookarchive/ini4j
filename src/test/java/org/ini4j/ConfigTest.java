@@ -58,6 +58,7 @@ public class ConfigTest
         setBoolean(Config.PROP_STRIP_OPTION_VALUE_QUOTES, exp.isStripOptionValueQuotes());
         setBoolean(Config.PROP_QUOTE_OPTION_NAME, exp.isQuoteOptionName());
         setBoolean(Config.PROP_QUOTE_OPTION_VALUE, exp.isQuoteOptionValue());
+        setBoolean(Config.PROP_TREE, exp.isTree());
         Config cfg = new Config();
 
         assertEquals(exp, cfg);
@@ -93,6 +94,7 @@ public class ConfigTest
         Assert.assertEquals(exp.isUnnamedSection(), act.isUnnamedSection());
         Assert.assertEquals(exp.getGlobalSectionName(), act.getGlobalSectionName());
         Assert.assertEquals(exp.getPathSeparator(), act.getPathSeparator());
+        Assert.assertEquals(exp.isTree(), act.isTree());
         Assert.assertEquals(exp.isQuoteOptionName(), act.isQuoteOptionName());
         Assert.assertEquals(exp.isQuoteOptionValue(), act.isQuoteOptionValue());
         Assert.assertEquals(exp.isStripOptionNameQuotes(), act.isStripOptionNameQuotes());
@@ -116,6 +118,7 @@ public class ConfigTest
         cfg.setStrictOperator(false);
         cfg.setUnnamedSection(false);
         cfg.setPathSeparator('/');
+        cfg.setTree(true);
         cfg.setQuoteOptionName(false);
         cfg.setQuoteOptionValue(false);
         cfg.setStripOptionNameQuotes(false);
@@ -141,6 +144,7 @@ public class ConfigTest
         cfg.setStrictOperator(!cfg.isStrictOperator());
         cfg.setUnnamedSection(!cfg.isUnnamedSection());
         cfg.setPathSeparator('?');
+        cfg.setTree(!cfg.isTree());
         cfg.setQuoteOptionName(!cfg.isQuoteOptionName());
         cfg.setQuoteOptionValue(!cfg.isQuoteOptionValue());
         cfg.setStripOptionNameQuotes(!cfg.isStripOptionNameQuotes());
