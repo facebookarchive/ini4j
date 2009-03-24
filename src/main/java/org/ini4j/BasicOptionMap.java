@@ -33,6 +33,17 @@ public class BasicOptionMap extends BasicCommentedMultiMap<String, String> imple
     private static final int G_INDEX = 4;
     private static final long serialVersionUID = 325469712293707584L;
     private BeanAccess _defaultBeanAccess;
+    private final boolean _propertyFirstUpper;
+
+    public BasicOptionMap()
+    {
+        this(false);
+    }
+
+    public BasicOptionMap(boolean propertyFirstUpper)
+    {
+        _propertyFirstUpper = propertyFirstUpper;
+    }
 
     @Override public void add(String key, Object value)
     {
@@ -136,6 +147,11 @@ public class BasicOptionMap extends BasicCommentedMultiMap<String, String> imple
         return _defaultBeanAccess;
     }
 
+    protected boolean isPropertyFirstUpper()
+    {
+        return _propertyFirstUpper;
+    }
+
     protected BeanAccess newBeanAccess()
     {
         return new Access();
@@ -228,7 +244,31 @@ public class BasicOptionMap extends BasicCommentedMultiMap<String, String> imple
 
         private String transform(String orig)
         {
-            return (orig == null) ? null : ((_prefix == null) ? orig : (_prefix + orig));
+            String ret = orig;
+
+            if (((_prefix != null) || isPropertyFirstUpper()) && (orig != null))
+            {
+                StringBuilder buff = new StringBuilder();
+
+                if (_prefix != null)
+                {
+                    buff.append(_prefix);
+                }
+
+                if (isPropertyFirstUpper())
+                {
+                    buff.append(Character.toUpperCase(orig.charAt(0)));
+                    buff.append(orig.substring(1));
+                }
+                else
+                {
+                    buff.append(orig);
+                }
+
+                ret = buff.toString();
+            }
+
+            return ret;
         }
     }
 }

@@ -160,6 +160,11 @@ public class Options extends BasicOptionMap implements Persistable
         return _config;
     }
 
+    @Override protected boolean isPropertyFirstUpper()
+    {
+        return getConfig().isPropertyFirstUpper();
+    }
+
     protected void store(OptionsHandler formatter) throws IOException
     {
         formatter.startOptions();

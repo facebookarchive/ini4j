@@ -35,16 +35,18 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
     private static final int G_OPTION_IDX = 7;
     private static final long serialVersionUID = -1817521505004015256L;
     protected static final char JNDI_PATH_SEPARATOR = '/';
+    private final boolean _propertyFirstUpper;
     private final boolean _treeMode;
 
     public BasicProfile()
     {
-        this(false);
+        this(false, false);
     }
 
-    public BasicProfile(boolean treeMode)
+    public BasicProfile(boolean treeMode, boolean propertyFirstUpper)
     {
         _treeMode = treeMode;
+        _propertyFirstUpper = propertyFirstUpper;
     }
 
     @Override public Section add(String name)
@@ -134,6 +136,11 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
     protected char getPathSeparator()
     {
         return JNDI_PATH_SEPARATOR;
+    }
+
+    protected boolean isPropertyFirstUpper()
+    {
+        return _propertyFirstUpper;
     }
 
     protected void resolve(StringBuilder buffer, Section owner)

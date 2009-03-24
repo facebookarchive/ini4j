@@ -169,6 +169,11 @@ public class Ini extends BasicProfile implements Persistable
         return getConfig().getPathSeparator();
     }
 
+    @Override protected boolean isPropertyFirstUpper()
+    {
+        return getConfig().isPropertyFirstUpper();
+    }
+
     protected void store(IniHandler formatter) throws IOException
     {
         formatter.startIni();

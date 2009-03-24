@@ -59,6 +59,7 @@ public class ConfigTest
         setBoolean(Config.PROP_QUOTE_OPTION_NAME, exp.isQuoteOptionName());
         setBoolean(Config.PROP_QUOTE_OPTION_VALUE, exp.isQuoteOptionValue());
         setBoolean(Config.PROP_TREE, exp.isTree());
+        setBoolean(Config.PROP_PROPERTY_FIRST_UPPER, exp.isPropertyFirstUpper());
         Config cfg = new Config();
 
         assertEquals(exp, cfg);
@@ -99,6 +100,7 @@ public class ConfigTest
         Assert.assertEquals(exp.isQuoteOptionValue(), act.isQuoteOptionValue());
         Assert.assertEquals(exp.isStripOptionNameQuotes(), act.isStripOptionNameQuotes());
         Assert.assertEquals(exp.isStripOptionValueQuotes(), act.isStripOptionValueQuotes());
+        Assert.assertEquals(exp.isPropertyFirstUpper(), act.isPropertyFirstUpper());
     }
 
     private Config newDefaultConfig()
@@ -123,6 +125,7 @@ public class ConfigTest
         cfg.setQuoteOptionValue(false);
         cfg.setStripOptionNameQuotes(false);
         cfg.setStripOptionValueQuotes(false);
+        cfg.setPropertyFirstUpper(false);
 
         return cfg;
     }
@@ -149,6 +152,7 @@ public class ConfigTest
         cfg.setQuoteOptionValue(!cfg.isQuoteOptionValue());
         cfg.setStripOptionNameQuotes(!cfg.isStripOptionNameQuotes());
         cfg.setStripOptionValueQuotes(!cfg.isStripOptionValueQuotes());
+        cfg.setPropertyFirstUpper(!cfg.isPropertyFirstUpper());
 
         return cfg;
     }

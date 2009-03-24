@@ -144,6 +144,23 @@ public class BasicOptionMapTest
         assertEquals(DwarfsData.bashful.homePage, map.fetch(Dwarf.PROP_HOME_PAGE, URI.class));
     }
 
+    @Test public void testPropertyFirstUpper()
+    {
+        DwarfBean bean;
+        OptionMap map = new BasicOptionMap(true);
+
+        map.from(DwarfsData.bashful);
+        assertTrue(map.containsKey("Age"));
+        assertTrue(map.containsKey("Height"));
+        assertTrue(map.containsKey("Weight"));
+        assertTrue(map.containsKey("HomePage"));
+        assertTrue(map.containsKey("HomeDir"));
+        bean = new DwarfBean();
+        map.to(bean);
+        Helper.assertEquals(DwarfsData.bashful, bean);
+        Helper.assertEquals(DwarfsData.bashful, map.as(Dwarf.class));
+    }
+
     @Test public void testPut()
     {
         OptionMap map = new BasicOptionMap();

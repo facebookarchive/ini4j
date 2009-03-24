@@ -113,6 +113,11 @@ class BasicSection extends BasicOptionMap implements Profile.Section
         _profile.remove(name);
     }
 
+    @Override protected boolean isPropertyFirstUpper()
+    {
+        return _profile.isPropertyFirstUpper();
+    }
+
     @Override protected void resolve(StringBuilder buffer)
     {
         _profile.resolve(buffer, this);

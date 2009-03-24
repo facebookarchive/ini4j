@@ -38,6 +38,7 @@ public class Config implements Cloneable, Serializable
     public static final String PROP_QUOTE_OPTION_VALUE = "quoteOptionValue";
     public static final String PROP_PATH_SEPARATOR = "pathSeparator";
     public static final String PROP_TREE = "tree";
+    public static final String PROP_PROPERTY_FIRST_UPPER = "propertyFirstUpper";
     public static final boolean DEFAULT_EMPTY_OPTION = false;
     public static final boolean DEFAULT_EMPTY_SECTION = false;
     public static final boolean DEFAULT_GLOBAL_SECTION = false;
@@ -55,6 +56,7 @@ public class Config implements Cloneable, Serializable
     public static final boolean DEFAULT_QUOTE_OPTION_NAME = false;
     public static final boolean DEFAULT_QUOTE_OPTION_VALUE = false;
     public static final boolean DEFAULT_TREE = true;
+    public static final boolean DEFAULT_PROPERTY_FIRST_UPPER = false;
     public static final char DEFAULT_PATH_SEPARATOR = '/';
     private static final Config GLOBAL = new Config();
     private static final long serialVersionUID = 2865793267410367814L;
@@ -69,6 +71,7 @@ public class Config implements Cloneable, Serializable
     private boolean _multiOption;
     private boolean _multiSection;
     private char _pathSeparator;
+    private boolean _propertyFirstUpper;
     private boolean _quoteOptionName;
     private boolean _quoteOptionValue;
     private boolean _strictOperator;
@@ -217,6 +220,11 @@ public class Config implements Cloneable, Serializable
         _pathSeparator = value;
     }
 
+    public void setPropertyFirstUpper(boolean value)
+    {
+        _propertyFirstUpper = value;
+    }
+
     public void setQuoteOptionName(boolean value)
     {
         _quoteOptionName = value;
@@ -225,6 +233,11 @@ public class Config implements Cloneable, Serializable
     public void setQuoteOptionValue(boolean value)
     {
         _quoteOptionValue = value;
+    }
+
+    public boolean isPropertyFirstUpper()
+    {
+        return _propertyFirstUpper;
     }
 
     public boolean isStrictOperator()
@@ -299,6 +312,7 @@ public class Config implements Cloneable, Serializable
         _quoteOptionValue = getBoolean(PROP_QUOTE_OPTION_VALUE, DEFAULT_QUOTE_OPTION_VALUE);
         _pathSeparator = getChar(PROP_PATH_SEPARATOR, DEFAULT_PATH_SEPARATOR);
         _tree = getBoolean(PROP_TREE, DEFAULT_TREE);
+        _propertyFirstUpper = getBoolean(PROP_PROPERTY_FIRST_UPPER, DEFAULT_PROPERTY_FIRST_UPPER);
     }
 
     private boolean getBoolean(String name, boolean defaultValue)
