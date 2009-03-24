@@ -19,15 +19,11 @@
 <document xmlns="http://maven.apache.org/XDOC/2.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
-
     <properties>
         <title>Java API for handling Windows ini file format</title>
     </properties>
-
     <body>
-
         <section name="Java API for handling Windows ini file format">
-
             <p>
  The [ini4j] is a simple Java API for handling configuration files in Windows .ini format.
  Additionally, the library includes
@@ -40,7 +36,38 @@
                 <li><a href="download.html"><img src="img/download.png"/> Download</a></li>
                 <li><a href="community.html"><img src="img/community.png"/> Community</a></li>
             </menu>
+            <subsection name="Simple document model">
+                <p>
+                    [ini4j] has very simple, but intuitive document model for windows .ini files.
+                    Basicly it is two level of Maps. You can use full power of Collections API.
+                    The Ini (Wini) class is map of Sections. Section is map of name/value pairs (options).
+                </p>
+            </subsection>
+            <subsection name="Multiply option/section values">
+                <p>
+                    In addition of model above, [ini4j] is able to deal with multiply option/section
+                    entries. It can be handled with MultiMap interface, which simply extends Map
+                    interface, and allow multiply values per key.
+                </p>
+            </subsection>
+            <subsection name="Expression handling">
+                <p>
+                    Many .ini files contains same values more than one times. With [ini4j] you are
+                    able to refer other options value via simple macro substitution. The basic
+                    syntax is the commonly used ${REF} format: ${section/option}
+                    (or with multi option: ${section/option[index]})
+                </p>
+            </subsection>
+            <subsection name="java.util.Properties replacement">
+                <p>
+                    [ini4j] contains class <code>Options</code> which is a better
+                    Properties replacement. <code>Options</code> use .properties
+                    file format, but allow macro/variable substitution, mult value
+                    properties. Unlike original java.util.Properties, <code>Options</code> implements
+                    Map&lt;String,String&gt;, so it more confortable to use
+                    standard Collections api.
+                </p>
+            </subsection>
         </section>
     </body>
-
 </document>

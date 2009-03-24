@@ -18,5 +18,5 @@ Tutorials
  * {{{tutorial/PrefsTutorial.java.html}Preferences Tutorial}}
  Introduce [ini4j] library's Preferences interface.
 
- * {{{tutorial/dwarfs.ini.html}dwarfs.ini}}
+ * {{{sample/dwarfs.ini.html}dwarfs.ini}}
  Sample .ini file used in tutorials.
