@@ -15,84 +15,23 @@
  */
 package org.ini4j;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class BasicCommentedMultiMap<K, V> extends BasicMultiMap<K, V> implements CommentedMap<K, V>
+public class BasicCommentedMultiMap<K, V> extends BasicMetaMultiMap<K, V> implements CommentedMap<K, V>
 {
     private static final long serialVersionUID = -3191166132698733784L;
-    private Map<K, String> _comments;
+    private static final String META_COMMENT = "comment";
 
     @Override public String getComment(Object key)
     {
-        return (_comments == null) ? null : _comments.get(key);
-    }
-
-    @Override public void clear()
-    {
-        super.clear();
-        if (_comments != null)
-        {
-            _comments.clear();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override public void putAll(Map<? extends K, ? extends V> map)
-    {
-        super.putAll(map);
-        if (map instanceof BasicCommentedMultiMap)
-        {
-            Map<K, String> cms = ((BasicCommentedMultiMap) map)._comments;
-
-            if (cms != null)
-            {
-                comments().putAll(cms);
-            }
-        }
+        return getMeta(META_COMMENT, key);
     }
 
     @Override public String putComment(K key, String comment)
     {
-        return comments().put(key, comment);
-    }
-
-    @Override public V remove(Object key)
-    {
-        V ret = super.remove(key);
-
-        if (_comments != null)
-        {
-            _comments.remove(key);
-        }
-
-        return ret;
-    }
-
-    @Override public V remove(Object key, int index)
-    {
-        V ret = super.remove(key, index);
-
-        if ((length(key) == 0) && (_comments != null))
-        {
-            _comments.remove(key);
-        }
-
-        return ret;
+        return putMeta(META_COMMENT, key, comment);
     }
 
     @Override public String removeComment(Object key)
     {
-        return (_comments == null) ? null : _comments.remove(key);
-    }
-
-    private Map<K, String> comments()
-    {
-        if (_comments == null)
-        {
-            _comments = new HashMap<K, String>();
-        }
-
-        return _comments;
+        return removeMeta(META_COMMENT, key);
     }
 }

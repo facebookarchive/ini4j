@@ -66,7 +66,7 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
             }
         }
 
-        Section section = new BasicSection(this, name);
+        Section section = newSection(name);
 
         add(name, section);
 
@@ -143,6 +143,11 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
         return _propertyFirstUpper;
     }
 
+    protected Section newSection(String name)
+    {
+        return new BasicSection(this, name);
+    }
+
     protected void resolve(StringBuilder buffer, Section owner)
     {
         Matcher m = EXPRESSION.matcher(buffer);
@@ -205,21 +210,22 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
     {
         @Override protected Object getPropertySpi(String property, Class<?> clazz)
         {
+            String key = transform(property);
             Object o = null;
 
-            if (containsKey(property))
+            if (containsKey(key))
             {
                 if (clazz.isArray())
                 {
-                    o = Array.newInstance(clazz.getComponentType(), length(property));
-                    for (int i = 0; i < length(property); i++)
+                    o = Array.newInstance(clazz.getComponentType(), length(key));
+                    for (int i = 0; i < length(key); i++)
                     {
-                        Array.set(o, i, get(property, i).as(clazz.getComponentType()));
+                        Array.set(o, i, get(key, i).as(clazz.getComponentType()));
                     }
                 }
                 else
                 {
-                    o = get(property).as(clazz);
+                    o = get(key).as(clazz);
                 }
             }
 
@@ -228,21 +234,23 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
 
         @Override protected void setPropertySpi(String property, Object value, Class<?> clazz)
         {
-            remove(property);
+            String key = transform(property);
+
+            remove(key);
             if (value != null)
             {
                 if (clazz.isArray())
                 {
                     for (int i = 0; i < Array.getLength(value); i++)
                     {
-                        Section sec = add(property);
+                        Section sec = add(key);
 
                         sec.from(Array.get(value, i));
                     }
                 }
                 else
                 {
-                    Section sec = add(property);
+                    Section sec = add(key);
 
                     sec.from(value);
                 }
@@ -251,7 +259,23 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
 
         @Override protected boolean hasPropertySpi(String property)
         {
-            return containsKey(property);
+            return containsKey(transform(property));
+        }
+
+        protected String transform(String property)
+        {
+            String ret = property;
+
+            if (isPropertyFirstUpper())
+            {
+                StringBuilder buff = new StringBuilder();
+
+                buff.append(Character.toUpperCase(property.charAt(0)));
+                buff.append(property.substring(1));
+                ret = buff.toString();
+            }
+
+            return ret;
         }
     }
 }

@@ -447,7 +447,7 @@ public class ConfigParser implements Serializable
             {
                 if (_defaultSection == null)
                 {
-                    _defaultSection = new BasicSection(this, name);
+                    _defaultSection = newSection(name);
                 }
 
                 section = _defaultSection;

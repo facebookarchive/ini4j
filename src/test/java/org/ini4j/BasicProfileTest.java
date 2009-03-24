@@ -60,6 +60,16 @@ public class BasicProfileTest
         assertNull(prof.remove(SECTION, Dwarf.PROP_FORTUNE_NUMBER));
     }
 
+    @Test public void testFirstUpper()
+    {
+        BasicProfile prof = new BasicProfile(true, true);
+        DwarfsRW dwarfs = prof.as(DwarfsRW.class);
+
+        dwarfs.setBashful(DwarfsData.bashful);
+        assertTrue(prof.containsKey("Bashful"));
+        assertNotNull(dwarfs.getBashful());
+    }
+
     @Test public void testFromToAs() throws Exception
     {
         BasicProfile prof = new BasicProfile();
@@ -295,24 +305,19 @@ public class BasicProfileTest
 
     @Test public void testSetter()
     {
-        Config cfg = new Config();
-
-        cfg.setMultiSection(true);
-        Ini ini = new Ini();
-
-        ini.setConfig(cfg);
-        Global g = ini.as(Global.class);
+        BasicProfile prof = new BasicProfile();
+        Global g = prof.as(Global.class);
         Section s1 = new SectionBean();
         Section s2 = new SectionBean();
         Section[] all = new Section[] { s1, s2 };
 
         g.setSection(all);
-        assertEquals(2, ini.length("section"));
+        assertEquals(2, prof.length("section"));
         assertNull(g.getSolo());
         g.setSolo(s1);
         assertNotNull(g.getSolo());
         g.setSolo(null);
-        assertEquals(0, ini.length("solo"));
+        assertEquals(0, prof.length("solo"));
     }
 
     private void fromToAs(BasicProfile prof, DwarfData dwarf)

@@ -105,25 +105,25 @@ public class Ini extends BasicProfile implements Persistable
 
     @Override public void load(InputStream input) throws IOException, InvalidFileFormatException
     {
-        IniParser.newInstance(getConfig()).parse(input, new Builder());
+        IniParser.newInstance(getConfig()).parse(input, newBuilder());
     }
 
     @Override public void load(Reader input) throws IOException, InvalidFileFormatException
     {
-        IniParser.newInstance(getConfig()).parse(input, new Builder());
+        IniParser.newInstance(getConfig()).parse(input, newBuilder());
     }
 
     @Override public void load(File input) throws IOException, InvalidFileFormatException
     {
         Reader reader = new FileReader(input);
 
-        IniParser.newInstance(getConfig()).parse(reader, new Builder());
+        IniParser.newInstance(getConfig()).parse(reader, newBuilder());
         reader.close();
     }
 
     @Override public void load(URL input) throws IOException, InvalidFileFormatException
     {
-        IniParser.newInstance(getConfig()).parse(input, new Builder());
+        IniParser.newInstance(getConfig()).parse(input, newBuilder());
     }
 
     @Override public void store() throws IOException
@@ -172,6 +172,11 @@ public class Ini extends BasicProfile implements Persistable
     @Override protected boolean isPropertyFirstUpper()
     {
         return getConfig().isPropertyFirstUpper();
+    }
+
+    protected IniHandler newBuilder()
+    {
+        return new Builder();
     }
 
     protected void store(IniHandler formatter) throws IOException
