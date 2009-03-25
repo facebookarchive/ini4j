@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ini4j</groupId>
     <artifactId>ini4j</artifactId>
-    <version>0.4.2-SNAPSHOT</version>
+    <version>0.5.0-SNAPSHOT</version>
     <name>ini4j</name>
     <description>Java API for handling configuration files in Windows .ini format. The library includes its own Map based API, Java Preferences API and Java Beans API for handling .ini files. Additionally, the library includes a feature rich (variable/macro substitution, multiply property values, etc) java.util.Properties replacement.</description>
     <packaging>jar</packaging>

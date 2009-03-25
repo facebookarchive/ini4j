@@ -143,7 +143,7 @@ class BasicSection extends BasicOptionMap implements Profile.Section
         StringBuilder buff = new StringBuilder();
 
         buff.append('^');
-        buff.append(name);
+        buff.append(Pattern.quote(name));
         buff.append(REGEXP_ESCAPE_CHAR);
         buff.append(_profile.getPathSeparator());
         buff.append("[^");

@@ -39,12 +39,13 @@ public abstract class AbstractFormatter implements HandlerBase
         for (String line : comment.split(NEWLINE))
         {
             getOutput().print(COMMENT);
-            getOutput().println(line);
+            getOutput().print(line);
+            getOutput().print(getConfig().getLineSeparator());
         }
 
         if (_header)
         {
-            getOutput().println();
+            getOutput().print(getConfig().getLineSeparator());
             setHeader(false);
         }
     }
@@ -66,7 +67,7 @@ public abstract class AbstractFormatter implements HandlerBase
 
             if (getConfig().isEmptyOption() || (optionValue != null))
             {
-                getOutput().println();
+                getOutput().print(getConfig().getLineSeparator());
             }
         }
         else
@@ -79,7 +80,8 @@ public abstract class AbstractFormatter implements HandlerBase
                 getOutput().print(SPACE);
                 getOutput().print(OPERATOR);
                 getOutput().print(SPACE);
-                getOutput().println(escapeFilter(value));
+                getOutput().print(escapeFilter(value));
+                getOutput().print(getConfig().getLineSeparator());
             }
         }
 

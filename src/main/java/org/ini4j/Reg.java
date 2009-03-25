@@ -18,15 +18,119 @@ package org.ini4j;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.Writer;
 
 import java.net.URL;
+
+import java.nio.charset.Charset;
 
 public class Reg extends Wini
 {
     private static final long serialVersionUID = -1485602876922985912L;
+    public static final String DEFAULT_VERSION = "Windows Registry Editor Version 5.00";
+    private String _version;
 
-    public static enum Type
+    public Reg()
+    {
+        getConfig().setStrictOperator(true);
+        getConfig().setEmptySection(true);
+        getConfig().setFileEncoding(Charset.forName("UnicodeLittle"));
+        getConfig().setLineSeparator("\r\n");
+    }
+
+    public Reg(File input) throws IOException, InvalidFileFormatException
+    {
+        this();
+        load(input);
+    }
+
+    public Reg(URL input) throws IOException, InvalidFileFormatException
+    {
+        this();
+        load(input);
+    }
+
+    public Reg(InputStream input) throws IOException, InvalidFileFormatException
+    {
+        this();
+        load(input);
+    }
+
+    public Reg(Reader input) throws IOException, InvalidFileFormatException
+    {
+        this();
+        load(input);
+    }
+
+    public String getVersion()
+    {
+        return _version;
+    }
+
+    public void setVersion(String value)
+    {
+        _version = value;
+    }
+
+    @Override public void load(InputStream input) throws IOException, InvalidFileFormatException
+    {
+        load(new InputStreamReader(input, getConfig().getFileEncoding()));
+    }
+
+    @Override public void load(URL input) throws IOException, InvalidFileFormatException
+    {
+        load(new InputStreamReader(input.openStream(), getConfig().getFileEncoding()));
+    }
+
+    @Override public void load(Reader input) throws IOException, InvalidFileFormatException
+    {
+        int newline = 2;
+        StringBuilder buff = new StringBuilder();
+
+        for (int c = input.read(); c != -1; c = input.read())
+        {
+            if (c == '\n')
+            {
+                newline--;
+                if (newline == 0)
+                {
+                    break;
+                }
+            }
+            else if ((c != '\r') && (newline != 1))
+            {
+                buff.append((char) c);
+            }
+        }
+
+        if (buff.length() == 0)
+        {
+            throw new InvalidFileFormatException("Missing version header");
+        }
+
+        setVersion(buff.toString());
+        super.load(input);
+    }
+
+    @Override public void store(OutputStream output) throws IOException
+    {
+        store(new OutputStreamWriter(output, getConfig().getFileEncoding()));
+    }
+
+    @Override public void store(Writer output) throws IOException
+    {
+        output.write((_version == null) ? DEFAULT_VERSION : _version);
+        output.write(getConfig().getLineSeparator());
+        output.write(getConfig().getLineSeparator());
+        super.store(output);
+    }
+
+/*
+     private static enum Type
     {
         REG_NONE(0, "hex(0)"),
         REG_SZ(1, ""),
@@ -62,43 +166,5 @@ public class Reg extends Wini
         }
     }
 
-    public Reg()
-    {
-        getConfig().setStripOptionNameQuotes(true);
-        getConfig().setStripOptionValueQuotes(false);
-        getConfig().setStrictOperator(true);
-    }
-
-    public Reg(File input) throws IOException, InvalidFileFormatException
-    {
-        this();
-        load(input);
-    }
-
-    public Reg(URL input) throws IOException, InvalidFileFormatException
-    {
-        this();
-        load(input);
-    }
-
-    public Reg(InputStream input) throws IOException, InvalidFileFormatException
-    {
-        this();
-        load(input);
-    }
-
-    public Reg(Reader input) throws IOException, InvalidFileFormatException
-    {
-        this();
-        load(input);
-    }
-
-    public static Value parse(String str)
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    public static class Value
-    {
-    }
+ */
 }

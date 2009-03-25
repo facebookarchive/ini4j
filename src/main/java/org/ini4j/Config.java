@@ -17,6 +17,8 @@ package org.ini4j;
 
 import java.io.Serializable;
 
+import java.nio.charset.Charset;
+
 public class Config implements Cloneable, Serializable
 {
     public static final String KEY_PREFIX = "org.ini4j.config.";
@@ -32,13 +34,11 @@ public class Config implements Cloneable, Serializable
     public static final String PROP_STRICT_OPERATOR = "strictOperator";
     public static final String PROP_UNNAMED_SECTION = "unnamedSection";
     public static final String PROP_ESCAPE = "escape";
-    public static final String PROP_STRIP_OPTION_NAME_QUOTES = "stripOptionNameQuotes";
-    public static final String PROP_STRIP_OPTION_VALUE_QUOTES = "stripOptionValueQuotes";
-    public static final String PROP_QUOTE_OPTION_NAME = "quoteOptionName";
-    public static final String PROP_QUOTE_OPTION_VALUE = "quoteOptionValue";
     public static final String PROP_PATH_SEPARATOR = "pathSeparator";
     public static final String PROP_TREE = "tree";
     public static final String PROP_PROPERTY_FIRST_UPPER = "propertyFirstUpper";
+    public static final String PROP_FILE_ENCODING = "fileEncoding";
+    public static final String PROP_LINE_SEPARATOR = "lineSeparator";
     public static final boolean DEFAULT_EMPTY_OPTION = false;
     public static final boolean DEFAULT_EMPTY_SECTION = false;
     public static final boolean DEFAULT_GLOBAL_SECTION = false;
@@ -51,32 +51,28 @@ public class Config implements Cloneable, Serializable
     public static final boolean DEFAULT_STRICT_OPERATOR = false;
     public static final boolean DEFAULT_UNNAMED_SECTION = false;
     public static final boolean DEFAULT_ESCAPE = true;
-    public static final boolean DEFAULT_STRIP_OPTION_NAME_QUOTES = false;
-    public static final boolean DEFAULT_STRIP_OPTION_VALUE_QUOTES = false;
-    public static final boolean DEFAULT_QUOTE_OPTION_NAME = false;
-    public static final boolean DEFAULT_QUOTE_OPTION_VALUE = false;
     public static final boolean DEFAULT_TREE = true;
     public static final boolean DEFAULT_PROPERTY_FIRST_UPPER = false;
     public static final char DEFAULT_PATH_SEPARATOR = '/';
+    public static final String DEFAULT_LINE_SEPARATOR = System.getProperty("line.separator");
+    public static final Charset DEFAULT_FILE_ENCODING = Charset.forName("UTF-8");
     private static final Config GLOBAL = new Config();
     private static final long serialVersionUID = 2865793267410367814L;
     private boolean _emptyOption;
     private boolean _emptySection;
     private boolean _escape;
+    private Charset _fileEncoding;
     private boolean _globalSection;
     private String _globalSectionName;
     private boolean _include;
+    private String _lineSeparator;
     private boolean _lowerCaseOption;
     private boolean _lowerCaseSection;
     private boolean _multiOption;
     private boolean _multiSection;
     private char _pathSeparator;
     private boolean _propertyFirstUpper;
-    private boolean _quoteOptionName;
-    private boolean _quoteOptionValue;
     private boolean _strictOperator;
-    private boolean _stripOptionNameQuotes;
-    private boolean _stripOptionValueQuotes;
     private boolean _tree;
     private boolean _unnamedSection;
 
@@ -100,16 +96,6 @@ public class Config implements Cloneable, Serializable
         return _include;
     }
 
-    public boolean isQuoteOptionName()
-    {
-        return _quoteOptionName;
-    }
-
-    public boolean isQuoteOptionValue()
-    {
-        return _quoteOptionValue;
-    }
-
     public boolean isTree()
     {
         return _tree;
@@ -130,6 +116,16 @@ public class Config implements Cloneable, Serializable
         _escape = value;
     }
 
+    public Charset getFileEncoding()
+    {
+        return _fileEncoding;
+    }
+
+    public void setFileEncoding(Charset value)
+    {
+        _fileEncoding = value;
+    }
+
     public void setGlobalSection(boolean value)
     {
         _globalSection = value;
@@ -148,6 +144,16 @@ public class Config implements Cloneable, Serializable
     public void setInclude(boolean value)
     {
         _include = value;
+    }
+
+    public String getLineSeparator()
+    {
+        return _lineSeparator;
+    }
+
+    public void setLineSeparator(String value)
+    {
+        _lineSeparator = value;
     }
 
     public void setLowerCaseOption(boolean value)
@@ -225,16 +231,6 @@ public class Config implements Cloneable, Serializable
         _propertyFirstUpper = value;
     }
 
-    public void setQuoteOptionName(boolean value)
-    {
-        _quoteOptionName = value;
-    }
-
-    public void setQuoteOptionValue(boolean value)
-    {
-        _quoteOptionValue = value;
-    }
-
     public boolean isPropertyFirstUpper()
     {
         return _propertyFirstUpper;
@@ -245,29 +241,9 @@ public class Config implements Cloneable, Serializable
         return _strictOperator;
     }
 
-    public boolean isStripOptionNameQuotes()
-    {
-        return _stripOptionNameQuotes;
-    }
-
-    public boolean isStripOptionValueQuotes()
-    {
-        return _stripOptionValueQuotes;
-    }
-
     public void setStrictOperator(boolean value)
     {
         _strictOperator = value;
-    }
-
-    public void setStripOptionNameQuotes(boolean value)
-    {
-        _stripOptionNameQuotes = value;
-    }
-
-    public void setStripOptionValueQuotes(boolean value)
-    {
-        _stripOptionValueQuotes = value;
     }
 
     public void setTree(boolean value)
@@ -306,13 +282,11 @@ public class Config implements Cloneable, Serializable
         _strictOperator = getBoolean(PROP_STRICT_OPERATOR, DEFAULT_STRICT_OPERATOR);
         _unnamedSection = getBoolean(PROP_UNNAMED_SECTION, DEFAULT_UNNAMED_SECTION);
         _escape = getBoolean(PROP_ESCAPE, DEFAULT_ESCAPE);
-        _stripOptionNameQuotes = getBoolean(PROP_STRIP_OPTION_NAME_QUOTES, DEFAULT_STRIP_OPTION_NAME_QUOTES);
-        _stripOptionValueQuotes = getBoolean(PROP_STRIP_OPTION_VALUE_QUOTES, DEFAULT_STRIP_OPTION_VALUE_QUOTES);
-        _quoteOptionName = getBoolean(PROP_QUOTE_OPTION_NAME, DEFAULT_QUOTE_OPTION_NAME);
-        _quoteOptionValue = getBoolean(PROP_QUOTE_OPTION_VALUE, DEFAULT_QUOTE_OPTION_VALUE);
         _pathSeparator = getChar(PROP_PATH_SEPARATOR, DEFAULT_PATH_SEPARATOR);
         _tree = getBoolean(PROP_TREE, DEFAULT_TREE);
         _propertyFirstUpper = getBoolean(PROP_PROPERTY_FIRST_UPPER, DEFAULT_PROPERTY_FIRST_UPPER);
+        _lineSeparator = getString(PROP_LINE_SEPARATOR, DEFAULT_LINE_SEPARATOR);
+        _fileEncoding = getCharset(PROP_FILE_ENCODING, DEFAULT_FILE_ENCODING);
     }
 
     private boolean getBoolean(String name, boolean defaultValue)
@@ -327,6 +301,13 @@ public class Config implements Cloneable, Serializable
         String key = KEY_PREFIX + name;
 
         return System.getProperties().containsKey(key) ? System.getProperty(key).charAt(0) : defaultValue;
+    }
+
+    private Charset getCharset(String name, Charset defaultValue)
+    {
+        String key = KEY_PREFIX + name;
+
+        return System.getProperties().containsKey(key) ? Charset.forName(System.getProperty(key)) : defaultValue;
     }
 
     private String getString(String name, String defaultValue)

@@ -35,7 +35,7 @@ public class IniFormatter extends AbstractFormatter implements IniHandler
 
     public static IniFormatter newInstance(OutputStream out)
     {
-        return newInstance(new OutputStreamWriter(out));
+        return newInstance(new OutputStreamWriter(out, Config.getGlobal().getFileEncoding()));
     }
 
     public static IniFormatter newInstance(Writer out, Config config)
@@ -49,7 +49,7 @@ public class IniFormatter extends AbstractFormatter implements IniHandler
 
     public static IniFormatter newInstance(OutputStream out, Config config)
     {
-        return newInstance(new OutputStreamWriter(out), config);
+        return newInstance(new OutputStreamWriter(out, config.getFileEncoding()), config);
     }
 
     @Override public void endIni()
@@ -59,7 +59,7 @@ public class IniFormatter extends AbstractFormatter implements IniHandler
 
     @Override public void endSection()
     {
-        getOutput().println();
+        getOutput().print(getConfig().getLineSeparator());
     }
 
     @Override public void startIni()
@@ -74,7 +74,8 @@ public class IniFormatter extends AbstractFormatter implements IniHandler
         {
             getOutput().print(IniParser.SECTION_BEGIN);
             getOutput().print(escapeFilter(sectionName));
-            getOutput().println(IniParser.SECTION_END);
+            getOutput().print(IniParser.SECTION_END);
+            getOutput().print(getConfig().getLineSeparator());
         }
     }
 

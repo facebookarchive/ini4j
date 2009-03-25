@@ -21,6 +21,8 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.nio.charset.Charset;
+
 public class ConfigTest
 {
     @AfterClass public static void tearDownClass() throws Exception
@@ -54,12 +56,10 @@ public class ConfigTest
         setBoolean(Config.PROP_UNNAMED_SECTION, exp.isUnnamedSection());
         setBoolean(Config.PROP_ESCAPE, exp.isEscape());
         setChar(Config.PROP_PATH_SEPARATOR, exp.getPathSeparator());
-        setBoolean(Config.PROP_STRIP_OPTION_NAME_QUOTES, exp.isStripOptionNameQuotes());
-        setBoolean(Config.PROP_STRIP_OPTION_VALUE_QUOTES, exp.isStripOptionValueQuotes());
-        setBoolean(Config.PROP_QUOTE_OPTION_NAME, exp.isQuoteOptionName());
-        setBoolean(Config.PROP_QUOTE_OPTION_VALUE, exp.isQuoteOptionValue());
         setBoolean(Config.PROP_TREE, exp.isTree());
         setBoolean(Config.PROP_PROPERTY_FIRST_UPPER, exp.isPropertyFirstUpper());
+        setString(Config.PROP_LINE_SEPARATOR, exp.getLineSeparator());
+        setCharset(Config.PROP_FILE_ENCODING, exp.getFileEncoding());
         Config cfg = new Config();
 
         assertEquals(exp, cfg);
@@ -71,6 +71,11 @@ public class ConfigTest
     }
 
     private void setChar(String prop, char value)
+    {
+        System.setProperty(Config.KEY_PREFIX + prop, String.valueOf(value));
+    }
+
+    private void setCharset(String prop, Charset value)
     {
         System.setProperty(Config.KEY_PREFIX + prop, String.valueOf(value));
     }
@@ -96,11 +101,9 @@ public class ConfigTest
         Assert.assertEquals(exp.getGlobalSectionName(), act.getGlobalSectionName());
         Assert.assertEquals(exp.getPathSeparator(), act.getPathSeparator());
         Assert.assertEquals(exp.isTree(), act.isTree());
-        Assert.assertEquals(exp.isQuoteOptionName(), act.isQuoteOptionName());
-        Assert.assertEquals(exp.isQuoteOptionValue(), act.isQuoteOptionValue());
-        Assert.assertEquals(exp.isStripOptionNameQuotes(), act.isStripOptionNameQuotes());
-        Assert.assertEquals(exp.isStripOptionValueQuotes(), act.isStripOptionValueQuotes());
         Assert.assertEquals(exp.isPropertyFirstUpper(), act.isPropertyFirstUpper());
+        Assert.assertEquals(exp.getLineSeparator(), act.getLineSeparator());
+        Assert.assertEquals(exp.getFileEncoding(), act.getFileEncoding());
     }
 
     private Config newDefaultConfig()
@@ -121,11 +124,9 @@ public class ConfigTest
         cfg.setUnnamedSection(false);
         cfg.setPathSeparator('/');
         cfg.setTree(true);
-        cfg.setQuoteOptionName(false);
-        cfg.setQuoteOptionValue(false);
-        cfg.setStripOptionNameQuotes(false);
-        cfg.setStripOptionValueQuotes(false);
         cfg.setPropertyFirstUpper(false);
+        cfg.setLineSeparator(System.getProperty("line.separator"));
+        cfg.setFileEncoding(Charset.forName("UTF-8"));
 
         return cfg;
     }
@@ -148,11 +149,9 @@ public class ConfigTest
         cfg.setUnnamedSection(!cfg.isUnnamedSection());
         cfg.setPathSeparator('?');
         cfg.setTree(!cfg.isTree());
-        cfg.setQuoteOptionName(!cfg.isQuoteOptionName());
-        cfg.setQuoteOptionValue(!cfg.isQuoteOptionValue());
-        cfg.setStripOptionNameQuotes(!cfg.isStripOptionNameQuotes());
-        cfg.setStripOptionValueQuotes(!cfg.isStripOptionValueQuotes());
         cfg.setPropertyFirstUpper(!cfg.isPropertyFirstUpper());
+        cfg.setLineSeparator("\t");
+        cfg.setFileEncoding(Charset.forName("ASCII"));
 
         return cfg;
     }

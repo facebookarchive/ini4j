@@ -20,9 +20,9 @@ import org.ini4j.spi.OptionsHandler;
 import org.ini4j.spi.OptionsParser;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -121,10 +121,10 @@ public class Options extends BasicOptionMap implements Persistable
 
     @Override public void load(File input) throws IOException, InvalidFileFormatException
     {
-        Reader reader = new FileReader(input);
+        InputStream stream = new FileInputStream(input);
 
-        OptionsParser.newInstance(getConfig()).parse(reader, new Builder());
-        reader.close();
+        OptionsParser.newInstance(getConfig()).parse(stream, new Builder());
+        stream.close();
     }
 
     @Override public void store() throws IOException
@@ -149,10 +149,10 @@ public class Options extends BasicOptionMap implements Persistable
 
     @Override public void store(File output) throws IOException
     {
-        Writer writer = new FileWriter(output);
+        OutputStream stream = new FileOutputStream(output);
 
-        store(writer);
-        writer.close();
+        store(stream);
+        stream.close();
     }
 
     protected Config getConfig()

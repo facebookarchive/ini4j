@@ -28,8 +28,6 @@ import java.util.Locale;
 
 public abstract class AbstractParser
 {
-    private static final char DOUBLE_QUOTE = '"';
-    private static final char QUOTE = '\'';
     private final String _comments;
     private Config _config = Config.getGlobal();
     private final String _operators;
@@ -50,13 +48,6 @@ public abstract class AbstractParser
         return _config;
     }
 
-    protected String nameFilter(String orig)
-    {
-        String ret = unescapeFilter(orig).trim();
-
-        return getConfig().isStripOptionNameQuotes() ? unquote(ret) : ret;
-    }
-
     protected void parseError(String line, int lineNumber) throws InvalidFileFormatException
     {
         throw new InvalidFileFormatException("parse error (at line: " + lineNumber + "): " + line);
@@ -67,39 +58,19 @@ public abstract class AbstractParser
         return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
     }
 
-    protected String unquote(String orig)
-    {
-        String ret = orig;
-
-        if ((orig != null) && (orig.length() > 2)
-              && (((orig.charAt(0) == DOUBLE_QUOTE) && (orig.charAt(orig.length() - 1) == DOUBLE_QUOTE)) || ((orig.charAt(0) == QUOTE) && (orig.charAt(orig.length() - 1) == QUOTE))))
-        {
-            ret = orig.substring(1, orig.length() - 1);
-        }
-
-        return ret;
-    }
-
-    protected String valueFilter(String orig)
-    {
-        String ret = unescapeFilter(orig).trim();
-
-        return getConfig().isStripOptionValueQuotes() ? unquote(ret) : ret;
-    }
-
     IniSource newIniSource(InputStream input, HandlerBase handler)
     {
-        return new IniSource(input, handler, getConfig().isInclude(), _comments);
+        return new IniSource(input, handler, getConfig().isInclude(), _comments, getConfig().getFileEncoding());
     }
 
     IniSource newIniSource(Reader input, HandlerBase handler)
     {
-        return new IniSource(input, handler, getConfig().isInclude(), _comments);
+        return new IniSource(input, handler, getConfig().isInclude(), _comments, getConfig().getFileEncoding());
     }
 
     IniSource newIniSource(URL input, HandlerBase handler) throws IOException
     {
-        return new IniSource(input, handler, getConfig().isInclude(), _comments);
+        return new IniSource(input, handler, getConfig().isInclude(), _comments, getConfig().getFileEncoding());
     }
 
     void parseOptionLine(String line, HandlerBase handler, int lineNumber) throws InvalidFileFormatException
@@ -121,8 +92,8 @@ public abstract class AbstractParser
         }
         else
         {
-            name = nameFilter(line.substring(0, idx));
-            value = valueFilter(line.substring(idx + 1));
+            name = unescapeFilter(line.substring(0, idx)).trim();
+            value = unescapeFilter(line.substring(idx + 1)).trim();
         }
 
         if (name.length() == 0)

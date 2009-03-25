@@ -17,6 +17,8 @@ package org.ini4j.spi;
 
 import org.easymock.EasyMock;
 
+import org.ini4j.Config;
+
 import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
@@ -70,7 +72,7 @@ public class IniSourceTest
         outer.append("2" + OUTER + '\n');
         outer.append(";-2" + OUTER + '\n');
         InputStream in = new ByteArrayInputStream(outer.toString().getBytes());
-        IniSource src = new IniSource(in, handler, true, COMMENTS);
+        IniSource src = new IniSource(in, handler, true, COMMENTS, Config.DEFAULT_FILE_ENCODING);
 
         assertEquals("1" + OUTER, src.readLine());
         assertEquals(2, src.getLineNumber());
@@ -80,6 +82,16 @@ public class IniSourceTest
         assertEquals(2, src.getLineNumber());
         assertEquals("1" + PART1, src.readLine());
         assertEquals(2, src.getLineNumber());
+        assertEquals("2" + PART1, src.readLine());
+        assertEquals(4, src.getLineNumber());
+        assertEquals("3" + PART1 + "\\\\", src.readLine());
+        assertEquals(5, src.getLineNumber());
+        assertEquals("4:\\\\part1.txt", src.readLine());
+        assertEquals(7, src.getLineNumber());
+        assertEquals("5" + PART1 + "\\\\\\\\", src.readLine());
+        assertEquals(8, src.getLineNumber());
+        assertEquals("6" + PART1 + ";", src.readLine());
+        assertEquals(10, src.getLineNumber());
         assertEquals("2" + INCLUDE, src.readLine());
         assertEquals(6, src.getLineNumber());
         assertEquals("3" + INCLUDE, src.readLine());
@@ -105,7 +117,7 @@ public class IniSourceTest
         handler.handleComment("-3" + NESTED);
         handler.handleComment("-4" + NESTED);
         EasyMock.replay(handler);
-        IniSource src = new IniSource(Helper.getResourceURL(NESTED_PATH), handler, false, COMMENTS);
+        IniSource src = new IniSource(Helper.getResourceURL(NESTED_PATH), handler, false, COMMENTS, Config.DEFAULT_FILE_ENCODING);
 
         assertEquals("1" + NESTED, src.readLine());
         assertEquals("<include.txt>", src.readLine());

@@ -20,9 +20,9 @@ import org.ini4j.spi.IniHandler;
 import org.ini4j.spi.IniParser;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -115,10 +115,10 @@ public class Ini extends BasicProfile implements Persistable
 
     @Override public void load(File input) throws IOException, InvalidFileFormatException
     {
-        Reader reader = new FileReader(input);
+        InputStream stream = new FileInputStream(input);
 
-        IniParser.newInstance(getConfig()).parse(reader, newBuilder());
-        reader.close();
+        IniParser.newInstance(getConfig()).parse(stream, newBuilder());
+        stream.close();
     }
 
     @Override public void load(URL input) throws IOException, InvalidFileFormatException
@@ -148,10 +148,10 @@ public class Ini extends BasicProfile implements Persistable
 
     @Override public void store(File output) throws IOException
     {
-        Writer writer = new FileWriter(output);
+        OutputStream stream = new FileOutputStream(output);
 
-        store(IniFormatter.newInstance(writer, getConfig()));
-        writer.close();
+        store(IniFormatter.newInstance(stream, getConfig()));
+        stream.close();
     }
 
     protected Config getConfig()

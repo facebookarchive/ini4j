@@ -23,35 +23,40 @@ import java.io.Reader;
 
 import java.net.URL;
 
+import java.nio.charset.Charset;
+
 class IniSource
 {
     public static final char INCLUDE_BEGIN = '<';
     public static final char INCLUDE_END = '>';
     public static final char INCLUDE_OPTIONAL = '?';
+    private static final char ESCAPE_CHAR = '\\';
     private static final String NEWLINE = "\n";
     protected final boolean allowInclude;
     protected final String commentChars;
     private URL _base;
     private IniSource _chain;
+    private final Charset _fileEncoding;
     private final HandlerBase _handler;
     private final LineNumberReader _reader;
 
-    IniSource(InputStream input, HandlerBase handler, boolean includeFlag, String comments)
+    IniSource(InputStream input, HandlerBase handler, boolean includeFlag, String comments, Charset fileEncoding)
     {
-        this(new InputStreamReader(input), handler, includeFlag, comments);
+        this(new InputStreamReader(input, fileEncoding), handler, includeFlag, comments, fileEncoding);
     }
 
-    IniSource(Reader input, HandlerBase handler, boolean includeFlag, String comments)
+    IniSource(Reader input, HandlerBase handler, boolean includeFlag, String comments, Charset fileEncoding)
     {
         _reader = new LineNumberReader(input);
         _handler = handler;
         allowInclude = includeFlag;
         commentChars = comments;
+        _fileEncoding = fileEncoding;
     }
 
-    IniSource(URL input, HandlerBase handler, boolean includeFlag, String comments) throws IOException
+    IniSource(URL input, HandlerBase handler, boolean includeFlag, String comments, Charset fileEncoding) throws IOException
     {
-        this(new InputStreamReader(input.openStream()), handler, includeFlag, comments);
+        this(new InputStreamReader(input.openStream(), fileEncoding), handler, includeFlag, comments, fileEncoding);
         _base = input;
     }
 
@@ -127,7 +132,7 @@ class IniSource
             {
                 try
                 {
-                    _chain = new IniSource(loc, _handler, allowInclude, commentChars);
+                    _chain = new IniSource(loc, _handler, allowInclude, commentChars, _fileEncoding);
                 }
                 catch (IOException x)
                 {
@@ -140,7 +145,7 @@ class IniSource
             }
             else
             {
-                _chain = new IniSource(loc, _handler, allowInclude, commentChars);
+                _chain = new IniSource(loc, _handler, allowInclude, commentChars, _fileEncoding);
                 line = readLine();
             }
         }
@@ -168,6 +173,7 @@ class IniSource
     {
         String line;
         StringBuilder comment = new StringBuilder();
+        StringBuilder buff = new StringBuilder();
 
         for (line = _reader.readLine(); line != null; line = _reader.readLine())
         {
@@ -176,7 +182,7 @@ class IniSource
             {
                 handleComment(comment);
             }
-            else if (commentChars.indexOf(line.charAt(0)) >= 0)
+            else if ((commentChars.indexOf(line.charAt(0)) >= 0) && (buff.length() == 0))
             {
                 comment.append(line.substring(1));
                 comment.append(NEWLINE);
@@ -184,8 +190,22 @@ class IniSource
             else
             {
                 handleComment(comment);
+                int escapeCount = 0;
 
-                break;
+                for (int i = line.length() - 1; (i >= 0) && (line.charAt(i) == ESCAPE_CHAR); i--)
+                {
+                    escapeCount++;
+                }
+
+                if ((escapeCount & 1) == 0)
+                {
+                    buff.append(line);
+                    line = buff.toString();
+
+                    break;
+                }
+
+                buff.append(line.subSequence(0, line.length() - 1));
             }
         }
 
