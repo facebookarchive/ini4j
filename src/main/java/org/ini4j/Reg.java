@@ -16,6 +16,7 @@
 package org.ini4j;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -127,6 +128,21 @@ public class Reg extends Wini
         output.write(getConfig().getLineSeparator());
         output.write(getConfig().getLineSeparator());
         super.store(output);
+    }
+
+    public void read(String path) throws IOException
+    {
+        File tmp = File.createTempFile("tmp", ".reg");
+        tmp.deleteOnExit();
+        try
+        {
+            Runtime.getRuntime().exec(new String[] {"cmd","/c","reg","export",path, tmp.getAbsolutePath()});
+            load(new FileInputStream(tmp));
+        }
+        finally
+        {
+            tmp.delete();
+        }
     }
 
 /*

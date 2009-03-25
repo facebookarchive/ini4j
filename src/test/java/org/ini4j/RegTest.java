@@ -39,6 +39,17 @@ public class RegTest
         assertArrayEquals(read(getClass().getResourceAsStream("mozilla.reg")), read(new FileInputStream(tmp)));
     }
 
+    @Test public void testSync() throws Exception
+    {
+        Reg reg = new Reg();
+
+
+        reg.read("HKEY_LOCAL_MACHINE\\SOFTWARE\\Mozilla");
+        reg.getConfig().setFileEncoding(Config.DEFAULT_FILE_ENCODING);
+        reg.store(System.out);
+
+    }
+
     private byte[] read(InputStream input) throws Exception
     {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
