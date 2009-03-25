@@ -349,6 +349,7 @@
                         <exclude>**/META-INF/services/**</exclude>
                         <exclude>**/*.txt</exclude>
                         <exclude>**/*.apt</exclude>
+                        <exclude>**/*.reg</exclude>
                     </excludes>
                     <mapping>
                         <java>SLASHSTAR_STYLE</java>

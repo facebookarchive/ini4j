@@ -117,7 +117,7 @@ public class Ini extends BasicProfile implements Persistable
     {
         InputStream stream = new FileInputStream(input);
 
-        IniParser.newInstance(getConfig()).parse(stream, newBuilder());
+        load(stream);
         stream.close();
     }
 

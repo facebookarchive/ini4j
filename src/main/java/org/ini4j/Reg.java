@@ -16,10 +16,10 @@
 package org.ini4j;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
@@ -32,7 +32,9 @@ import java.nio.charset.Charset;
 public class Reg extends Wini
 {
     private static final long serialVersionUID = -1485602876922985912L;
-    public static final String DEFAULT_VERSION = "Windows Registry Editor Version 5.00";
+    protected static final String DEFAULT_VERSION = "Windows Registry Editor Version 5.00";
+    protected static final String DEFAULT_SUFFIX = ".reg";
+    protected static final String TMP_PREFIX = "reg-";
     private String _version;
 
     public Reg()
@@ -41,6 +43,12 @@ public class Reg extends Wini
         getConfig().setEmptySection(true);
         getConfig().setFileEncoding(Charset.forName("UnicodeLittle"));
         getConfig().setLineSeparator("\r\n");
+    }
+
+    public Reg(String registryKey) throws IOException, ReadException
+    {
+        this();
+        read(registryKey);
     }
 
     public Reg(File input) throws IOException, InvalidFileFormatException
@@ -117,6 +125,21 @@ public class Reg extends Wini
         super.load(input);
     }
 
+    public void read(String registryKey) throws IOException, ReadException
+    {
+        File tmp = createTempFile();
+
+        try
+        {
+            regExport(registryKey, tmp);
+            load(tmp);
+        }
+        finally
+        {
+            tmp.delete();
+        }
+    }
+
     @Override public void store(OutputStream output) throws IOException
     {
         store(new OutputStreamWriter(output, getConfig().getFileEncoding()));
@@ -130,18 +153,83 @@ public class Reg extends Wini
         super.store(output);
     }
 
-    public void read(String path) throws IOException
+    public void write(String registryKey) throws IOException, WriteException
     {
-        File tmp = File.createTempFile("tmp", ".reg");
-        tmp.deleteOnExit();
+        File tmp = createTempFile();
+
         try
         {
-            Runtime.getRuntime().exec(new String[] {"cmd","/c","reg","export",path, tmp.getAbsolutePath()});
-            load(new FileInputStream(tmp));
+            regImport(tmp);
         }
         finally
         {
             tmp.delete();
+        }
+    }
+
+    protected File createTempFile() throws IOException
+    {
+        File ret = File.createTempFile(TMP_PREFIX, DEFAULT_SUFFIX);
+
+        ret.deleteOnExit();
+
+        return ret;
+    }
+
+    protected int exec(String[] args) throws IOException
+    {
+        Process proc = Runtime.getRuntime().exec(args);
+        int status;
+
+        try
+        {
+            status = proc.waitFor();
+        }
+        catch (InterruptedException x)
+        {
+            throw (IOException) (new InterruptedIOException().initCause(x));
+        }
+
+        return status;
+    }
+
+    protected void regExport(String registryKey, File file) throws IOException, ReadException
+    {
+        int status = exec(new String[] { "cmd", "/c", "reg", "export", registryKey, file.getAbsolutePath() });
+
+        if (status != 0)
+        {
+            throw new ReadException(registryKey);
+        }
+    }
+
+    protected void regImport(File file) throws IOException, WriteException
+    {
+        int status = exec(new String[] { "cmd", "/c", "reg", "import", file.getAbsolutePath() });
+
+        if (status != 0)
+        {
+            throw new IOException();
+        }
+    }
+
+    public static class ReadException extends IOException
+    {
+        private static final long serialVersionUID = 9204800670442695605L;
+
+        public ReadException(String key)
+        {
+            super(key);
+        }
+    }
+
+    public static class WriteException extends IOException
+    {
+        private static final long serialVersionUID = 7004159918511996639L;
+
+        public WriteException(String key)
+        {
+            super(key);
         }
     }
 
