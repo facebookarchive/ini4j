@@ -17,6 +17,10 @@ package org.ini4j;
 
 public interface Profile extends MultiMap<String, Profile.Section>, CommentedMap<String, Profile.Section>
 {
+    String getComment();
+
+    void setComment(String value);
+
     Section add(String sectionName);
 
     void add(String sectionName, String optionName, Object value);

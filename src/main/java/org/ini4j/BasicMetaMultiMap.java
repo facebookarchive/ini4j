@@ -25,7 +25,7 @@ public class BasicMetaMultiMap<K, V> extends BasicMultiMap<K, V>
     private static final String SEPARATOR = ";#;";
     private static final String FIRST_CATEGORY = "";
     private static final String LAST_CATEGORY = "zzzzzz";
-    private NavigableMap<String, String> _meta;
+    private NavigableMap<String, Object> _meta;
 
     @Override public void clear()
     {
@@ -72,12 +72,12 @@ public class BasicMetaMultiMap<K, V> extends BasicMultiMap<K, V>
         return ret;
     }
 
-    protected String getMeta(String category, Object key)
+    protected Object getMeta(String category, Object key)
     {
         return (_meta == null) ? null : _meta.get(makeKey(category, key));
     }
 
-    protected String putMeta(String category, K key, String value)
+    protected Object putMeta(String category, K key, Object value)
     {
         return meta().put(makeKey(category, key), value);
     }
@@ -90,7 +90,7 @@ public class BasicMetaMultiMap<K, V> extends BasicMultiMap<K, V>
         }
     }
 
-    protected String removeMeta(String category, Object key)
+    protected Object removeMeta(String category, Object key)
     {
         return (_meta == null) ? null : _meta.remove(makeKey(category, key));
     }
@@ -106,11 +106,11 @@ public class BasicMetaMultiMap<K, V> extends BasicMultiMap<K, V>
         return buff.toString();
     }
 
-    private Map<String, String> meta()
+    private Map<String, Object> meta()
     {
         if (_meta == null)
         {
-            _meta = new TreeMap<String, String>();
+            _meta = new TreeMap<String, Object>();
         }
 
         return _meta;

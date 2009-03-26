@@ -323,7 +323,7 @@ public class BasicProfileTest
     private void fromToAs(BasicProfile prof, DwarfData dwarf)
     {
         Profile.Section sec = prof.get(dwarf.name);
-        Profile.Section dup = new BasicSection(prof, SECTION);
+        Profile.Section dup = new BasicProfileSection(prof, SECTION);
         DwarfBean bean = new DwarfBean();
 
         sec.to(bean);

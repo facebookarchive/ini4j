@@ -22,16 +22,16 @@ public class BasicCommentedMultiMap<K, V> extends BasicMetaMultiMap<K, V> implem
 
     @Override public String getComment(Object key)
     {
-        return getMeta(META_COMMENT, key);
+        return (String) getMeta(META_COMMENT, key);
     }
 
     @Override public String putComment(K key, String comment)
     {
-        return putMeta(META_COMMENT, key, comment);
+        return (String) putMeta(META_COMMENT, key, comment);
     }
 
     @Override public String removeComment(Object key)
     {
-        return removeMeta(META_COMMENT, key);
+        return (String) removeMeta(META_COMMENT, key);
     }
 }

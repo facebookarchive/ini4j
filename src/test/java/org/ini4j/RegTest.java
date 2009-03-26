@@ -15,6 +15,8 @@
  */
 package org.ini4j;
 
+import org.ini4j.test.Helper;
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -23,28 +25,115 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+
+import java.nio.charset.Charset;
 
 public class RegTest
 {
     @Test public void testLoadSave() throws Exception
     {
-        Reg reg = new Reg();
+        Reg reg = new Reg(Helper.getResourceURL(Helper.TEST_REG));
 
-        reg.load(getClass().getResource("mozilla.reg"));
-        File tmp = File.createTempFile(RegTest.class.getSimpleName(), ".reg");
+        checkLoadSave(Helper.TEST_REG, reg);
+    }
 
-        tmp.deleteOnExit();
-        reg.store(new FileOutputStream(tmp));
-        assertArrayEquals(read(getClass().getResourceAsStream("mozilla.reg")), read(new FileInputStream(tmp)));
+    public void testReadException() throws Exception
+    {
+        if (!isWindows("testReadException"))
+        {
+            try
+            {
+                new Reg(Reg.Hive.HKEY_CURRENT_USER.toString());
+                fail("missing UnsupportedOperationException");
+            }
+            catch (UnsupportedOperationException x)
+            {
+                assert true;
+            }
+        }
+        else
+        {
+            try
+            {
+                new Reg("no such key");
+                fail("missing IOException");
+            }
+            catch (IOException x)
+            {
+                assert true;
+            }
+        }
     }
 
     @Test public void testReadWrite() throws Exception
     {
-        Reg reg = new Reg();
+        if (!isWindows("testReadWrite"))
+        {
+            return;
+        }
 
-        reg.read("HKEY_LOCAL_MACHINE\\SOFTWARE\\Mozilla");
-        //reg.write("HKEY_LOCAL_MACHINE\\SOFTWARE\\Mozilla");
+        Reg reg = Helper.loadDwarfsReg();
+
+        checkLoadSave(Helper.DWARFS_REG, reg);
+        reg.write(Helper.DWARFS_REG_PATH);
+        Reg dup = new Reg(Helper.DWARFS_REG_PATH);
+
+        checkEquals(reg.get(Helper.DWARFS_REG_PATH), dup.get(Helper.DWARFS_REG_PATH));
+    }
+
+    @Test public void testTypes() throws Exception
+    {
+        Reg reg = Helper.loadDwarfsReg();
+        Reg.Section dwarfs = reg.get(Helper.DWARFS_REG_PATH + "\\dwarfs");
+
+        reg.getConfig().setFileEncoding(Charset.forName("UTF-8"));
+        assertNotNull(dwarfs);
+        assertEquals(7, dwarfs.childrenNames().length);
+    }
+
+    private boolean isWindows()
+    {
+        String family = System.getProperty("os.family");
+
+        return (family != null) && family.equals("windows");
+    }
+
+    private boolean isWindows(String testName)
+    {
+        boolean ret = isWindows();
+
+        if (!ret)
+        {
+            System.out.println("Skipping " + getClass().getName() + '#' + testName);
+        }
+
+        return ret;
+    }
+
+    private void checkEquals(Registry.Key exp, Registry.Key act) throws Exception
+    {
+        assertNotNull(exp);
+        assertEquals(exp.size(), act.size());
+        for (String child : exp.childrenNames())
+        {
+            checkEquals(exp.getChild(child), act.getChild(child));
+        }
+
+        for (String name : exp.keySet())
+        {
+            assertEquals(exp.get(name), act.get(name));
+        }
+    }
+
+    private void checkLoadSave(String path, Reg reg) throws Exception
+    {
+        File tmp = File.createTempFile(Reg.TMP_PREFIX, Reg.DEFAULT_SUFFIX);
+
+        tmp.deleteOnExit();
+        reg.store(new FileOutputStream(tmp));
+        assertArrayEquals(read(Helper.getResourceStream(path)), read(new FileInputStream(tmp)));
     }
 
     private byte[] read(InputStream input) throws Exception

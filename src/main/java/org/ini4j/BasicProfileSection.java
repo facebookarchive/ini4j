@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-class BasicSection extends BasicOptionMap implements Profile.Section
+class BasicProfileSection extends BasicOptionMap implements Profile.Section
 {
     private static final long serialVersionUID = 985800697957194374L;
     private static final String[] EMPTY_STRING_ARRAY = {};
@@ -28,7 +28,7 @@ class BasicSection extends BasicOptionMap implements Profile.Section
     private final String _name;
     private final BasicProfile _profile;
 
-    protected BasicSection(BasicProfile profile, String name)
+    protected BasicProfileSection(BasicProfile profile, String name)
     {
         _profile = profile;
         _name = name;
@@ -103,7 +103,7 @@ class BasicSection extends BasicOptionMap implements Profile.Section
             buff.append(part);
         }
 
-        return lookup(buff.toString());
+        return _profile.get(childName(buff.toString()));
     }
 
     @Override public void removeChild(String key)
@@ -131,11 +131,6 @@ class BasicSection extends BasicOptionMap implements Profile.Section
         buff.append(key);
 
         return buff.toString();
-    }
-
-    private Profile.Section lookup(String path)
-    {
-        return _profile.get(childName(path));
     }
 
     private Pattern newChildPattern(String name)

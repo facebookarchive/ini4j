@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class BasicSectionTest
+public class BasicProfileSectionTest
 {
     @Test public void testAddChild() throws Exception
     {

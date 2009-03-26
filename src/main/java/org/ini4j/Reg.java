@@ -15,7 +15,15 @@
  */
 package org.ini4j;
 
+import org.ini4j.spi.IniFormatter;
+import org.ini4j.spi.IniHandler;
+import org.ini4j.spi.IniParser;
+import org.ini4j.spi.RegistryBuilder;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,25 +35,34 @@ import java.io.Writer;
 
 import java.net.URL;
 
-import java.nio.charset.Charset;
-
-public class Reg extends Wini
+public class Reg extends BasicRegistry implements Registry, Persistable
 {
     private static final long serialVersionUID = -1485602876922985912L;
-    protected static final String DEFAULT_VERSION = "Windows Registry Editor Version 5.00";
     protected static final String DEFAULT_SUFFIX = ".reg";
     protected static final String TMP_PREFIX = "reg-";
-    private String _version;
+    private static final int STDERR_BUFF_SIZE = 8192;
+    private static final String PROP_OS_NAME = "os.name";
+    private static final boolean WINDOWS = System.getProperty(PROP_OS_NAME).startsWith("Windows");
+    private Config _config;
+    private File _file;
 
     public Reg()
     {
-        getConfig().setStrictOperator(true);
-        getConfig().setEmptySection(true);
-        getConfig().setFileEncoding(Charset.forName("UnicodeLittle"));
-        getConfig().setLineSeparator("\r\n");
+        Config cfg = Config.getGlobal().clone();
+
+        cfg.setEscape(false);
+        cfg.setGlobalSection(false);
+        cfg.setEmptyOption(true);
+        cfg.setMultiOption(false);
+        cfg.setStrictOperator(true);
+        cfg.setEmptySection(true);
+        cfg.setPathSeparator(KEY_SEPARATOR);
+        cfg.setFileEncoding(FILE_ENCODING);
+        cfg.setLineSeparator(LINE_SEPARATOR);
+        _config = cfg;
     }
 
-    public Reg(String registryKey) throws IOException, ReadException
+    public Reg(String registryKey) throws IOException
     {
         this();
         read(registryKey);
@@ -75,14 +92,29 @@ public class Reg extends Wini
         load(input);
     }
 
-    public String getVersion()
+    public static boolean isWindows()
     {
-        return _version;
+        return WINDOWS;
     }
 
-    public void setVersion(String value)
+    @Override public File getFile()
     {
-        _version = value;
+        return _file;
+    }
+
+    @Override public void setFile(File value)
+    {
+        _file = value;
+    }
+
+    @Override public void load() throws IOException, InvalidFileFormatException
+    {
+        if (_file == null)
+        {
+            throw new FileNotFoundException();
+        }
+
+        load(_file);
     }
 
     @Override public void load(InputStream input) throws IOException, InvalidFileFormatException
@@ -121,11 +153,23 @@ public class Reg extends Wini
             throw new InvalidFileFormatException("Missing version header");
         }
 
-        setVersion(buff.toString());
-        super.load(input);
+        if (!buff.toString().equals(getVersion()))
+        {
+            throw new InvalidFileFormatException("Unsupported version: " + buff.toString());
+        }
+
+        IniParser.newInstance(getConfig()).parse(input, newBuilder());
     }
 
-    public void read(String registryKey) throws IOException, ReadException
+    @Override public void load(File input) throws IOException, InvalidFileFormatException
+    {
+        InputStream stream = new FileInputStream(input);
+
+        load(stream);
+        stream.close();
+    }
+
+    public void read(String registryKey) throws IOException
     {
         File tmp = createTempFile();
 
@@ -140,6 +184,16 @@ public class Reg extends Wini
         }
     }
 
+    @Override public void store() throws IOException
+    {
+        if (_file == null)
+        {
+            throw new FileNotFoundException();
+        }
+
+        store(_file);
+    }
+
     @Override public void store(OutputStream output) throws IOException
     {
         store(new OutputStreamWriter(output, getConfig().getFileEncoding()));
@@ -147,18 +201,27 @@ public class Reg extends Wini
 
     @Override public void store(Writer output) throws IOException
     {
-        output.write((_version == null) ? DEFAULT_VERSION : _version);
+        output.write(getVersion());
         output.write(getConfig().getLineSeparator());
         output.write(getConfig().getLineSeparator());
-        super.store(output);
+        store(IniFormatter.newInstance(output, getConfig()));
     }
 
-    public void write(String registryKey) throws IOException, WriteException
+    @Override public void store(File output) throws IOException
+    {
+        OutputStream stream = new FileOutputStream(output);
+
+        store(stream);
+        stream.close();
+    }
+
+    public void write(String registryKey) throws IOException
     {
         File tmp = createTempFile();
 
         try
         {
+            store(tmp);
             regImport(tmp);
         }
         finally
@@ -167,7 +230,32 @@ public class Reg extends Wini
         }
     }
 
-    protected File createTempFile() throws IOException
+    protected Config getConfig()
+    {
+        return _config;
+    }
+
+    @Override protected boolean isTreeMode()
+    {
+        return getConfig().isTree();
+    }
+
+    @Override protected char getPathSeparator()
+    {
+        return getConfig().getPathSeparator();
+    }
+
+    @Override protected boolean isPropertyFirstUpper()
+    {
+        return getConfig().isPropertyFirstUpper();
+    }
+
+    protected IniHandler newBuilder()
+    {
+        return new RegistryBuilder(this, getConfig());
+    }
+
+    private File createTempFile() throws IOException
     {
         File ret = File.createTempFile(TMP_PREFIX, DEFAULT_SUFFIX);
 
@@ -176,99 +264,47 @@ public class Reg extends Wini
         return ret;
     }
 
-    protected int exec(String[] args) throws IOException
+    private void exec(String[] args) throws IOException
     {
         Process proc = Runtime.getRuntime().exec(args);
-        int status;
 
         try
         {
-            status = proc.waitFor();
+            int status = proc.waitFor();
+
+            if (status != 0)
+            {
+                Reader in = new InputStreamReader(proc.getErrorStream());
+                char[] buff = new char[STDERR_BUFF_SIZE];
+                int n = in.read(buff);
+
+                in.close();
+                throw new IOException(new String(buff, 0, n).trim());
+            }
         }
         catch (InterruptedException x)
         {
             throw (IOException) (new InterruptedIOException().initCause(x));
         }
-
-        return status;
     }
 
-    protected void regExport(String registryKey, File file) throws IOException, ReadException
+    private void regExport(String registryKey, File file) throws IOException
     {
-        int status = exec(new String[] { "cmd", "/c", "reg", "export", registryKey, file.getAbsolutePath() });
-
-        if (status != 0)
-        {
-            throw new ReadException(registryKey);
-        }
+        requireWindows();
+        exec(new String[] { "cmd", "/c", "reg", "export", registryKey, file.getAbsolutePath() });
     }
 
-    protected void regImport(File file) throws IOException, WriteException
+    private void regImport(File file) throws IOException
     {
-        int status = exec(new String[] { "cmd", "/c", "reg", "import", file.getAbsolutePath() });
-
-        if (status != 0)
-        {
-            throw new IOException();
-        }
+        requireWindows();
+        exec(new String[] { "cmd", "/c", "reg", "import", file.getAbsolutePath() });
     }
 
-    public static class ReadException extends IOException
+    private void requireWindows()
     {
-        private static final long serialVersionUID = 9204800670442695605L;
-
-        public ReadException(String key)
+        if (!WINDOWS)
         {
-            super(key);
+            throw new UnsupportedOperationException("Unsupported operating system: " + System.getProperty(PROP_OS_NAME));
         }
     }
-
-    public static class WriteException extends IOException
-    {
-        private static final long serialVersionUID = 7004159918511996639L;
-
-        public WriteException(String key)
-        {
-            super(key);
-        }
-    }
-
-/*
-     private static enum Type
-    {
-        REG_NONE(0, "hex(0)"),
-        REG_SZ(1, ""),
-        REG_EXPAND_SZ(2, "hex(2)"),
-        REG_BINARY(3, "hex"),
-        REG_DWORD(4, "dword"),
-        REG_DWORD_LITTLE_ENDIAN(4, "dword"),
-        REG_DWORD_BIG_ENDIAN(5, "hex(5)"),
-        REG_LINK(6, "hex(6)"),
-        REG_MULTI_SZ(7, "hex(7)"),
-        REG_RESOURCE_LIST(8, "hex(8)"),
-        REG_FULL_RESOURCE_DESCRIPTOR(9, "hex(9)"),
-        REG_RESOURCE_REQUIREMENTS_LIST(10, "hex(a)"),
-        REG_QWORD(11, "hex(b)"),
-        REQ_QWORD_LITTLE_ENDIAN(11, "hex(b)");
-        private final int _code;
-        private final String _prefix;
-
-        private Type(int code, String prefix)
-        {
-            _code = code;
-            _prefix = prefix;
-        }
-
-        public int getCode()
-        {
-            return _code;
-        }
-
-        public String getPrefix()
-        {
-            return _prefix;
-        }
-    }
-
- */
 }

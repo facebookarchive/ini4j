@@ -20,6 +20,7 @@ import org.ini4j.Ini;
 import org.ini4j.OptionMap;
 import org.ini4j.Options;
 import org.ini4j.Profile;
+import org.ini4j.Reg;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.Dwarfs;
@@ -46,6 +47,9 @@ public class Helper
     public static final String DWARFS_INI = RESOURCE_PREFIX + "dwarfs.ini";
     public static final String TALE_INI = RESOURCE_PREFIX + "tale.ini";
     public static final String DWARFS_OPT = RESOURCE_PREFIX + "dwarfs.opt";
+    public static final String DWARFS_REG = RESOURCE_PREFIX + "dwarfs.reg";
+    public static final String TEST_REG = "org/ini4j/mozilla.reg";
+    public static final String DWARFS_REG_PATH = Reg.Hive.HKEY_CURRENT_USER + "\\Software\\ini4j-test";
     public static final float DELTA = 0.00000001f;
     private static final String[] CONFIG_PROPERTIES =
         { Config.PROP_EMPTY_OPTION, Config.PROP_GLOBAL_SECTION, Config.PROP_GLOBAL_SECTION_NAME, Config.PROP_INCLUDE, Config.PROP_LOWER_CASE_OPTION, Config.PROP_LOWER_CASE_SECTION, Config.PROP_MULTI_OPTION, Config.PROP_MULTI_SECTION, Config.PROP_STRICT_OPERATOR, Config.PROP_UNNAMED_SECTION, Config.PROP_ESCAPE };
@@ -212,6 +216,11 @@ public class Helper
         opt.load(Helper.class.getClassLoader().getResourceAsStream(DWARFS_OPT));
 
         return opt;
+    }
+
+    public static Reg loadDwarfsReg() throws Exception
+    {
+        return new Reg(Helper.class.getClassLoader().getResourceAsStream(DWARFS_REG));
     }
 
     public static Ini loadTaleIni() throws Exception

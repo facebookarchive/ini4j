@@ -15,10 +15,10 @@
  */
 package org.ini4j;
 
-import org.ini4j.spi.IniBuilder;
 import org.ini4j.spi.IniFormatter;
 import org.ini4j.spi.IniHandler;
 import org.ini4j.spi.IniParser;
+import org.ini4j.spi.ProfileBuilder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,7 +35,6 @@ import java.net.URL;
 public class Ini extends BasicProfile implements Persistable
 {
     private static final long serialVersionUID = -6029486578113700585L;
-    private String _comment;
     private Config _config;
     private File _file;
 
@@ -67,16 +66,6 @@ public class Ini extends BasicProfile implements Persistable
         this();
         _file = input;
         load();
-    }
-
-    public String getComment()
-    {
-        return _comment;
-    }
-
-    public void setComment(String value)
-    {
-        _comment = value;
     }
 
     public void setConfig(Config value)
@@ -177,44 +166,22 @@ public class Ini extends BasicProfile implements Persistable
 
     protected IniHandler newBuilder()
     {
-        return new IniBuilder(this, getConfig());
+        return new ProfileBuilder(this, getConfig());
     }
 
-    protected void store(IniHandler formatter) throws IOException
+    @Override protected void store(IniHandler formatter, Profile.Section section)
     {
-        formatter.startIni();
-        storeComment(formatter, _comment);
-        for (Ini.Section s : values())
+        if (getConfig().isEmptySection() || (section.size() != 0))
         {
-            if (!getConfig().isEmptySection() && (s.size() == 0))
-            {
-                continue;
-            }
-
-            storeComment(formatter, getComment(s.getName()));
-            formatter.startSection(s.getName());
-            for (String name : s.keySet())
-            {
-                storeComment(formatter, s.getComment(name));
-                int n = getConfig().isMultiOption() ? s.length(name) : 1;
-
-                for (int i = 0; i < n; i++)
-                {
-                    formatter.handleOption(name, s.get(name, i));
-                }
-            }
-
-            formatter.endSection();
+            super.store(formatter, section);
         }
-
-        formatter.endIni();
     }
 
-    private void storeComment(IniHandler formatter, String comment)
+    @Override protected void store(IniHandler formatter, Profile.Section section, String option, int index)
     {
-        if ((comment != null) && (comment.length() != 0))
+        if (getConfig().isMultiOption() || (index == 0))
         {
-            formatter.handleComment(comment);
+            super.store(formatter, section, option, index);
         }
     }
 }

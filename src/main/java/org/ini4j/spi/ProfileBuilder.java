@@ -17,18 +17,19 @@ package org.ini4j.spi;
 
 import org.ini4j.Config;
 import org.ini4j.Ini;
+import org.ini4j.Profile;
 
-public class IniBuilder implements IniHandler
+public class ProfileBuilder implements IniHandler
 {
     private final Config _config;
-    private Ini.Section _currentSection;
+    private Profile.Section _currentSection;
     private boolean _header;
-    private final Ini _ini;
     private String _lastComment;
+    private final Profile _profile;
 
-    public IniBuilder(Ini ini, Config config)
+    public ProfileBuilder(Profile profile, Config config)
     {
-        _ini = ini;
+        _profile = profile;
         _config = config;
     }
 
@@ -38,7 +39,7 @@ public class IniBuilder implements IniHandler
         // comment only .ini files....
         if ((_lastComment != null) && _header)
         {
-            _ini.setComment(_lastComment);
+            _profile.setComment(_lastComment);
         }
     }
 
@@ -51,7 +52,7 @@ public class IniBuilder implements IniHandler
     {
         if ((_lastComment != null) && _header)
         {
-            _ini.setComment(_lastComment);
+            _profile.setComment(_lastComment);
             _header = false;
         }
 
@@ -86,24 +87,24 @@ public class IniBuilder implements IniHandler
     {
         if (getConfig().isMultiSection())
         {
-            _currentSection = _ini.add(sectionName);
+            _currentSection = _profile.add(sectionName);
         }
         else
         {
-            Ini.Section s = _ini.get(sectionName);
+            Ini.Section s = _profile.get(sectionName);
 
-            _currentSection = (s == null) ? _ini.add(sectionName) : s;
+            _currentSection = (s == null) ? _profile.add(sectionName) : s;
         }
 
         if (_lastComment != null)
         {
             if (_header)
             {
-                _ini.setComment(_lastComment);
+                _profile.setComment(_lastComment);
             }
             else
             {
-                _ini.putComment(sectionName, _lastComment);
+                _profile.putComment(sectionName, _lastComment);
             }
 
             _lastComment = null;
@@ -115,5 +116,10 @@ public class IniBuilder implements IniHandler
     protected Config getConfig()
     {
         return _config;
+    }
+
+    protected Profile.Section getCurrentSection()
+    {
+        return _currentSection;
     }
 }

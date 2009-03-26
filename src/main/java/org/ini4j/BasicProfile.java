@@ -17,6 +17,7 @@ package org.ini4j;
 
 import org.ini4j.spi.AbstractBeanInvocationHandler;
 import org.ini4j.spi.BeanTool;
+import org.ini4j.spi.IniHandler;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Proxy;
@@ -35,6 +36,7 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
     private static final int G_OPTION_IDX = 7;
     private static final long serialVersionUID = -1817521505004015256L;
     protected static final char JNDI_PATH_SEPARATOR = '/';
+    private String _comment;
     private final boolean _propertyFirstUpper;
     private final boolean _treeMode;
 
@@ -47,6 +49,16 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
     {
         _treeMode = treeMode;
         _propertyFirstUpper = propertyFirstUpper;
+    }
+
+    @Override public String getComment()
+    {
+        return _comment;
+    }
+
+    @Override public void setComment(String value)
+    {
+        _comment = value;
     }
 
     @Override public Section add(String name)
@@ -145,7 +157,7 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
 
     protected Section newSection(String name)
     {
-        return new BasicSection(this, name);
+        return new BasicProfileSection(this, name);
     }
 
     protected void resolve(StringBuilder buffer, Section owner)
@@ -179,6 +191,54 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
                 m.reset(buffer);
             }
         }
+    }
+
+    protected void store(IniHandler formatter)
+    {
+        formatter.startIni();
+        store(formatter, getComment());
+        for (Ini.Section s : values())
+        {
+            store(formatter, s);
+        }
+
+        formatter.endIni();
+    }
+
+    protected void store(IniHandler formatter, Section s)
+    {
+        store(formatter, getComment(s.getName()));
+        formatter.startSection(s.getName());
+        for (String name : s.keySet())
+        {
+            store(formatter, s, name);
+        }
+
+        formatter.endSection();
+    }
+
+    protected void store(IniHandler formatter, String comment)
+    {
+        if ((comment != null) && (comment.length() != 0))
+        {
+            formatter.handleComment(comment);
+        }
+    }
+
+    protected void store(IniHandler formatter, Section section, String option)
+    {
+        store(formatter, section.getComment(option));
+        int n = section.length(option);
+
+        for (int i = 0; i < n; i++)
+        {
+            store(formatter, section, option, i);
+        }
+    }
+
+    protected void store(IniHandler formatter, Section section, String option, int index)
+    {
+        formatter.handleOption(option, section.get(option, index));
     }
 
     private Section getOrAdd(String sectionName)

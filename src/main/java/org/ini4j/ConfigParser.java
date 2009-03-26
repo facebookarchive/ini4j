@@ -519,7 +519,7 @@ public class ConfigParser implements Serializable
             }
         }
 
-        @Override protected void store(IniHandler formatter) throws IOException
+        @Override protected void store(IniHandler formatter)
         {
             formatter.startIni();
             if (_defaultSection != null)
@@ -535,7 +535,7 @@ public class ConfigParser implements Serializable
             formatter.endIni();
         }
 
-        protected void store(IniHandler formatter, Section section) throws IOException
+        protected void store(IniHandler formatter, Section section)
         {
             formatter.startSection(section.getName());
             for (String name : section.keySet())
