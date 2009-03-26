@@ -15,6 +15,7 @@
  */
 package org.ini4j;
 
+import org.ini4j.spi.OptionsBuilder;
 import org.ini4j.spi.OptionsFormatter;
 import org.ini4j.spi.OptionsHandler;
 import org.ini4j.spi.OptionsParser;
@@ -106,24 +107,24 @@ public class Options extends BasicOptionMap implements Persistable
 
     @Override public void load(InputStream input) throws IOException, InvalidFileFormatException
     {
-        OptionsParser.newInstance(getConfig()).parse(input, new Builder());
+        OptionsParser.newInstance(getConfig()).parse(input, newBuilder());
     }
 
     @Override public void load(Reader input) throws IOException, InvalidFileFormatException
     {
-        OptionsParser.newInstance(getConfig()).parse(input, new Builder());
+        OptionsParser.newInstance(getConfig()).parse(input, newBuilder());
     }
 
     @Override public void load(URL input) throws IOException, InvalidFileFormatException
     {
-        OptionsParser.newInstance(getConfig()).parse(input, new Builder());
+        OptionsParser.newInstance(getConfig()).parse(input, newBuilder());
     }
 
     @Override public void load(File input) throws IOException, InvalidFileFormatException
     {
         InputStream stream = new FileInputStream(input);
 
-        OptionsParser.newInstance(getConfig()).parse(stream, new Builder());
+        OptionsParser.newInstance(getConfig()).parse(stream, newBuilder());
         stream.close();
     }
 
@@ -165,6 +166,11 @@ public class Options extends BasicOptionMap implements Persistable
         return getConfig().isPropertyFirstUpper();
     }
 
+    protected OptionsHandler newBuilder()
+    {
+        return new OptionsBuilder(this, getConfig());
+    }
+
     protected void store(OptionsHandler formatter) throws IOException
     {
         formatter.startOptions();
@@ -190,66 +196,6 @@ public class Options extends BasicOptionMap implements Persistable
         if ((comment != null) && (comment.length() != 0))
         {
             formatter.handleComment(comment);
-        }
-    }
-
-    private class Builder implements OptionsHandler
-    {
-        private boolean _header;
-        private String _lastComment;
-
-        public void endOptions()
-        {
-
-            // comment only .opt file ...
-            if ((_lastComment != null) && _header)
-            {
-                setComment(_lastComment);
-            }
-        }
-
-        @Override public void handleComment(String comment)
-        {
-            if ((_lastComment != null) && _header)
-            {
-                setComment(_lastComment);
-                _header = false;
-            }
-
-            _lastComment = comment;
-        }
-
-        @Override public void handleOption(String name, String value)
-        {
-            if (getConfig().isMultiOption())
-            {
-                add(name, value);
-            }
-            else
-            {
-                put(name, value);
-            }
-
-            if (_lastComment != null)
-            {
-                if (_header)
-                {
-                    setComment(_lastComment);
-                }
-                else
-                {
-                    putComment(name, _lastComment);
-                }
-
-                _lastComment = null;
-            }
-
-            _header = false;
-        }
-
-        public void startOptions()
-        {
-            _header = true;
         }
     }
 }
