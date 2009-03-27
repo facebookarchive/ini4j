@@ -107,11 +107,11 @@ public class BasicRegistry extends BasicProfile implements Registry
         formatter.handleOption(rawName, rawValue);
     }
 
-    private String hexadecimal(String value)
+    String hexadecimal(String value)
     {
         StringBuilder buff = new StringBuilder();
 
-        if (value != null)
+        if ((value != null) && (value.length() != 0))
         {
             byte[] bytes = value.getBytes(HEX_CHARSET);
 
@@ -128,7 +128,7 @@ public class BasicRegistry extends BasicProfile implements Registry
         return buff.toString();
     }
 
-    private String quote(String value)
+    String quote(String value)
     {
         String ret = value;
 
@@ -156,7 +156,7 @@ public class BasicRegistry extends BasicProfile implements Registry
         return ret;
     }
 
-    private String raw(Section section, String option, Type type)
+    String raw(Section section, String option, Type type)
     {
         StringBuilder buff = new StringBuilder();
 

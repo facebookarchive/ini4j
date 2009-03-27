@@ -94,7 +94,7 @@ public class RegTest
         reg.write();
         Reg dup = new Reg(Helper.DWARFS_REG_PATH);
 
-        checkEquals(reg.get(Helper.DWARFS_REG_PATH), dup.get(Helper.DWARFS_REG_PATH));
+        Helper.assertEquals(reg.get(Helper.DWARFS_REG_PATH), dup.get(Helper.DWARFS_REG_PATH));
         Dwarfs dwarfs = dup.as(Dwarfs.class, Helper.DWARFS_REG_PATH + "\\dwarfs\\");
 
         assertNotNull(dwarfs);
@@ -118,21 +118,6 @@ public class RegTest
         }
 
         return ret;
-    }
-
-    private void checkEquals(Registry.Key exp, Registry.Key act) throws Exception
-    {
-        assertNotNull(exp);
-        assertEquals(exp.size(), act.size());
-        for (String child : exp.childrenNames())
-        {
-            checkEquals(exp.getChild(child), act.getChild(child));
-        }
-
-        for (String name : exp.keySet())
-        {
-            assertEquals(exp.get(name), act.get(name));
-        }
     }
 
     private void checkLoadSave(String path, Reg reg) throws Exception

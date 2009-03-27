@@ -150,9 +150,8 @@ public class ConfigTest
         cfg.setPathSeparator('?');
         cfg.setTree(!cfg.isTree());
         cfg.setPropertyFirstUpper(!cfg.isPropertyFirstUpper());
-        cfg.setLineSeparator("\t");
-        cfg.setFileEncoding(Charset.forName("ASCII"));
-
+        //cfg.setLineSeparator("\t");
+        //cfg.setFileEncoding(Charset.forName("ASCII"));
         return cfg;
     }
 }
