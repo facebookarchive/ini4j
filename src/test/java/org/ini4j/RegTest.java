@@ -15,6 +15,9 @@
  */
 package org.ini4j;
 
+import org.ini4j.sample.Dwarfs;
+
+import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
@@ -28,15 +31,27 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.nio.charset.Charset;
-
 public class RegTest
 {
+    @Test public void proba() throws Exception
+    {
+    }
+
+    @Test public void testDwarfs() throws Exception
+    {
+        Reg reg = Helper.loadDwarfsReg();
+        Dwarfs dwarfs = reg.as(Dwarfs.class, Helper.DWARFS_REG_PATH + "\\dwarfs\\");
+
+        assertNotNull(dwarfs);
+        Helper.assertEquals(DwarfsData.dwarfs, dwarfs);
+    }
+
     @Test public void testLoadSave() throws Exception
     {
         Reg reg = new Reg(Helper.getResourceURL(Helper.TEST_REG));
 
         checkLoadSave(Helper.TEST_REG, reg);
+        checkLoadSave(Helper.DWARFS_REG, Helper.loadDwarfsReg());
     }
 
     public void testReadException() throws Exception
@@ -76,21 +91,14 @@ public class RegTest
 
         Reg reg = Helper.loadDwarfsReg();
 
-        checkLoadSave(Helper.DWARFS_REG, reg);
-        reg.write(Helper.DWARFS_REG_PATH);
+        reg.write();
         Reg dup = new Reg(Helper.DWARFS_REG_PATH);
 
         checkEquals(reg.get(Helper.DWARFS_REG_PATH), dup.get(Helper.DWARFS_REG_PATH));
-    }
+        Dwarfs dwarfs = dup.as(Dwarfs.class, Helper.DWARFS_REG_PATH + "\\dwarfs\\");
 
-    @Test public void testTypes() throws Exception
-    {
-        Reg reg = Helper.loadDwarfsReg();
-        Reg.Section dwarfs = reg.get(Helper.DWARFS_REG_PATH + "\\dwarfs");
-
-        reg.getConfig().setFileEncoding(Charset.forName("UTF-8"));
         assertNotNull(dwarfs);
-        assertEquals(7, dwarfs.childrenNames().length);
+        Helper.assertEquals(DwarfsData.dwarfs, dwarfs);
     }
 
     private boolean isWindows()

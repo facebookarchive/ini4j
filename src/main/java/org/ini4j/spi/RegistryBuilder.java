@@ -17,12 +17,20 @@ package org.ini4j.spi;
 
 import org.ini4j.Config;
 import org.ini4j.Profile;
+import org.ini4j.Registry;
 
 import org.ini4j.Registry.Key;
 import org.ini4j.Registry.Type;
 
+import java.nio.charset.Charset;
+
+import java.util.Arrays;
+
 public class RegistryBuilder extends ProfileBuilder
 {
+    private static final char DOUBLE_QUOTE = '"';
+    protected static final Charset HEX_CHARSET = Charset.forName("UTF-16LE");
+
     public RegistryBuilder(Profile profile, Config config)
     {
         super(profile, config);
@@ -33,28 +41,111 @@ public class RegistryBuilder extends ProfileBuilder
         String name = unquote(rawName);
         String value = unquote(rawValue);
 
-        if (rawValue.charAt(0) != '"')
+        if (rawValue.charAt(0) == DOUBLE_QUOTE)
         {
-            int idx = rawValue.indexOf(':');
+            super.handleOption(name, value);
+        }
+        else
+        {
+            Type type = parseType(value);
 
-            if (idx > 0)
+            if (type == null)
             {
-                Type type = Type.fromString(rawValue.substring(0, idx));
+                super.handleOption(name, value);
+            }
+            else
+            {
+                handleOption(name, value.substring(type.toString().length() + 1), type);
+            }
+        }
+    }
 
-                if (type != null)
+    private byte[] binary(String value)
+    {
+        byte[] bytes = new byte[value.length()];
+        int idx = 0;
+        int shift = 4;
+
+        for (int i = 0; i < value.length(); i++)
+        {
+            char c = value.charAt(i);
+
+            if (Character.isWhitespace(c))
+            {
+                continue;
+            }
+
+            if (c == ',')
+            {
+                idx++;
+                shift = 4;
+            }
+            else
+            {
+                int digit = Character.digit(c, 16);
+
+                if (digit >= 0)
                 {
-                    ((Key) getCurrentSection()).putType(name, type);
-                    value = value.substring(idx + 1);
+                    bytes[idx] |= digit << shift;
+                    shift = 0;
                 }
             }
         }
 
-        super.handleOption(name, value);
+        return Arrays.copyOfRange(bytes, 0, idx + 1);
     }
 
-    protected String unquote(String value)
+    private void handleOption(String name, String value, Type type)
     {
-        if (value.charAt(0) != '"')
+        ((Key) getCurrentSection()).putType(name, type);
+        String converted = value;
+
+        switch (type)
+        {
+
+            case REG_EXPAND_SZ:
+            case REG_MULTI_SZ:
+                byte[] bytes = binary(value);
+
+                converted = new String(bytes, 0, bytes.length - 2, HEX_CHARSET);
+                break;
+
+            case REG_DWORD:
+                converted = String.valueOf(Long.parseLong(value, 16));
+                break;
+        }
+
+        if (type == Type.REG_MULTI_SZ)
+        {
+            int start = 0;
+            int len = converted.length();
+
+            for (int end = converted.indexOf(0, start); end >= 0; end = converted.indexOf(0, start))
+            {
+                super.handleOption(name, converted.substring(start, end));
+                start = end + 1;
+                if (start >= len)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            super.handleOption(name, converted);
+        }
+    }
+
+    private Type parseType(String value)
+    {
+        int idx = value.indexOf(Registry.TYPE_SEPARATOR);
+
+        return (idx < 0) ? Type.REG_SZ : Type.fromString(value.substring(0, idx));
+    }
+
+    private String unquote(String value)
+    {
+        if (value.charAt(0) != DOUBLE_QUOTE)
         {
             return value;
         }
@@ -66,7 +157,7 @@ public class RegistryBuilder extends ProfileBuilder
         {
             char c = value.charAt(i);
 
-            if (c == '\\')
+            if (c == Registry.ESCAPE_CHAR)
             {
                 if (!escape)
                 {

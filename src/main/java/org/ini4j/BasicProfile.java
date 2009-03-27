@@ -35,7 +35,6 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
     private static final int G_OPTION = 5;
     private static final int G_OPTION_IDX = 7;
     private static final long serialVersionUID = -1817521505004015256L;
-    protected static final char JNDI_PATH_SEPARATOR = '/';
     private String _comment;
     private final boolean _propertyFirstUpper;
     private final boolean _treeMode;
@@ -92,7 +91,12 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
 
     @Override public <T> T as(Class<T> clazz)
     {
-        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler()));
+        return as(clazz, null);
+    }
+
+    @Override public <T> T as(Class<T> clazz, String prefix)
+    {
+        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler(prefix)));
     }
 
     @Override public String fetch(Object sectionName, Object optionName)
@@ -147,7 +151,7 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
 
     protected char getPathSeparator()
     {
-        return JNDI_PATH_SEPARATOR;
+        return PATH_SEPARATOR;
     }
 
     protected boolean isPropertyFirstUpper()
@@ -268,6 +272,13 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
 
     private class BeanInvocationHandler extends AbstractBeanInvocationHandler
     {
+        private final String _prefix;
+
+        private BeanInvocationHandler(String prefix)
+        {
+            _prefix = prefix;
+        }
+
         @Override protected Object getPropertySpi(String property, Class<?> clazz)
         {
             String key = transform(property);
@@ -324,7 +335,7 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
 
         protected String transform(String property)
         {
-            String ret = property;
+            String ret = (_prefix == null) ? property : (_prefix + property);
 
             if (isPropertyFirstUpper())
             {

@@ -17,6 +17,8 @@ package org.ini4j;
 
 public interface Profile extends MultiMap<String, Profile.Section>, CommentedMap<String, Profile.Section>
 {
+    char PATH_SEPARATOR = '/';
+
     String getComment();
 
     void setComment(String value);
@@ -26,6 +28,8 @@ public interface Profile extends MultiMap<String, Profile.Section>, CommentedMap
     void add(String sectionName, String optionName, Object value);
 
     <T> T as(Class<T> clazz);
+
+    <T> T as(Class<T> clazz, String prefix);
 
     String fetch(Object sectionName, Object optionName);
 

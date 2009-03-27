@@ -43,6 +43,8 @@ public class Reg extends BasicRegistry implements Registry, Persistable
     private static final int STDERR_BUFF_SIZE = 8192;
     private static final String PROP_OS_NAME = "os.name";
     private static final boolean WINDOWS = System.getProperty(PROP_OS_NAME).startsWith("Windows");
+    private static final char CR = '\r';
+    private static final char LF = '\n';
     private Config _config;
     private File _file;
 
@@ -53,7 +55,7 @@ public class Reg extends BasicRegistry implements Registry, Persistable
         cfg.setEscape(false);
         cfg.setGlobalSection(false);
         cfg.setEmptyOption(true);
-        cfg.setMultiOption(false);
+        cfg.setMultiOption(true);
         cfg.setStrictOperator(true);
         cfg.setEmptySection(true);
         cfg.setPathSeparator(KEY_SEPARATOR);
@@ -134,7 +136,7 @@ public class Reg extends BasicRegistry implements Registry, Persistable
 
         for (int c = input.read(); c != -1; c = input.read())
         {
-            if (c == '\n')
+            if (c == LF)
             {
                 newline--;
                 if (newline == 0)
@@ -142,7 +144,7 @@ public class Reg extends BasicRegistry implements Registry, Persistable
                     break;
                 }
             }
-            else if ((c != '\r') && (newline != 1))
+            else if ((c != CR) && (newline != 1))
             {
                 buff.append((char) c);
             }
@@ -215,7 +217,7 @@ public class Reg extends BasicRegistry implements Registry, Persistable
         stream.close();
     }
 
-    public void write(String registryKey) throws IOException
+    public void write() throws IOException
     {
         File tmp = createTempFile();
 

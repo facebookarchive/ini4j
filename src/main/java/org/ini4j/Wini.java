@@ -27,6 +27,7 @@ import java.net.URL;
 public class Wini extends Ini
 {
     private static final long serialVersionUID = -2781377824232440728L;
+    public static final char PATH_SEPARATOR = '\\';
 
     public Wini()
     {
@@ -36,7 +37,7 @@ public class Wini extends Ini
         cfg.setGlobalSection(true);
         cfg.setEmptyOption(true);
         cfg.setMultiOption(false);
-        cfg.setPathSeparator('\\');
+        cfg.setPathSeparator(PATH_SEPARATOR);
         setConfig(cfg);
     }
 

@@ -19,6 +19,7 @@ public class EscapeTool
 {
     private static final String ESCAPE_LETTERS = "\\tnfbr";
     private static final String ESCAPEABLE_CHARS = "\\\t\n\f\b\r";
+    public static final char ESCAPE_CHAR = '\\';
     protected static final char[] HEX = "0123456789abcdef".toCharArray();
     private static final EscapeTool INSTANCE = ServiceFinder.findService(EscapeTool.class);
     private static final char ASCII_MIN = 0x20;
@@ -60,7 +61,7 @@ public class EscapeTool
 
             if (idx >= 0)
             {
-                buffer.append('\\');
+                buffer.append(ESCAPE_CHAR);
                 buffer.append(_escapeLetters.charAt(idx));
             }
             else
@@ -89,7 +90,7 @@ public class EscapeTool
         {
             char c = line.charAt(i++);
 
-            if (c == '\\')
+            if (c == ESCAPE_CHAR)
             {
                 c = line.charAt(i++);
                 int next = unescapeBinary(buffer, c, line, i);

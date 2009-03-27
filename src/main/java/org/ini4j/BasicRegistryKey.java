@@ -17,12 +17,12 @@ package org.ini4j;
 
 import org.ini4j.Registry.Key;
 
-class BasicRegKey extends BasicProfileSection implements Registry.Key
+class BasicRegistryKey extends BasicProfileSection implements Registry.Key
 {
     private static final long serialVersionUID = -1390060044244350928L;
     private static final String META_TYPE = "type";
 
-    public BasicRegKey(BasicRegistry registry, String name)
+    public BasicRegistryKey(BasicRegistry registry, String name)
     {
         super(registry, name);
     }
@@ -40,6 +40,13 @@ class BasicRegKey extends BasicProfileSection implements Registry.Key
     @Override public Registry.Type getType(Object key)
     {
         return (Registry.Type) getMeta(META_TYPE, key);
+    }
+
+    @Override public Registry.Type getType(Object key, Registry.Type defaultType)
+    {
+        Registry.Type type = getType(key);
+
+        return (type == null) ? defaultType : type;
     }
 
     @Override public Key addChild(String key)

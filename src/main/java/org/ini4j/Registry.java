@@ -79,9 +79,11 @@ public interface Registry extends Profile
         }
     }
 
+    char ESCAPE_CHAR = '\\';
     Charset FILE_ENCODING = Charset.forName("UnicodeLittle");
     char KEY_SEPARATOR = '\\';
     String LINE_SEPARATOR = "\r\n";
+    char TYPE_SEPARATOR = ':';
     String VERSION = "Windows Registry Editor Version 5.00";
 
     String getVersion();
@@ -109,6 +111,8 @@ public interface Registry extends Profile
         @Override Key getParent();
 
         Type getType(Object key);
+
+        Type getType(Object key, Type defaulType);
 
         @Override Key addChild(String key);
 
