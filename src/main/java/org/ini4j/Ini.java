@@ -179,7 +179,7 @@ public class Ini extends BasicProfile implements Persistable
 
     @Override protected void store(IniHandler formatter, Profile.Section section, String option, int index)
     {
-        if (getConfig().isMultiOption() || (index == 0))
+        if (getConfig().isMultiOption() || (index == (section.length(option) - 1)))
         {
             super.store(formatter, section, option, index);
         }

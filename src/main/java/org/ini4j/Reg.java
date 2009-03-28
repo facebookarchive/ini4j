@@ -73,7 +73,8 @@ public class Reg extends BasicRegistry implements Registry, Persistable
     public Reg(File input) throws IOException, InvalidFileFormatException
     {
         this();
-        load(input);
+        _file = input;
+        load();
     }
 
     public Reg(URL input) throws IOException, InvalidFileFormatException
@@ -257,16 +258,7 @@ public class Reg extends BasicRegistry implements Registry, Persistable
         return new RegistryBuilder(this, getConfig());
     }
 
-    private File createTempFile() throws IOException
-    {
-        File ret = File.createTempFile(TMP_PREFIX, DEFAULT_SUFFIX);
-
-        ret.deleteOnExit();
-
-        return ret;
-    }
-
-    private void exec(String[] args) throws IOException
+    void exec(String[] args) throws IOException
     {
         Process proc = Runtime.getRuntime().exec(args);
 
@@ -288,6 +280,15 @@ public class Reg extends BasicRegistry implements Registry, Persistable
         {
             throw (IOException) (new InterruptedIOException().initCause(x));
         }
+    }
+
+    private File createTempFile() throws IOException
+    {
+        File ret = File.createTempFile(TMP_PREFIX, DEFAULT_SUFFIX);
+
+        ret.deleteOnExit();
+
+        return ret;
     }
 
     private void regExport(String registryKey, File file) throws IOException

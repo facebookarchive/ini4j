@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 
 import java.net.URI;
 import java.net.URL;
@@ -50,23 +51,40 @@ public class BeanToolTest
         testInject("dummy");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testInjectIllegalArgument1() throws Exception
+    {
+        TestMap map = new TestMap();
+
+        instance.inject(map.newBeanAccess(), new BadBean());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testInjectIllegalArgument2() throws Exception
+    {
+        TestMap map = new TestMap();
+
+        map.put("name", "bad");
+        instance.inject(new BadBean(), map.newBeanAccess());
+    }
+
     @SuppressWarnings("empty-statement")
     @Test public void testParse() throws Exception
     {
         String input = "6";
         int value = 6;
 
-        assertEquals(value, ((Byte) instance.parse(input, byte.class)).byteValue());
-        assertEquals(value, ((Short) instance.parse(input, short.class)).shortValue());
-        assertEquals(value, ((Integer) instance.parse(input, int.class)).intValue());
-        assertEquals(value, ((Long) instance.parse(input, long.class)).longValue());
-        assertEquals((float) value, ((Float) instance.parse(input, float.class)).floatValue(), Helper.DELTA);
-        assertEquals((double) value, ((Double) instance.parse(input, double.class)).doubleValue(), Helper.DELTA);
-        assertFalse(((Boolean) instance.parse(input, boolean.class)));
-        assertEquals('6', ((Character) instance.parse(input, char.class)).charValue());
+        assertEquals(value, instance.parse(input, byte.class).byteValue());
+        assertEquals(value, instance.parse(input, short.class).shortValue());
+        assertEquals(value, instance.parse(input, int.class).intValue());
+        assertEquals(value, instance.parse(input, long.class).longValue());
+        assertEquals((float) value, instance.parse(input, float.class).floatValue(), Helper.DELTA);
+        assertEquals((double) value, instance.parse(input, double.class).doubleValue(), Helper.DELTA);
+        assertFalse(instance.parse(input, boolean.class));
+        assertEquals('6', instance.parse(input, char.class).charValue());
 
         // parse null mean zero
-        assertEquals(0, ((Byte) instance.parse(null, byte.class)).byteValue());
+        assertEquals(0, instance.parse(null, byte.class).byteValue());
 
         // parse to null class mean exception
         try
@@ -92,8 +110,8 @@ public class BeanToolTest
 
         // standard, but not primitive types
         assertSame(input, instance.parse(input, String.class));
-        assertEquals(new Character('6'), ((Character) instance.parse(input, Character.class)));
-        assertEquals(new Byte(input), ((Byte) instance.parse(input, Byte.class)));
+        assertEquals(new Character('6'), instance.parse(input, Character.class));
+        assertEquals(new Byte(input), instance.parse(input, Byte.class));
 
         // special values
         input = "http://www.ini4j.org";
@@ -101,9 +119,9 @@ public class BeanToolTest
         assertEquals(new URI(input), instance.parse(input, URI.class));
         assertEquals(new File(input), instance.parse(input, File.class));
         input = "Europe/Budapest";
-        assertEquals(input, ((TimeZone) instance.parse(input, TimeZone.class)).getID());
+        assertEquals(input, instance.parse(input, TimeZone.class).getID());
         input = "java.lang.String";
-        assertEquals(String.class, (Class) instance.parse(input, Class.class));
+        assertEquals(String.class, instance.parse(input, Class.class));
 
         // invalid value should throw IllegalArgumentException
         try
@@ -142,15 +160,15 @@ public class BeanToolTest
     @Test public void testZero() throws Exception
     {
         assertEquals(null, instance.zero(Object.class));
-        assertEquals(0, ((Byte) instance.zero(byte.class)).byteValue());
-        assertEquals(0, ((Short) instance.zero(short.class)).shortValue());
-        assertEquals(0, ((Integer) instance.zero(int.class)).intValue());
-        assertEquals(0, ((Long) instance.zero(long.class)).longValue());
-        assertEquals(0.0f, ((Float) instance.zero(float.class)).floatValue(), Helper.DELTA);
-        assertEquals(0.0, ((Double) instance.zero(double.class)).doubleValue(), Helper.DELTA);
+        assertEquals(0, instance.zero(byte.class).byteValue());
+        assertEquals(0, instance.zero(short.class).shortValue());
+        assertEquals(0, instance.zero(int.class).intValue());
+        assertEquals(0, instance.zero(long.class).longValue());
+        assertEquals(0.0f, instance.zero(float.class).floatValue(), Helper.DELTA);
+        assertEquals(0.0, instance.zero(double.class).doubleValue(), Helper.DELTA);
         assertNotNull((instance.zero(boolean.class)));
-        assertFalse(((Boolean) instance.zero(boolean.class)));
-        assertEquals('\0', ((Character) instance.zero(char.class)).charValue());
+        assertFalse(instance.zero(boolean.class));
+        assertEquals('\0', instance.zero(char.class).charValue());
     }
 
     protected void testInject(String prefix) throws Exception
@@ -203,6 +221,8 @@ public class BeanToolTest
 
     static class TestMap extends BasicOptionMap
     {
+        private static final long serialVersionUID = -479440334238558045L;
+
         @Override protected BeanAccess newBeanAccess()
         {
             return super.newBeanAccess();
@@ -211,6 +231,19 @@ public class BeanToolTest
         @Override protected BeanAccess newBeanAccess(String prefix)
         {
             return super.newBeanAccess(prefix);
+        }
+    }
+
+    private static class BadBean
+    {
+        public String getName() throws IOException
+        {
+            throw new IOException();
+        }
+
+        public void setName(String value) throws IOException
+        {
+            throw new IOException();
         }
     }
 }

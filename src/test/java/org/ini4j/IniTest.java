@@ -31,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 public class IniTest
 {
@@ -95,6 +96,21 @@ public class IniTest
         ini.load(new StringReader(MULTI));
         assertEquals(2, ini.get("section", 0).length("option"));
         assertEquals(3, ini.get("section", 1).length("option"));
+
+        //
+        StringWriter writer = new StringWriter();
+
+        cfg.setMultiOption(false);
+        ini.store(writer);
+        ini.clear();
+        cfg.setMultiOption(true);
+        ini.load(new StringReader(writer.toString()));
+        assertEquals(1, ini.get("section", 0).length("option"));
+        assertEquals(1, ini.get("section", 1).length("option"));
+        assertEquals("value2", ini.get("section", 0).get("option"));
+        assertEquals("value5", ini.get("section", 1).get("option"));
+
+        //
         ini.clear();
         cfg.setMultiOption(false);
         ini.load(new StringReader(MULTI));

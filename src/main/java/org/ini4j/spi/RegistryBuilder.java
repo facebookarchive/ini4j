@@ -49,14 +49,7 @@ public class RegistryBuilder extends ProfileBuilder
         {
             Type type = parseType(value);
 
-            if (type == null)
-            {
-                super.handleOption(name, value);
-            }
-            else
-            {
-                handleOption(name, value.substring(type.toString().length() + 1), type);
-            }
+            handleOption(name, value.substring(type.toString().length() + 1), type);
         }
     }
 

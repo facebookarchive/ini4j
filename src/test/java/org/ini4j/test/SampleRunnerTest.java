@@ -37,6 +37,7 @@ import org.ini4j.tutorial.IniTutorial;
 import org.ini4j.tutorial.OneMinuteTutorial;
 import org.ini4j.tutorial.OptTutorial;
 import org.ini4j.tutorial.PrefsTutorial;
+import org.ini4j.tutorial.RegTutorial;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -47,14 +48,20 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.PushbackInputStream;
+import java.io.Reader;
 
 import java.lang.reflect.Method;
+
+import java.nio.charset.Charset;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -111,7 +118,8 @@ public class SampleRunnerTest
                     { BeanTutorial.class },
                     { OptTutorial.class },
                     { PrefsTutorial.class },
-                    { OneMinuteTutorial.class }
+                    { OneMinuteTutorial.class },
+                    { RegTutorial.class }
                 });
     }
 
@@ -147,7 +155,7 @@ public class SampleRunnerTest
         Pattern docPattern = Pattern.compile(String.format("^\\s*%s\\|(.*)$", comment));
         Pattern beginPattern = Pattern.compile(String.format("^\\s*%s\\{.*$", comment));
         Pattern endPattern = Pattern.compile(String.format("^\\s*%s\\}.*$", comment));
-        LineNumberReader reader = new LineNumberReader(new FileReader(src));
+        LineNumberReader reader = new LineNumberReader(openReader(src));
         PrintWriter writer = new PrintWriter(new FileWriter(source2document(src)));
         boolean in = false;
 
@@ -186,6 +194,23 @@ public class SampleRunnerTest
 
         reader.close();
         writer.close();
+    }
+
+    private static Reader openReader(File src) throws Exception
+    {
+        PushbackInputStream stream = new PushbackInputStream(new FileInputStream(src), 2);
+        byte[] head = new byte[2];
+        int n = stream.read(head);
+        Charset charset = Charset.forName("UTF-8");
+
+        if ((n == 2) && (head[0] == 0xfe) && (head[1] == 0xff))
+        {
+            charset = Charset.forName("UnicodeLittle");
+        }
+
+        stream.unread(head, 0, n);
+
+        return new InputStreamReader(stream, charset);
     }
 
     private static File source2document(File sourceFile) throws Exception
