@@ -64,7 +64,7 @@ public class RegTutorial extends AbstractTutorial
 //|
 //|* Instantiating
 //|
-//| There is nothing special with instantiating Ini object, but there is a few
+//| There is nothing special with instantiating Reg object, but there is a few
 //| constructor, to simplify loading data. These constructors simply call
 //| the <<<load()>>> method on newly created instance. Ofcource these
 //| constructors are throws IOException.

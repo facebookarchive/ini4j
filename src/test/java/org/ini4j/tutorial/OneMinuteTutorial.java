@@ -37,8 +37,6 @@ import java.io.IOException;
 //|
 //|One minute Tutorial
 //|
-//|
-//|
 //</editor-fold>
 public class OneMinuteTutorial extends AbstractTutorial
 {
@@ -74,7 +72,7 @@ public class OneMinuteTutorial extends AbstractTutorial
     }
 
 //|
-//| Lets read some value from .ini file ...
+//| Lets read some value from .ini file...
 //|
 //{
     void sample01(String filename) throws IOException
@@ -86,13 +84,14 @@ public class OneMinuteTutorial extends AbstractTutorial
 
 //}
 //| ... assuming there is a section with name <<<happy>>>, which contains at least
-//| three options: <<<age>>>, <<<height>>> and <<<homeDir>>> .
+//| the following options: <<<age>>>, <<<height>>> and <<<homeDir>>>.
+//|
         assertEquals(DwarfsData.happy.age, age);
         assertEquals(DwarfsData.happy.height, height, Helper.DELTA);
         assertEquals(DwarfsData.happy.homeDir, dir);
     }
 
-//| Wwhats about writing values ...
+//| Whats about writing values ...
 //|
 //{
     void sample02(String filename) throws IOException
@@ -104,15 +103,13 @@ public class OneMinuteTutorial extends AbstractTutorial
         ini.store();
 
 //}
-//| ... and then file will have a section <<<sleepy>>> and in this section there
-//| will be at least two options: <<<age>>> with value <<<55>>> and <<<weight>>>
+//| ... and then file will have a section <<<sleepy>>> and this section
+//| will contains at least two options: <<<age>>> with value <<<55>>> and <<<weight>>>
 //| with value <<<45.6>>>
         assertEquals(55, (int) ini.get(Dwarfs.PROP_SLEEPY, Dwarf.PROP_AGE, int.class));
         assertEquals(45.6, (double) ini.get(Dwarfs.PROP_SLEEPY, Dwarf.PROP_WEIGHT, double.class), Helper.DELTA);
     }
 
-//|
-//|* Next steps
 //|
 //| If you want to know more about this library, read
 //| {{{../tutorials.html}tutorials}}
