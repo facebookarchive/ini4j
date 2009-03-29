@@ -19,13 +19,19 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-public class BasicMetaMultiMap<K, V> extends BasicMultiMap<K, V>
+public class CommonMultiMap<K, V> extends BasicMultiMap<K, V> implements CommentedMap<K, V>
 {
     private static final long serialVersionUID = 3012579878005541746L;
     private static final String SEPARATOR = ";#;";
     private static final String FIRST_CATEGORY = "";
     private static final String LAST_CATEGORY = "zzzzzz";
+    private static final String META_COMMENT = "comment";
     private NavigableMap<String, Object> _meta;
+
+    @Override public String getComment(Object key)
+    {
+        return (String) getMeta(META_COMMENT, key);
+    }
 
     @Override public void clear()
     {
@@ -40,15 +46,20 @@ public class BasicMetaMultiMap<K, V> extends BasicMultiMap<K, V>
     @Override public void putAll(Map<? extends K, ? extends V> map)
     {
         super.putAll(map);
-        if (map instanceof BasicMetaMultiMap)
+        if (map instanceof CommonMultiMap)
         {
-            Map<String, String> meta = ((BasicMetaMultiMap) map)._meta;
+            Map<String, String> meta = ((CommonMultiMap) map)._meta;
 
             if (meta != null)
             {
                 meta().putAll(meta);
             }
         }
+    }
+
+    @Override public String putComment(K key, String comment)
+    {
+        return (String) putMeta(META_COMMENT, key, comment);
     }
 
     @Override public V remove(Object key)
@@ -72,17 +83,22 @@ public class BasicMetaMultiMap<K, V> extends BasicMultiMap<K, V>
         return ret;
     }
 
-    protected Object getMeta(String category, Object key)
+    @Override public String removeComment(Object key)
+    {
+        return (String) removeMeta(META_COMMENT, key);
+    }
+
+    Object getMeta(String category, Object key)
     {
         return (_meta == null) ? null : _meta.get(makeKey(category, key));
     }
 
-    protected Object putMeta(String category, K key, Object value)
+    Object putMeta(String category, K key, Object value)
     {
         return meta().put(makeKey(category, key), value);
     }
 
-    protected void removeMeta(Object key)
+    void removeMeta(Object key)
     {
         if (_meta != null)
         {
@@ -90,7 +106,7 @@ public class BasicMetaMultiMap<K, V> extends BasicMultiMap<K, V>
         }
     }
 
-    protected Object removeMeta(String category, Object key)
+    Object removeMeta(String category, Object key)
     {
         return (_meta == null) ? null : _meta.remove(makeKey(category, key));
     }

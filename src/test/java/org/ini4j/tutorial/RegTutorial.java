@@ -16,14 +16,18 @@
 package org.ini4j.tutorial;
 
 import org.ini4j.Reg;
+import org.ini4j.Registry;
+
+import org.ini4j.sample.Dwarfs;
+
+import org.ini4j.test.DwarfsData;
+import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import java.util.Set;
 
 //<editor-fold defaultstate="collapsed" desc="apt documentation">
 //|
@@ -36,8 +40,8 @@ import java.util.Set;
 //| the [ini4j] library's .reg interface. Each chapter contains all the
 //| necessary code portions and explanation for a given function.
 //|
-//| Code sniplets in this tutorial tested with the following .ini file:
-//| {{{../sample/dwarfs.reg.html}dwarfs.ini}}
+//| Code sniplets in this tutorial tested with the following .reg file:
+//| {{{../sample/dwarfs.reg.html}dwarfs.reg}}
 //|
 //</editor-fold>
 public class RegTutorial extends AbstractTutorial
@@ -49,7 +53,7 @@ public class RegTutorial extends AbstractTutorial
         new RegTutorial().run(filearg(args));
     }
 
-    protected void run(File arg) throws Exception
+    @Override protected void run(File arg) throws Exception
     {
         Reg reg = new Reg(arg.toURI().toURL());
 
@@ -73,35 +77,23 @@ public class RegTutorial extends AbstractTutorial
         // or instantiate and load data:
         //
         reg = new Reg(new FileInputStream(file));
-
 //}
-        //assertEquals(7, reg.keySet().size());
+        assertNotNull(reg.get(Helper.DWARFS_REG_PATH + "\\dwarfs"));
+        Helper.assertEquals(DwarfsData.dwarfs, reg.as(Dwarfs.class, Helper.DWARFS_REG_PATH + "\\dwarfs\\"));
     }
 
 //|
-//|* Map of maps
+//|* Tree
 //{
     void sample02(Reg reg)
     {
-        Set<String> sectionNames = reg.keySet();
-
-        // you may iterate over sectionNames for example...
-        //  Ini.Section dopey = reg.get("dopey");
-        // Set<String> optionNames = dopey.keySet();
-        //
-        // String age = dopey.get("age");
-        // String weight = dopey.fetch("weight");
-        // String height = dopey.fetch("height");
+        Registry.Key base = reg.get(Reg.Hive.HKEY_CURRENT_USER + "\\Software\\ini4j-test");
+        Registry.Key dwarfs = base.getChild("dwarfs");
+        Registry.Key bashful = dwarfs.getChild("bashful");
+        String homePage = bashful.get("homePage");
 //}
 //|
-//| The Ini object is a MultiMap\<String,Ini.Section\>, that is, a map that
-//| assigns Ini.Section objects to String keys.
-//|
-//| The section is a MultiMap\<String,String\>, that is, a map that assigns
-//| String values to String keys. So the <<<get>>> method is used to get values
-//| inside the section. To get a value, besides <<<get()>>> you can also
-//| use <<<fetch()>>> which resolves any occurrent $\{section/option\} format
-//| variable references in the needed value.
-        //Helper.assertEquals(DwarfsData.dopey, dopey.as(Dwarf.class));
+
+        assertEquals(DwarfsData.bashful.homePage.toString(), homePage);
     }
 }

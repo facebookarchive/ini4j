@@ -24,7 +24,7 @@ import java.io.Writer;
 
 import java.net.URL;
 
-interface Persistable
+public interface Persistable
 {
     File getFile();
 

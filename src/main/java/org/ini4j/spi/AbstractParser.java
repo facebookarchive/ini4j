@@ -26,7 +26,7 @@ import java.net.URL;
 
 import java.util.Locale;
 
-public abstract class AbstractParser
+abstract class AbstractParser
 {
     private final String _comments;
     private Config _config = Config.getGlobal();
@@ -38,24 +38,19 @@ public abstract class AbstractParser
         _comments = comments;
     }
 
-    public void setConfig(Config value)
-    {
-        _config = value;
-    }
-
     protected Config getConfig()
     {
         return _config;
     }
 
+    protected void setConfig(Config value)
+    {
+        _config = value;
+    }
+
     protected void parseError(String line, int lineNumber) throws InvalidFileFormatException
     {
         throw new InvalidFileFormatException("parse error (at line: " + lineNumber + "): " + line);
-    }
-
-    protected String unescapeFilter(String line)
-    {
-        return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
     }
 
     IniSource newIniSource(InputStream input, HandlerBase handler)
@@ -107,6 +102,11 @@ public abstract class AbstractParser
         }
 
         handler.handleOption(name, value);
+    }
+
+    String unescapeFilter(String line)
+    {
+        return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
     }
 
     private int indexOfOperator(String line)

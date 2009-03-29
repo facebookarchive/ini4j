@@ -57,7 +57,7 @@ public interface Registry extends Profile
             }
         }
 
-        public static char SEPARATOR_CHAR = ':';
+        public static final char SEPARATOR_CHAR = ':';
         public static final String SEPARATOR = String.valueOf(SEPARATOR_CHAR);
         public static final char REMOVE_CHAR = '-';
         public static final String REMOVE = String.valueOf(REMOVE_CHAR);

@@ -44,7 +44,8 @@ public class Wini extends Ini
     public Wini(File input) throws IOException, InvalidFileFormatException
     {
         this();
-        load(input);
+        setFile(input);
+        load();
     }
 
     public Wini(URL input) throws IOException, InvalidFileFormatException

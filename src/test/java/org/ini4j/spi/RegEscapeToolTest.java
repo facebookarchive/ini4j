@@ -15,9 +15,28 @@
  */
 package org.ini4j.spi;
 
-interface HandlerBase
-{
-    void handleComment(String comment);
+import static org.junit.Assert.*;
 
-    void handleOption(String optionName, String optionValue);
+import org.junit.Before;
+import org.junit.Test;
+
+public class RegEscapeToolTest
+{
+    protected RegEscapeTool instance;
+
+    @Before public void setUp() throws Exception
+    {
+        instance = RegEscapeTool.getInstance();
+    }
+
+    @Test public void testHexadecimal()
+    {
+        assertEquals(0, instance.hexadecimal(null).length());
+        assertEquals(0, instance.hexadecimal("").length());
+    }
+
+    @Test public void testSingleton() throws Exception
+    {
+        assertEquals(RegEscapeTool.class, RegEscapeTool.getInstance().getClass());
+    }
 }

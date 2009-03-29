@@ -16,34 +16,39 @@
 package org.ini4j.spi;
 
 import org.ini4j.Config;
+import org.ini4j.Ini;
+import org.ini4j.Profile;
 
-import java.io.PrintWriter;
-import java.io.Writer;
-
-public class OptionsFormatter extends AbstractFormatter implements OptionsHandler
+public class IniBuilder extends AbstractProfileBuilder implements IniHandler
 {
-    public static OptionsFormatter newInstance(Writer out, Config config)
-    {
-        OptionsFormatter instance = newInstance();
+    private Ini _ini;
 
-        instance.setOutput((out instanceof PrintWriter) ? (PrintWriter) out : new PrintWriter(out));
-        instance.setConfig(config);
+    public static IniBuilder newInstance(Ini ini)
+    {
+        IniBuilder instance = newInstance();
+
+        instance.setIni(ini);
 
         return instance;
     }
 
-    public void endOptions()
+    public void setIni(Ini value)
     {
-        getOutput().flush();
+        _ini = value;
     }
 
-    public void startOptions()
+    @Override Config getConfig()
     {
-        assert true;
+        return _ini.getConfig();
     }
 
-    private static OptionsFormatter newInstance()
+    @Override Profile getProfile()
     {
-        return ServiceFinder.findService(OptionsFormatter.class);
+        return _ini;
+    }
+
+    private static IniBuilder newInstance()
+    {
+        return ServiceFinder.findService(IniBuilder.class);
     }
 }

@@ -15,24 +15,25 @@
  */
 package org.ini4j;
 
+import org.ini4j.spi.IniBuilder;
 import org.ini4j.spi.IniFormatter;
 import org.ini4j.spi.IniHandler;
 import org.ini4j.spi.IniParser;
-import org.ini4j.spi.ProfileBuilder;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
 import java.net.URL;
 
-public class Ini extends BasicProfile implements Persistable
+public class Ini extends BasicProfile implements Persistable, Configurable
 {
     private static final long serialVersionUID = -6029486578113700585L;
     private Config _config;
@@ -68,7 +69,12 @@ public class Ini extends BasicProfile implements Persistable
         load();
     }
 
-    public void setConfig(Config value)
+    @Override public Config getConfig()
+    {
+        return _config;
+    }
+
+    @Override public void setConfig(Config value)
     {
         _config = value;
     }
@@ -95,7 +101,7 @@ public class Ini extends BasicProfile implements Persistable
 
     @Override public void load(InputStream input) throws IOException, InvalidFileFormatException
     {
-        IniParser.newInstance(getConfig()).parse(input, newBuilder());
+        load(new InputStreamReader(input, getConfig().getFileEncoding()));
     }
 
     @Override public void load(Reader input) throws IOException, InvalidFileFormatException
@@ -105,10 +111,7 @@ public class Ini extends BasicProfile implements Persistable
 
     @Override public void load(File input) throws IOException, InvalidFileFormatException
     {
-        InputStream stream = new FileInputStream(input);
-
-        load(stream);
-        stream.close();
+        load(input.toURI().toURL());
     }
 
     @Override public void load(URL input) throws IOException, InvalidFileFormatException
@@ -128,7 +131,7 @@ public class Ini extends BasicProfile implements Persistable
 
     @Override public void store(OutputStream output) throws IOException
     {
-        store(IniFormatter.newInstance(output, getConfig()));
+        store(new OutputStreamWriter(output, getConfig().getFileEncoding()));
     }
 
     @Override public void store(Writer output) throws IOException
@@ -140,33 +143,13 @@ public class Ini extends BasicProfile implements Persistable
     {
         OutputStream stream = new FileOutputStream(output);
 
-        store(IniFormatter.newInstance(stream, getConfig()));
+        store(stream);
         stream.close();
-    }
-
-    protected Config getConfig()
-    {
-        return _config;
-    }
-
-    @Override protected boolean isTreeMode()
-    {
-        return getConfig().isTree();
-    }
-
-    @Override protected char getPathSeparator()
-    {
-        return getConfig().getPathSeparator();
-    }
-
-    @Override protected boolean isPropertyFirstUpper()
-    {
-        return getConfig().isPropertyFirstUpper();
     }
 
     protected IniHandler newBuilder()
     {
-        return new ProfileBuilder(this, getConfig());
+        return IniBuilder.newInstance(this);
     }
 
     @Override protected void store(IniHandler formatter, Profile.Section section)
@@ -183,5 +166,20 @@ public class Ini extends BasicProfile implements Persistable
         {
             super.store(formatter, section, option, index);
         }
+    }
+
+    @Override boolean isTreeMode()
+    {
+        return getConfig().isTree();
+    }
+
+    @Override char getPathSeparator()
+    {
+        return getConfig().getPathSeparator();
+    }
+
+    @Override boolean isPropertyFirstUpper()
+    {
+        return getConfig().isPropertyFirstUpper();
     }
 }

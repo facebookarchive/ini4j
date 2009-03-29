@@ -21,7 +21,7 @@ import org.ini4j.spi.BeanTool;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BasicOptionMap extends BasicCommentedMultiMap<String, String> implements OptionMap
+public class BasicOptionMap extends CommonMultiMap<String, String> implements OptionMap
 {
     private static final char SUBST_CHAR = '$';
     private static final String SYSTEM_PROPERTY_PREFIX = "@prop/";
@@ -137,7 +137,7 @@ public class BasicOptionMap extends BasicCommentedMultiMap<String, String> imple
         BeanTool.getInstance().inject(bean, newBeanAccess(keyPrefix));
     }
 
-    protected synchronized BeanAccess getDefaultBeanAccess()
+    synchronized BeanAccess getDefaultBeanAccess()
     {
         if (_defaultBeanAccess == null)
         {
@@ -147,22 +147,22 @@ public class BasicOptionMap extends BasicCommentedMultiMap<String, String> imple
         return _defaultBeanAccess;
     }
 
-    protected boolean isPropertyFirstUpper()
+    boolean isPropertyFirstUpper()
     {
         return _propertyFirstUpper;
     }
 
-    protected BeanAccess newBeanAccess()
+    BeanAccess newBeanAccess()
     {
         return new Access();
     }
 
-    protected BeanAccess newBeanAccess(String propertyNamePrefix)
+    BeanAccess newBeanAccess(String propertyNamePrefix)
     {
         return new Access(propertyNamePrefix);
     }
 
-    protected void resolve(StringBuilder buffer)
+    void resolve(StringBuilder buffer)
     {
         Matcher m = EXPRESSION.matcher(buffer);
 
@@ -193,51 +193,51 @@ public class BasicOptionMap extends BasicCommentedMultiMap<String, String> imple
         }
     }
 
-    protected class Access implements BeanAccess
+    class Access implements BeanAccess
     {
         private final String _prefix;
 
-        protected Access()
+        Access()
         {
             this(null);
         }
 
-        protected Access(String prefix)
+        Access(String prefix)
         {
             _prefix = prefix;
         }
 
-        public void propAdd(String propertyName, String value)
+        @Override public void propAdd(String propertyName, String value)
         {
             add(transform(propertyName), value);
         }
 
-        public String propDel(String propertyName)
+        @Override public String propDel(String propertyName)
         {
             return remove(transform(propertyName));
         }
 
-        public String propGet(String propertyName)
+        @Override public String propGet(String propertyName)
         {
             return fetch(transform(propertyName));
         }
 
-        public String propGet(String propertyName, int index)
+        @Override public String propGet(String propertyName, int index)
         {
             return fetch(transform(propertyName), index);
         }
 
-        public int propLength(String propertyName)
+        @Override public int propLength(String propertyName)
         {
             return length(transform(propertyName));
         }
 
-        public String propSet(String propertyName, String value)
+        @Override public String propSet(String propertyName, String value)
         {
             return put(transform(propertyName), value);
         }
 
-        public String propSet(String propertyName, String value, int index)
+        @Override public String propSet(String propertyName, String value, int index)
         {
             return put(transform(propertyName), value, index);
         }

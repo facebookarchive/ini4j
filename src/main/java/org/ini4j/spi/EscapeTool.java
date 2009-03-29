@@ -19,30 +19,18 @@ public class EscapeTool
 {
     private static final String ESCAPE_LETTERS = "\\tnfbr";
     private static final String ESCAPEABLE_CHARS = "\\\t\n\f\b\r";
-    public static final char ESCAPE_CHAR = '\\';
-    protected static final char[] HEX = "0123456789abcdef".toCharArray();
+    private static final char ESCAPE_CHAR = '\\';
+    static final char[] HEX = "0123456789abcdef".toCharArray();
     private static final EscapeTool INSTANCE = ServiceFinder.findService(EscapeTool.class);
     private static final char ASCII_MIN = 0x20;
     private static final char ASCII_MAX = 0x7e;
-    protected static final int HEX_DIGIT_MASK = 0x0f;
-    protected static final int HEX_DIGIT_3_OFFSET = 4;
-    protected static final int HEX_DIGIT_2_OFFSET = 8;
-    protected static final int HEX_DIGIT_1_OFFSET = 12;
-    protected static final int HEX_RADIX = 16;
+    static final int HEX_DIGIT_MASK = 0x0f;
+    static final int HEX_DIGIT_3_OFFSET = 4;
+    static final int HEX_DIGIT_2_OFFSET = 8;
+    static final int HEX_DIGIT_1_OFFSET = 12;
+    static final int HEX_RADIX = 16;
     private static final int UNICODE_HEX_DIGITS = 4;
-    private final String _escapeableChars;
-    private final String _escapeLetters;
-
-    public EscapeTool()
-    {
-        this(ESCAPEABLE_CHARS, ESCAPE_LETTERS);
-    }
-
-    protected EscapeTool(String escapeableChars, String escapeLetters)
-    {
-        _escapeLetters = escapeLetters;
-        _escapeableChars = escapeableChars;
-    }
+    static final char DOUBLE_QUOTE = '"';
 
     public static EscapeTool getInstance()
     {
@@ -57,12 +45,12 @@ public class EscapeTool
         for (int i = 0; i < len; i++)
         {
             char c = line.charAt(i);
-            int idx = _escapeableChars.indexOf(c);
+            int idx = ESCAPEABLE_CHARS.indexOf(c);
 
             if (idx >= 0)
             {
                 buffer.append(ESCAPE_CHAR);
-                buffer.append(_escapeLetters.charAt(idx));
+                buffer.append(ESCAPE_LETTERS.charAt(idx));
             }
             else
             {
@@ -78,6 +66,34 @@ public class EscapeTool
         }
 
         return buffer.toString();
+    }
+
+    public String quote(String value)
+    {
+        String ret = value;
+
+        if ((value != null) && (value.length() != 0))
+        {
+            StringBuilder buff = new StringBuilder();
+
+            buff.append(DOUBLE_QUOTE);
+            for (int i = 0; i < value.length(); i++)
+            {
+                char c = value.charAt(i);
+
+                if ((c == ESCAPE_CHAR) || (c == DOUBLE_QUOTE))
+                {
+                    buff.append(ESCAPE_CHAR);
+                }
+
+                buff.append(c);
+            }
+
+            buff.append(DOUBLE_QUOTE);
+            ret = buff.toString();
+        }
+
+        return ret;
     }
 
     public String unescape(String line)
@@ -97,11 +113,11 @@ public class EscapeTool
 
                 if (next == i)
                 {
-                    int idx = _escapeLetters.indexOf(c);
+                    int idx = ESCAPE_LETTERS.indexOf(c);
 
                     if (idx >= 0)
                     {
-                        c = _escapeableChars.charAt(idx);
+                        c = ESCAPEABLE_CHARS.charAt(idx);
                     }
 
                     buffer.append(c);
@@ -120,7 +136,34 @@ public class EscapeTool
         return buffer.toString();
     }
 
-    protected void escapeBinary(StringBuilder buff, char c)
+    public String unquote(String value)
+    {
+        StringBuilder buff = new StringBuilder();
+        boolean escape = false;
+
+        for (int i = 1; i < (value.length() - 1); i++)
+        {
+            char c = value.charAt(i);
+
+            if (c == ESCAPE_CHAR)
+            {
+                if (!escape)
+                {
+                    escape = true;
+
+                    continue;
+                }
+
+                escape = false;
+            }
+
+            buff.append(c);
+        }
+
+        return buff.toString();
+    }
+
+    void escapeBinary(StringBuilder buff, char c)
     {
         buff.append("\\u");
         buff.append(HEX[(c >>> HEX_DIGIT_1_OFFSET) & HEX_DIGIT_MASK]);
@@ -129,7 +172,7 @@ public class EscapeTool
         buff.append(HEX[c & HEX_DIGIT_MASK]);
     }
 
-    protected int unescapeBinary(StringBuilder buff, char escapeType, String line, int index)
+    int unescapeBinary(StringBuilder buff, char escapeType, String line, int index)
     {
         int ret = index;
 

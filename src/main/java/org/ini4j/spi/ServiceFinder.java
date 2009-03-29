@@ -25,7 +25,7 @@ import java.io.InputStreamReader;
  * @author Szkiba Iv�n
  * @version $Name:  $
  */
-public final class ServiceFinder
+final class ServiceFinder
 {
     private static final String SERVICES_PATH = "META-INF/services/";
 
@@ -52,7 +52,7 @@ public final class ServiceFinder
      * @throws IllegalArgumentException keres�si vagy p�ld�nyos�t�si hiba eset�n
      * @return a keresett oszt�ly implement�l� objektum
      */
-    public static <T> T findService(Class<T> clazz)
+    static <T> T findService(Class<T> clazz)
     {
         try
         {

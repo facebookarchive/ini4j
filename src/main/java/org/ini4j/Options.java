@@ -21,18 +21,19 @@ import org.ini4j.spi.OptionsHandler;
 import org.ini4j.spi.OptionsParser;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
 import java.net.URL;
 
-public class Options extends BasicOptionMap implements Persistable
+public class Options extends BasicOptionMap implements Persistable, Configurable
 {
     private static final long serialVersionUID = -1119753444859181822L;
     private String _comment;
@@ -80,7 +81,12 @@ public class Options extends BasicOptionMap implements Persistable
         _comment = value;
     }
 
-    public void setConfig(Config value)
+    @Override public Config getConfig()
+    {
+        return _config;
+    }
+
+    @Override public void setConfig(Config value)
     {
         _config = value;
     }
@@ -107,7 +113,7 @@ public class Options extends BasicOptionMap implements Persistable
 
     @Override public void load(InputStream input) throws IOException, InvalidFileFormatException
     {
-        OptionsParser.newInstance(getConfig()).parse(input, newBuilder());
+        load(new InputStreamReader(input, getConfig().getFileEncoding()));
     }
 
     @Override public void load(Reader input) throws IOException, InvalidFileFormatException
@@ -122,10 +128,7 @@ public class Options extends BasicOptionMap implements Persistable
 
     @Override public void load(File input) throws IOException, InvalidFileFormatException
     {
-        InputStream stream = new FileInputStream(input);
-
-        OptionsParser.newInstance(getConfig()).parse(stream, newBuilder());
-        stream.close();
+        load(input.toURI().toURL());
     }
 
     @Override public void store() throws IOException
@@ -140,7 +143,7 @@ public class Options extends BasicOptionMap implements Persistable
 
     @Override public void store(OutputStream output) throws IOException
     {
-        store(OptionsFormatter.newInstance(output, getConfig()));
+        store(new OutputStreamWriter(output, getConfig().getFileEncoding()));
     }
 
     @Override public void store(Writer output) throws IOException
@@ -156,19 +159,9 @@ public class Options extends BasicOptionMap implements Persistable
         stream.close();
     }
 
-    protected Config getConfig()
-    {
-        return _config;
-    }
-
-    @Override protected boolean isPropertyFirstUpper()
-    {
-        return getConfig().isPropertyFirstUpper();
-    }
-
     protected OptionsHandler newBuilder()
     {
-        return new OptionsBuilder(this, getConfig());
+        return OptionsBuilder.newInstance(this);
     }
 
     protected void store(OptionsHandler formatter) throws IOException
@@ -189,6 +182,11 @@ public class Options extends BasicOptionMap implements Persistable
         }
 
         formatter.endOptions();
+    }
+
+    @Override boolean isPropertyFirstUpper()
+    {
+        return getConfig().isPropertyFirstUpper();
     }
 
     private void storeComment(OptionsHandler formatter, String comment)

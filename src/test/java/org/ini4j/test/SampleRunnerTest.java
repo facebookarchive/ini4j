@@ -52,11 +52,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.io.PushbackInputStream;
 import java.io.Reader;
 
 import java.lang.reflect.Method;
@@ -198,19 +198,23 @@ public class SampleRunnerTest
 
     private static Reader openReader(File src) throws Exception
     {
-        PushbackInputStream stream = new PushbackInputStream(new FileInputStream(src), 2);
+        InputStream stream = new FileInputStream(src);
         byte[] head = new byte[2];
         int n = stream.read(head);
-        Charset charset = Charset.forName("UTF-8");
 
-        if ((n == 2) && (head[0] == 0xfe) && (head[1] == 0xff))
+        stream.close();
+        Charset charset;
+
+        if ((n == 2) && (head[0] == -1) && (head[1] == -2))
         {
             charset = Charset.forName("UnicodeLittle");
         }
+        else
+        {
+            charset = Charset.forName("UTF-8");
+        }
 
-        stream.unread(head, 0, n);
-
-        return new InputStreamReader(stream, charset);
+        return new InputStreamReader(new FileInputStream(src), charset);
     }
 
     private static File source2document(File sourceFile) throws Exception

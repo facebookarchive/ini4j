@@ -13,25 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j;
+package org.ini4j.spi;
 
-public class BasicCommentedMultiMap<K, V> extends BasicMetaMultiMap<K, V> implements CommentedMap<K, V>
+import org.ini4j.Registry.Type;
+
+public class TypeValuesPair
 {
-    private static final long serialVersionUID = -3191166132698733784L;
-    private static final String META_COMMENT = "comment";
+    private final Type _type;
+    private final String[] _values;
 
-    @Override public String getComment(Object key)
+    @SuppressWarnings("PMD.ArrayIsStoredDirectly")
+    public TypeValuesPair(Type type, String[] values)
     {
-        return (String) getMeta(META_COMMENT, key);
+        _type = type;
+        _values = values;
     }
 
-    @Override public String putComment(K key, String comment)
+    public Type getType()
     {
-        return (String) putMeta(META_COMMENT, key, comment);
+        return _type;
     }
 
-    @Override public String removeComment(Object key)
+    public String[] getValues()
     {
-        return (String) removeMeta(META_COMMENT, key);
+        return _values;
     }
 }

@@ -27,14 +27,14 @@ public class WinEscapeTool extends EscapeTool
         return INSTANCE;
     }
 
-    @Override protected void escapeBinary(StringBuilder buff, char c)
+    @Override void escapeBinary(StringBuilder buff, char c)
     {
         buff.append("\\x");
         buff.append(HEX[(c >>> HEX_DIGIT_3_OFFSET) & HEX_DIGIT_MASK]);
         buff.append(HEX[c & HEX_DIGIT_MASK]);
     }
 
-    @Override protected int unescapeBinary(StringBuilder buff, char escapeType, String line, int index)
+    @Override int unescapeBinary(StringBuilder buff, char escapeType, String line, int index)
     {
         int ret = index;
 

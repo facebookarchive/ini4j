@@ -172,7 +172,7 @@ public class Helper
         addDwarf(prof, DwarfsData.sneezy);
     }
 
-    public static void assertEquals(Registry.Key exp, Registry.Key act) throws Exception
+    public static void assertEquals(Registry.Key exp, Registry.Key act)
     {
         Assert.assertNotNull(exp);
         Assert.assertEquals(exp.size(), act.size());
@@ -187,7 +187,7 @@ public class Helper
         }
     }
 
-    public static void assertEquals(Dwarfs expected, Dwarfs actual) throws Exception
+    public static void assertEquals(Dwarfs expected, Dwarfs actual)
     {
         assertEquals(expected.getBashful(), actual.getBashful());
         assertEquals(expected.getDoc(), actual.getDoc());

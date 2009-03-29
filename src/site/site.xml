@@ -72,6 +72,7 @@
             <item name="Ini" href="tutorial/IniTutorial.java.html"/>
             <item name="Bean" href="tutorial/BeanTutorial.java.html"/>
             <item name="Options" href="tutorial/OptTutorial.java.html"/>
+            <item name="Reg" href="tutorial/RegTutorial.java.html"/>
             <item name="Preferences" href="tutorial/PrefsTutorial.java.html"/>
         </menu>
         <menu name="Community">

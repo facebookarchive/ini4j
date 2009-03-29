@@ -19,7 +19,7 @@ import org.ini4j.Config;
 
 import java.io.PrintWriter;
 
-public abstract class AbstractFormatter implements HandlerBase
+abstract class AbstractFormatter implements HandlerBase
 {
     private static final char OPERATOR = '=';
     private static final char COMMENT = '#';
@@ -28,11 +28,6 @@ public abstract class AbstractFormatter implements HandlerBase
     private Config _config = Config.getGlobal();
     private boolean _header = true;
     private PrintWriter _output;
-
-    public void setConfig(Config value)
-    {
-        _config = value;
-    }
 
     @Override public void handleComment(String comment)
     {
@@ -93,9 +88,9 @@ public abstract class AbstractFormatter implements HandlerBase
         return _config;
     }
 
-    protected void setHeader(boolean value)
+    protected void setConfig(Config value)
     {
-        _header = value;
+        _config = value;
     }
 
     protected PrintWriter getOutput()
@@ -108,7 +103,12 @@ public abstract class AbstractFormatter implements HandlerBase
         _output = value;
     }
 
-    protected String escapeFilter(String input)
+    void setHeader(boolean value)
+    {
+        _header = value;
+    }
+
+    String escapeFilter(String input)
     {
         return getConfig().isEscape() ? EscapeTool.getInstance().escape(input) : input;
     }

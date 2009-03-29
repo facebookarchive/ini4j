@@ -126,7 +126,8 @@ public class ConfigParser implements Serializable
         return get(section, option, raw, Collections.EMPTY_MAP);
     }
 
-    public String get(String sectionName, String optionName, boolean raw, Map<String, String> variables) throws NoSectionException, NoOptionException, InterpolationException
+    public String get(String sectionName, String optionName, boolean raw, Map<String, String> variables) throws NoSectionException, NoOptionException,
+        InterpolationException
     {
         String value = requireOption(sectionName, optionName);
 
@@ -162,7 +163,8 @@ public class ConfigParser implements Serializable
         return items(sectionName, raw, Collections.EMPTY_MAP);
     }
 
-    public List<Map.Entry<String, String>> items(String sectionName, boolean raw, Map<String, String> variables) throws NoSectionException, InterpolationMissingOptionException
+    public List<Map.Entry<String, String>> items(String sectionName, boolean raw, Map<String, String> variables) throws NoSectionException,
+        InterpolationMissingOptionException
     {
         Ini.Section section = requireSection(sectionName);
         Map<String, String> ret;
@@ -299,7 +301,7 @@ public class ConfigParser implements Serializable
         _ini.store(new FileWriter(file));
     }
 
-    protected PyIni getIni()
+    protected Ini getIni()
     {
         return _ini;
     }
@@ -406,7 +408,7 @@ public class ConfigParser implements Serializable
         }
     }
 
-    protected static class PyIni extends Ini
+    static class PyIni extends Ini
     {
         private static final char SUBST_CHAR = '%';
         private static final Pattern EXPRESSION = Pattern.compile("(?<!\\\\)\\%\\(([^\\)]+)\\)");
@@ -535,7 +537,7 @@ public class ConfigParser implements Serializable
             formatter.endIni();
         }
 
-        protected void store(IniHandler formatter, Section section)
+        @Override protected void store(IniHandler formatter, Section section)
         {
             formatter.startSection(section.getName());
             for (String name : section.keySet())

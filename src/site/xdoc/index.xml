@@ -27,7 +27,7 @@
             <p>
  The [ini4j] is a simple Java API for handling configuration files in Windows .ini format.
  Additionally, the library includes
- <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/prefs/Preferences.html">Java Preferences API</a>
+ <a href="http://java.sun.com/javase/6/docs/api/java/util/prefs/Preferences.html">Java Preferences API</a>
  implementation based on the .ini file.
             </p>
             <menu>

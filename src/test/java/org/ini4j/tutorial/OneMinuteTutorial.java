@@ -15,7 +15,7 @@
  */
 package org.ini4j.tutorial;
 
-import org.ini4j.Ini;
+import org.ini4j.Wini;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.Dwarfs;
@@ -79,7 +79,7 @@ public class OneMinuteTutorial extends AbstractTutorial
 //{
     void sample01(String filename) throws IOException
     {
-        Ini ini = new Ini(new File(filename));
+        Wini ini = new Wini(new File(filename));
         int age = ini.get("happy", "age", int.class);
         double height = ini.get("happy", "height", double.class);
         String dir = ini.get("happy", "homeDir");
@@ -97,7 +97,7 @@ public class OneMinuteTutorial extends AbstractTutorial
 //{
     void sample02(String filename) throws IOException
     {
-        Ini ini = new Ini(new File(filename));
+        Wini ini = new Wini(new File(filename));
 
         ini.put("sleepy", "age", 55);
         ini.put("sleepy", "weight", 45.6);

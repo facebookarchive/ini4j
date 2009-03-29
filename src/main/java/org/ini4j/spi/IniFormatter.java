@@ -17,39 +17,19 @@ package org.ini4j.spi;
 
 import org.ini4j.Config;
 
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 
 public class IniFormatter extends AbstractFormatter implements IniHandler
 {
-    public static IniFormatter newInstance(Writer out)
+    public static IniFormatter newInstance(Writer out, Config config)
     {
         IniFormatter instance = newInstance();
 
         instance.setOutput((out instanceof PrintWriter) ? (PrintWriter) out : new PrintWriter(out));
-
-        return instance;
-    }
-
-    public static IniFormatter newInstance(OutputStream out)
-    {
-        return newInstance(new OutputStreamWriter(out, Config.getGlobal().getFileEncoding()));
-    }
-
-    public static IniFormatter newInstance(Writer out, Config config)
-    {
-        IniFormatter instance = newInstance(out);
-
         instance.setConfig(config);
 
         return instance;
-    }
-
-    public static IniFormatter newInstance(OutputStream out, Config config)
-    {
-        return newInstance(new OutputStreamWriter(out, config.getFileEncoding()), config);
     }
 
     @Override public void endIni()
@@ -79,7 +59,7 @@ public class IniFormatter extends AbstractFormatter implements IniHandler
         }
     }
 
-    protected static IniFormatter newInstance()
+    private static IniFormatter newInstance()
     {
         return ServiceFinder.findService(IniFormatter.class);
     }

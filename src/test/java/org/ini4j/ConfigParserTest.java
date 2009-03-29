@@ -195,9 +195,9 @@ public class ConfigParserTest
         vars.remove(MISSING);
         requireMissingOptionException(SECTION, OPTION);
         instance.getIni().add(ConfigParser.PyIni.DEFAULT_SECTION_NAME);
-        instance.getIni().getDefaultSection().put(MISSING, DUMMY);
+        ((ConfigParser.PyIni) instance.getIni()).getDefaultSection().put(MISSING, DUMMY);
         assertEquals(DUMMY, instance.get(SECTION, OPTION));
-        instance.getIni().getDefaultSection().remove(MISSING);
+        ((ConfigParser.PyIni) instance.getIni()).getDefaultSection().remove(MISSING);
         requireMissingOptionException(SECTION, OPTION);
         instance = new ConfigParser();
         instance.addSection(SECTION);
@@ -381,7 +381,7 @@ public class ConfigParserTest
         ConfigParser saved = new ConfigParser(instance.defaults());
 
         saved.read(file);
-        checkEquals(instance.getIni().getDefaultSection(), saved.getIni().getDefaultSection());
+        checkEquals(((ConfigParser.PyIni) instance.getIni()).getDefaultSection(), ((ConfigParser.PyIni) saved.getIni()).getDefaultSection());
         assertEquals(instance.sections().size(), saved.sections().size());
         for (String sectionName : instance.sections())
         {

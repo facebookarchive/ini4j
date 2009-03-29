@@ -13,11 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j.spi;
+package org.ini4j;
 
-interface HandlerBase
+import org.ini4j.spi.BeanAccess;
+
+public class BasicOptionMapGate extends BasicOptionMap
 {
-    void handleComment(String comment);
+    private static final long serialVersionUID = -479440334238558045L;
 
-    void handleOption(String optionName, String optionValue);
+    @Override public BeanAccess newBeanAccess()
+    {
+        return super.newBeanAccess();
+    }
+
+    @Override public BeanAccess newBeanAccess(String prefix)
+    {
+        return super.newBeanAccess(prefix);
+    }
 }

@@ -18,10 +18,9 @@ package org.ini4j;
 import org.ini4j.spi.IniFormatter;
 import org.ini4j.spi.IniHandler;
 import org.ini4j.spi.IniParser;
-import org.ini4j.spi.RegistryBuilder;
+import org.ini4j.spi.RegBuilder;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,7 +34,7 @@ import java.io.Writer;
 
 import java.net.URL;
 
-public class Reg extends BasicRegistry implements Registry, Persistable
+public class Reg extends BasicRegistry implements Registry, Persistable, Configurable
 {
     private static final long serialVersionUID = -1485602876922985912L;
     protected static final String DEFAULT_SUFFIX = ".reg";
@@ -98,6 +97,16 @@ public class Reg extends BasicRegistry implements Registry, Persistable
     public static boolean isWindows()
     {
         return WINDOWS;
+    }
+
+    @Override public Config getConfig()
+    {
+        return _config;
+    }
+
+    public void setConfig(Config value)
+    {
+        _config = value;
     }
 
     @Override public File getFile()
@@ -166,10 +175,7 @@ public class Reg extends BasicRegistry implements Registry, Persistable
 
     @Override public void load(File input) throws IOException, InvalidFileFormatException
     {
-        InputStream stream = new FileInputStream(input);
-
-        load(stream);
-        stream.close();
+        load(input.toURI().toURL());
     }
 
     public void read(String registryKey) throws IOException
@@ -233,29 +239,24 @@ public class Reg extends BasicRegistry implements Registry, Persistable
         }
     }
 
-    protected Config getConfig()
+    protected IniHandler newBuilder()
     {
-        return _config;
+        return RegBuilder.newInstance(this);
     }
 
-    @Override protected boolean isTreeMode()
+    @Override boolean isTreeMode()
     {
         return getConfig().isTree();
     }
 
-    @Override protected char getPathSeparator()
+    @Override char getPathSeparator()
     {
         return getConfig().getPathSeparator();
     }
 
-    @Override protected boolean isPropertyFirstUpper()
+    @Override boolean isPropertyFirstUpper()
     {
         return getConfig().isPropertyFirstUpper();
-    }
-
-    protected IniHandler newBuilder()
-    {
-        return new RegistryBuilder(this, getConfig());
     }
 
     void exec(String[] args) throws IOException

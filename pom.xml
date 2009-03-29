@@ -426,6 +426,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <quiet>true</quiet>
+                    <noqualifier>java.*</noqualifier>
+                    <links>
+                        <link>http://java.sun.com/javase/6/docs/api/</link>
+                    </links>
+                    <keywords>true</keywords>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <reports>

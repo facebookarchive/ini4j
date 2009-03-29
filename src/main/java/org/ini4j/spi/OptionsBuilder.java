@@ -20,15 +20,22 @@ import org.ini4j.Options;
 
 public class OptionsBuilder implements OptionsHandler
 {
-    private final Config _config;
     private boolean _header;
     private String _lastComment;
-    private final Options _options;
+    private Options _options;
 
-    public OptionsBuilder(Options options, Config config)
+    public static OptionsBuilder newInstance(Options opts)
     {
-        _options = options;
-        _config = config;
+        OptionsBuilder instance = newInstance();
+
+        instance.setOptions(opts);
+
+        return instance;
+    }
+
+    public void setOptions(Options value)
+    {
+        _options = value;
     }
 
     @Override public void endOptions()
@@ -85,8 +92,13 @@ public class OptionsBuilder implements OptionsHandler
         _header = true;
     }
 
-    protected Config getConfig()
+    protected static OptionsBuilder newInstance()
     {
-        return _config;
+        return ServiceFinder.findService(OptionsBuilder.class);
+    }
+
+    private Config getConfig()
+    {
+        return _options.getConfig();
     }
 }

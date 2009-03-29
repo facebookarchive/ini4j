@@ -31,6 +31,12 @@ public class EscapeToolTest
     private static final String VALUE4 = "Iv\u0017n";
     private static final String ESCAPE4 = "Iv\\u0017n";
     private static final String INVALID_UNICODE = "\\u98x";
+    private static final String UNQUOTED1 = "simple";
+    private static final String QUOTED1 = "\"simple\"";
+    private static final String UNQUOTED2 = "no\\csak\"";
+    private static final String QUOTED2 = "\"no\\\\csak\\\"\"";
+    private static final String UNQUOTED3 = "";
+    private static final String QUOTED3 = "";
     protected EscapeTool instance;
 
     @Before public void setUp() throws Exception
@@ -50,6 +56,14 @@ public class EscapeToolTest
     public void testInvalidUnicode()
     {
         instance.unescape(INVALID_UNICODE);
+    }
+
+    @Test public void testQuote() throws Exception
+    {
+        assertEquals(QUOTED1, instance.quote(UNQUOTED1));
+        assertEquals(QUOTED2, instance.quote(UNQUOTED2));
+        assertEquals(QUOTED3, instance.quote(UNQUOTED3));
+        assertNull(instance.quote(null));
     }
 
     @Test public void testSingleton() throws Exception

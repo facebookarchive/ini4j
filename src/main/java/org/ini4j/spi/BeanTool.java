@@ -32,7 +32,7 @@ import java.util.TimeZone;
 
 public class BeanTool
 {
-    protected static final String PARSE_METHOD = "valueOf";
+    private static final String PARSE_METHOD = "valueOf";
     private static final BeanTool INSTANCE = ServiceFinder.findService(BeanTool.class);
 
     public static final BeanTool getInstance()
@@ -49,7 +49,6 @@ public class BeanTool
                 Method method = pd.getWriteMethod();
                 String name = pd.getName();
 
-//                if ((method != null) && props.containsKey(name))
                 if ((method != null) && (props.propLength(name) != 0))
                 {
                     Object value;

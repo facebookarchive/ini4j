@@ -30,7 +30,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -126,29 +125,31 @@ public class IniFormatterTest
 
     @Test public void testNewInstance() throws Exception
     {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        StringWriter stringWriter;
+        PrintWriter printWriter;
         Config cfg = new Config();
         IniFormatter instance;
 
-        instance = IniFormatter.newInstance(stream);
+        stringWriter = new StringWriter();
+        instance = IniFormatter.newInstance(stringWriter, cfg);
+
         instance.getOutput().print(DUMMY);
         instance.getOutput().flush();
-        assertEquals(DUMMY, stream.toString());
-
-        //
-        instance = IniFormatter.newInstance(stream, cfg);
+        assertEquals(DUMMY, stringWriter.toString());
         assertSame(cfg, instance.getConfig());
 
         //
-        instance = IniFormatter.newInstance(stringWriter);
+        stringWriter = new StringWriter();
+        instance = IniFormatter.newInstance(stringWriter, cfg);
+
         instance.getOutput().print(DUMMY);
         instance.getOutput().flush();
         assertEquals(DUMMY, stringWriter.toString());
 
         //
-        instance = IniFormatter.newInstance(printWriter);
+        printWriter = new PrintWriter(stringWriter);
+        instance = IniFormatter.newInstance(printWriter, cfg);
+
         assertSame(printWriter, instance.getOutput());
     }
 

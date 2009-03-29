@@ -25,7 +25,7 @@ import java.lang.reflect.Proxy;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section> implements Profile
+public class BasicProfile extends CommonMultiMap<String, Profile.Section> implements Profile
 {
     private static final String SECTION_SYSTEM_PROPERTIES = "@prop";
     private static final String SECTION_ENVIRONMENT = "@env";
@@ -96,7 +96,8 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
 
     @Override public <T> T as(Class<T> clazz, String prefix)
     {
-        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler(prefix)));
+        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz },
+                    new BeanInvocationHandler(prefix)));
     }
 
     @Override public String fetch(Object sectionName, Object optionName)
@@ -144,27 +145,27 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
         return (sec == null) ? null : sec.remove(optionName);
     }
 
-    protected boolean isTreeMode()
+    boolean isTreeMode()
     {
         return _treeMode;
     }
 
-    protected char getPathSeparator()
+    char getPathSeparator()
     {
         return PATH_SEPARATOR;
     }
 
-    protected boolean isPropertyFirstUpper()
+    boolean isPropertyFirstUpper()
     {
         return _propertyFirstUpper;
     }
 
-    protected Section newSection(String name)
+    Section newSection(String name)
     {
         return new BasicProfileSection(this, name);
     }
 
-    protected void resolve(StringBuilder buffer, Section owner)
+    void resolve(StringBuilder buffer, Section owner)
     {
         Matcher m = EXPRESSION.matcher(buffer);
 
@@ -197,7 +198,7 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
         }
     }
 
-    protected void store(IniHandler formatter)
+    void store(IniHandler formatter)
     {
         formatter.startIni();
         store(formatter, getComment());
@@ -209,7 +210,7 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
         formatter.endIni();
     }
 
-    protected void store(IniHandler formatter, Section s)
+    void store(IniHandler formatter, Section s)
     {
         store(formatter, getComment(s.getName()));
         formatter.startSection(s.getName());
@@ -221,7 +222,7 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
         formatter.endSection();
     }
 
-    protected void store(IniHandler formatter, String comment)
+    void store(IniHandler formatter, String comment)
     {
         if ((comment != null) && (comment.length() != 0))
         {
@@ -229,7 +230,7 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
         }
     }
 
-    protected void store(IniHandler formatter, Section section, String option)
+    void store(IniHandler formatter, Section section, String option)
     {
         store(formatter, section.getComment(option));
         int n = section.length(option);
@@ -240,7 +241,7 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
         }
     }
 
-    protected void store(IniHandler formatter, Section section, String option, int index)
+    void store(IniHandler formatter, Section section, String option, int index)
     {
         formatter.handleOption(option, section.get(option, index));
     }
@@ -270,7 +271,7 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
         return (m.group(G_SECTION_IDX) == null) ? -1 : Integer.parseInt(m.group(G_SECTION_IDX));
     }
 
-    private class BeanInvocationHandler extends AbstractBeanInvocationHandler
+    private final class BeanInvocationHandler extends AbstractBeanInvocationHandler
     {
         private final String _prefix;
 
@@ -333,7 +334,7 @@ public class BasicProfile extends BasicCommentedMultiMap<String, Profile.Section
             return containsKey(transform(property));
         }
 
-        protected String transform(String property)
+        String transform(String property)
         {
             String ret = (_prefix == null) ? property : (_prefix + property);
 

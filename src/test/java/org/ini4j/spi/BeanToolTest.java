@@ -15,7 +15,7 @@
  */
 package org.ini4j.spi;
 
-import org.ini4j.BasicOptionMap;
+import org.ini4j.BasicOptionMapGate;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.DwarfBean;
@@ -219,19 +219,9 @@ public class BeanToolTest
         assertArrayEquals(new int[] { 1, 2, 3 }, proxy.getFortuneNumber());
     }
 
-    static class TestMap extends BasicOptionMap
+    static class TestMap extends BasicOptionMapGate
     {
-        private static final long serialVersionUID = -479440334238558045L;
-
-        @Override protected BeanAccess newBeanAccess()
-        {
-            return super.newBeanAccess();
-        }
-
-        @Override protected BeanAccess newBeanAccess(String prefix)
-        {
-            return super.newBeanAccess(prefix);
-        }
+        private static final long serialVersionUID = 4818386732025655044L;
     }
 
     private static class BadBean

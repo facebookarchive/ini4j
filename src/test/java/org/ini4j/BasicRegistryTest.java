@@ -23,31 +23,7 @@ public class BasicRegistryTest
 {
     private static final String KEY = "key";
     private static final String DUMMY = "dummy";
-    public static final String UNQUOTED1 = "simple";
-    public static final String QUOTED1 = "\"simple\"";
-    public static final String UNQUOTED2 = "no\\csak\"";
-    public static final String QUOTED2 = "\"no\\\\csak\\\"\"";
-    public static final String UNQUOTED3 = "";
-    public static final String QUOTED3 = "";
     private static final String VERSION = "Windows Registry Editor Version 5.00";
-
-    @Test public void testHexadecimal()
-    {
-        BasicRegistry reg = new BasicRegistry();
-
-        assertEquals(0, reg.hexadecimal(null).length());
-        assertEquals(0, reg.hexadecimal("").length());
-    }
-
-    @Test public void testQuote() throws Exception
-    {
-        BasicRegistry reg = new BasicRegistry();
-
-        assertEquals(QUOTED1, reg.quote(UNQUOTED1));
-        assertEquals(QUOTED2, reg.quote(UNQUOTED2));
-        assertEquals(QUOTED3, reg.quote(UNQUOTED3));
-        assertNull(reg.quote(null));
-    }
 
     @Test public void testVersion()
     {

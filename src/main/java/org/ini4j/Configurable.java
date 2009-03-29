@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j.spi;
+package org.ini4j;
 
-interface HandlerBase
+public interface Configurable
 {
-    void handleComment(String comment);
+    Config getConfig();
 
-    void handleOption(String optionName, String optionValue);
+    void setConfig(Config value);
 }

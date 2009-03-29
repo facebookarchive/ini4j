@@ -22,7 +22,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BasicCommentedMultiMapTest
+public class CommonMultiMapTest
 {
     private static final String KEY = "key";
     private static final String VALUE = "value";
@@ -30,7 +30,7 @@ public class BasicCommentedMultiMapTest
 
     @Test public void testClearAndRemove() throws Exception
     {
-        BasicCommentedMultiMap<String, String> map = new BasicCommentedMultiMap<String, String>();
+        CommonMultiMap<String, String> map = new CommonMultiMap<String, String>();
 
         assertNull(map.removeComment(KEY));
 
@@ -84,8 +84,8 @@ public class BasicCommentedMultiMapTest
 
     @Test public void testPutAll() throws Exception
     {
-        BasicCommentedMultiMap<String, String> map = new BasicCommentedMultiMap<String, String>();
-        BasicCommentedMultiMap<String, String> copy = new BasicCommentedMultiMap<String, String>();
+        CommonMultiMap<String, String> map = new CommonMultiMap<String, String>();
+        CommonMultiMap<String, String> copy = new CommonMultiMap<String, String>();
 
         map.put(KEY, VALUE);
         map.putComment(KEY, COMMENT);
@@ -101,7 +101,7 @@ public class BasicCommentedMultiMapTest
         assertEquals(VALUE, copy.get(KEY));
 
         //
-        map = new BasicCommentedMultiMap<String, String>();
+        map = new CommonMultiMap<String, String>();
         map.put(KEY, VALUE);
         copy.clear();
         copy.putAll(map);

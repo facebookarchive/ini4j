@@ -18,14 +18,12 @@ package org.ini4j;
 import org.ini4j.Profile.Section;
 
 import org.ini4j.spi.IniHandler;
-
-import java.nio.charset.Charset;
+import org.ini4j.spi.RegEscapeTool;
+import org.ini4j.spi.TypeValuesPair;
 
 public class BasicRegistry extends BasicProfile implements Registry
 {
     private static final long serialVersionUID = -6432826330714504802L;
-    private static final char DOUBLE_QUOTE = '"';
-    protected static final Charset HEX_CHARSET = Charset.forName("UTF-16LE");
     private String _version;
 
     public BasicRegistry()
@@ -83,113 +81,25 @@ public class BasicRegistry extends BasicProfile implements Registry
         return (Key) super.remove(key, index);
     }
 
-    @Override protected Key newSection(String name)
+    @Override Key newSection(String name)
     {
         return new BasicRegistryKey(this, name);
     }
 
-    @Override protected void store(IniHandler formatter, Section section, String option)
+    @Override void store(IniHandler formatter, Section section, String option)
     {
         store(formatter, section.getComment(option));
         Type type = ((Key) section).getType(option, Type.REG_SZ);
-        String rawName = option.equals(Key.DEFAULT_NAME) ? option : quote(option);
-        String rawValue;
+        String rawName = option.equals(Key.DEFAULT_NAME) ? option : RegEscapeTool.getInstance().quote(option);
+        String[] values = new String[section.length(option)];
 
-        if (section.length(option) == 0)
+        for (int i = 0; i < values.length; i++)
         {
-            rawValue = null;
+            values[i] = section.get(option, i);
         }
-        else
-        {
-            rawValue = (type == Type.REG_SZ) ? quote(section.get(option)) : raw(section, option, type);
-        }
+
+        String rawValue = RegEscapeTool.getInstance().encode(new TypeValuesPair(type, values));
 
         formatter.handleOption(rawName, rawValue);
-    }
-
-    String hexadecimal(String value)
-    {
-        StringBuilder buff = new StringBuilder();
-
-        if ((value != null) && (value.length() != 0))
-        {
-            byte[] bytes = value.getBytes(HEX_CHARSET);
-
-            for (int i = 0; i < bytes.length; i++)
-            {
-                buff.append(Character.forDigit((bytes[i] & 0xf0) >> 4, 16));
-                buff.append(Character.forDigit(bytes[i] & 0x0f, 16));
-                buff.append(',');
-            }
-
-            buff.append("00,00");
-        }
-
-        return buff.toString();
-    }
-
-    String quote(String value)
-    {
-        String ret = value;
-
-        if ((value != null) && (value.length() != 0))
-        {
-            StringBuilder buff = new StringBuilder();
-
-            buff.append(DOUBLE_QUOTE);
-            for (int i = 0; i < value.length(); i++)
-            {
-                char c = value.charAt(i);
-
-                if ((c == ESCAPE_CHAR) || (c == DOUBLE_QUOTE))
-                {
-                    buff.append(ESCAPE_CHAR);
-                }
-
-                buff.append(c);
-            }
-
-            buff.append(DOUBLE_QUOTE);
-            ret = buff.toString();
-        }
-
-        return ret;
-    }
-
-    String raw(Section section, String option, Type type)
-    {
-        StringBuilder buff = new StringBuilder();
-
-        buff.append(type.toString());
-        buff.append(Type.SEPARATOR_CHAR);
-        switch (type)
-        {
-
-            case REG_EXPAND_SZ:
-                buff.append(hexadecimal(section.get(option)));
-                break;
-
-            case REG_DWORD:
-                buff.append(String.format("%08x", Long.parseLong(section.get(option))));
-                break;
-
-            case REG_MULTI_SZ:
-                int n = section.length(option);
-
-                for (int i = 0; i < n; i++)
-                {
-                    buff.append(hexadecimal(section.get(option, i)));
-                    buff.append(',');
-                }
-
-                buff.append("00,00");
-                break;
-
-            default:
-                buff.append(section.get(option));
-                break;
-        }
-
-        return buff.toString();
     }
 }

@@ -32,10 +32,10 @@ class IniSource
     public static final char INCLUDE_OPTIONAL = '?';
     private static final char ESCAPE_CHAR = '\\';
     private static final String NEWLINE = "\n";
-    protected final boolean allowInclude;
-    protected final String commentChars;
+    private final boolean _allowInclude;
     private URL _base;
     private IniSource _chain;
+    private final String _commentChars;
     private final Charset _fileEncoding;
     private final HandlerBase _handler;
     private final LineNumberReader _reader;
@@ -49,8 +49,8 @@ class IniSource
     {
         _reader = new LineNumberReader(input);
         _handler = handler;
-        allowInclude = includeFlag;
-        commentChars = comments;
+        _allowInclude = includeFlag;
+        _commentChars = comments;
         _fileEncoding = fileEncoding;
     }
 
@@ -116,7 +116,7 @@ class IniSource
     {
         String line = input;
 
-        if (allowInclude && (line.length() > 2) && (line.charAt(0) == INCLUDE_BEGIN) && (line.charAt(line.length() - 1) == INCLUDE_END))
+        if (_allowInclude && (line.length() > 2) && (line.charAt(0) == INCLUDE_BEGIN) && (line.charAt(line.length() - 1) == INCLUDE_END))
         {
             line = line.substring(1, line.length() - 1).trim();
             boolean optional = line.charAt(0) == INCLUDE_OPTIONAL;
@@ -132,7 +132,7 @@ class IniSource
             {
                 try
                 {
-                    _chain = new IniSource(loc, _handler, allowInclude, commentChars, _fileEncoding);
+                    _chain = new IniSource(loc, _handler, _allowInclude, _commentChars, _fileEncoding);
                 }
                 catch (IOException x)
                 {
@@ -145,7 +145,7 @@ class IniSource
             }
             else
             {
-                _chain = new IniSource(loc, _handler, allowInclude, commentChars, _fileEncoding);
+                _chain = new IniSource(loc, _handler, _allowInclude, _commentChars, _fileEncoding);
                 line = readLine();
             }
         }
@@ -182,7 +182,7 @@ class IniSource
             {
                 handleComment(comment);
             }
-            else if ((commentChars.indexOf(line.charAt(0)) >= 0) && (buff.length() == 0))
+            else if ((_commentChars.indexOf(line.charAt(0)) >= 0) && (buff.length() == 0))
             {
                 comment.append(line.substring(1));
                 comment.append(NEWLINE);

@@ -30,7 +30,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -142,29 +141,33 @@ public class OptionsFormatterTest
 
     @Test public void testNewInstance() throws Exception
     {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        StringWriter stringWriter;
+        PrintWriter printWriter;
+
+        ;
         Config cfg = new Config();
         OptionsFormatter instance;
 
-        instance = OptionsFormatter.newInstance(stream);
+        stringWriter = new StringWriter();
+        instance = OptionsFormatter.newInstance(stringWriter, cfg);
+
         instance.getOutput().print(DUMMY);
         instance.getOutput().flush();
-        assertEquals(DUMMY, stream.toString());
-
-        //
-        instance = OptionsFormatter.newInstance(stream, cfg);
+        assertEquals(DUMMY, stringWriter.toString());
         assertSame(cfg, instance.getConfig());
 
         //
-        instance = OptionsFormatter.newInstance(stringWriter);
+        stringWriter = new StringWriter();
+        instance = OptionsFormatter.newInstance(stringWriter, cfg);
+
         instance.getOutput().print(DUMMY);
         instance.getOutput().flush();
         assertEquals(DUMMY, stringWriter.toString());
 
         //
-        instance = OptionsFormatter.newInstance(printWriter);
+        printWriter = new PrintWriter(stringWriter);
+        instance = OptionsFormatter.newInstance(printWriter, cfg);
+
         assertSame(printWriter, instance.getOutput());
     }
 

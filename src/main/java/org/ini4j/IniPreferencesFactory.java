@@ -52,7 +52,7 @@ public class IniPreferencesFactory implements PreferencesFactory
         return _user;
     }
 
-    protected String getIniLocation(String key)
+    String getIniLocation(String key)
     {
         String location = System.getProperty(key);
 
@@ -74,7 +74,7 @@ public class IniPreferencesFactory implements PreferencesFactory
         return location;
     }
 
-    protected URL getResource(String location) throws IllegalArgumentException
+    URL getResource(String location) throws IllegalArgumentException
     {
         try
         {
@@ -98,7 +98,7 @@ public class IniPreferencesFactory implements PreferencesFactory
         }
     }
 
-    protected InputStream getResourceAsStream(String location) throws IllegalArgumentException
+    InputStream getResourceAsStream(String location) throws IllegalArgumentException
     {
         try
         {
@@ -110,7 +110,7 @@ public class IniPreferencesFactory implements PreferencesFactory
         }
     }
 
-    protected Preferences newIniPreferences(String key)
+    Preferences newIniPreferences(String key)
     {
         Ini ini = new Ini();
         String location = getIniLocation(key);
