@@ -22,7 +22,8 @@ package org.ini4j.sample;
 //|
 //|IniSample
 //|
-//| Displaying every setting of a given section.
+//| The [ini4j] library has a simple API: the .ini file is a map of sections, while the section is a map of options.
+//| Due to the Java 1.5 generics these are type safe maps.
 //|
 //| This sample program expect the .ini file as a command line argument.
 //| If there is no such argument, it use the {{{dwarfs.ini.html}dwarfs.ini}} file.

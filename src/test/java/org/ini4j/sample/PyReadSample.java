@@ -17,11 +17,12 @@ package org.ini4j.sample;
 
 //<editor-fold defaultstate="collapsed" desc="apt documentation">
 //|
-//|                                 ------------
-//|                                 PyReadSample
+//|                                 ----------------------------------
+//|                                 Using Python like ConfigParser API
 //|
-//|PyReadSample
+//|Using Python like ConfigParser API
 //|
+//| For Python programmers the simlest API to use is ConfigParser.
 //| This sample presents accessing .ini files as Python ConfigParser objects.
 //|
 //| This sample program expect the .ini file as a command line argument.

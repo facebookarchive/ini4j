@@ -38,6 +38,7 @@ import org.ini4j.tutorial.OneMinuteTutorial;
 import org.ini4j.tutorial.OptTutorial;
 import org.ini4j.tutorial.PrefsTutorial;
 import org.ini4j.tutorial.RegTutorial;
+import org.ini4j.tutorial.WindowsRegistryTutorial;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -73,7 +74,9 @@ public class SampleRunnerTest
 {
     private static final String DOC_PATH = "generated-site/apt";
     private static final String JAVA_SUFFIX = ".java";
+    private static final String PACKAGE_INFO = "package-info" + JAVA_SUFFIX;
     private static final String APT_SUFFIX = ".apt";
+    private static final String APT_INDEX = "index" + APT_SUFFIX;
     private static final String CODE_BEGIN = "\n+----+\n";
     private static final String CODE_END = "+----+\n\n";
     private static File _documentDir;
@@ -95,6 +98,8 @@ public class SampleRunnerTest
         document(sourceFile(DwarfBean.class), "//");
         document(sourceFile(Dwarfs.class), "//");
         document(sourceFile(DwarfsBean.class), "//");
+        document(sourceFile(IniTutorial.class.getPackage()), "//");
+        document(sourceFile(IniSample.class.getPackage()), "//");
     }
 
     @Parameters public static Collection data()
@@ -102,6 +107,8 @@ public class SampleRunnerTest
         return Arrays.asList(
                 new Object[][]
                 {
+
+                    // samples
                     { ReadStringSample.class },
                     { ReadPrimitiveSample.class },
                     { IniSample.class },
@@ -114,12 +121,15 @@ public class SampleRunnerTest
                     { FromSample.class },
                     { ToSample.class },
                     { PyReadSample.class },
-                    { IniTutorial.class },
-                    { BeanTutorial.class },
-                    { OptTutorial.class },
-                    { PrefsTutorial.class },
+
+                    // tutorials
                     { OneMinuteTutorial.class },
-                    { RegTutorial.class }
+                    { IniTutorial.class },
+                    { OptTutorial.class },
+                    { RegTutorial.class },
+                    { BeanTutorial.class },
+                    { WindowsRegistryTutorial.class },
+                    { PrefsTutorial.class },
                 });
     }
 
@@ -142,6 +152,7 @@ public class SampleRunnerTest
         }
 
         document(_sourceFile, "//");
+        index(source2document(_sourceFile), source2index(_clazz));
         if (tmp.length() > 0)
         {
             append(tmp);
@@ -196,6 +207,55 @@ public class SampleRunnerTest
         writer.close();
     }
 
+    private static void index(File src, File dst) throws Exception
+    {
+        LineNumberReader reader = new LineNumberReader(new FileReader(src));
+        PrintWriter writer = new PrintWriter(new FileWriter(dst, true));
+        String name = src.getName().replace(".apt", ".html");
+        boolean h1 = false;
+        boolean p = false;
+
+        for (String line = reader.readLine(); line != null; line = reader.readLine())
+        {
+            if (line.length() == 0)
+            {
+                if (p)
+                {
+                    writer.println();
+
+                    break;
+                }
+                else if (h1)
+                {
+                    p = true;
+                }
+            }
+            else
+            {
+                if (Character.isSpaceChar(line.charAt(0)))
+                {
+                    if (p)
+                    {
+                        writer.println(line);
+                    }
+                }
+                else
+                {
+                    if (!h1)
+                    {
+                        h1 = true;
+                        writer.print(String.format(" *{{{%s}%s}}", name, line));
+                        writer.println();
+                        writer.println();
+                    }
+                }
+            }
+        }
+
+        writer.close();
+        reader.close();
+    }
+
     private static Reader openReader(File src) throws Exception
     {
         InputStream stream = new FileInputStream(src);
@@ -224,12 +284,22 @@ public class SampleRunnerTest
 
         dir.mkdir();
 
-        return new File(dir, name + APT_SUFFIX);
+        return new File(dir, name.equals(PACKAGE_INFO) ? APT_INDEX : (name + APT_SUFFIX));
+    }
+
+    private static File source2index(Class clazz) throws Exception
+    {
+        return source2document(sourceFile(clazz.getPackage()));
     }
 
     private static File sourceFile(Class clazz) throws Exception
     {
         return Helper.getSourceFile(clazz.getName().replaceAll("\\.", "/") + JAVA_SUFFIX);
+    }
+
+    private static File sourceFile(Package pkg) throws Exception
+    {
+        return Helper.getSourceFile(pkg.getName().replaceAll("\\.", "/") + '/' + PACKAGE_INFO);
     }
 
     private void append(File stdout) throws Exception
