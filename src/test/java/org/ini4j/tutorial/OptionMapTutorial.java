@@ -17,62 +17,60 @@ package org.ini4j.tutorial;
 
 import org.ini4j.Ini;
 
-import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.Dwarfs;
 
 import org.ini4j.test.DwarfsData;
-import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 
-import java.util.Map;
 import java.util.Set;
 
 //<editor-fold defaultstate="collapsed" desc="apt documentation">
 //|
 //|                -------------
-//|                Ini Tutorial
+//|                OptionMap Tutorial
 //|
-//|Ini Tutorial - How to use \[ini4j\] api
+//|OptionMap Tutorial - more than just String,String map
 //|
-//| This tutorial familiarize the reader with the usage of
-//| the [ini4j] library's natural interface.
+//| Option is a name/value pair stored in OptionMap. But OptionMap adds a lot of
+//| usefull data access methods than simple get. OptionMap is base interface for
+//| both Ini.Section, Registry.Key and Options classes, so this tutorial will
+//| usefull for all of these.
 //|
-//| Code sniplets in this tutorial tested with the following .ini file:
+//| So in samples bellow you can use either Ini.Section, Registry.Key or Options
+//| classes instead of OptionMap interface, because these classes implements
+//| OptionMap.
+//|
+//| Code sniplets in this tutorial tested with the following files:
 //| {{{../sample/dwarfs.ini.html}dwarfs.ini}}
+//| {{{../sample/dwarfs.opt.html}dwarfs.opt}}
 //|
 //</editor-fold>
-public class IniTutorial extends AbstractTutorial
+public class OptionMapTutorial extends AbstractTutorial
 {
     public static void main(String[] args) throws Exception
     {
-        new IniTutorial().run(filearg(args));
+        new OptionMapTutorial().run(filearg(args));
     }
 
     @Override protected void run(File arg) throws Exception
     {
         Ini ini = new Ini(arg.toURI().toURL());
 
-        sample01(ini);
-        sample02(arg);
+        sample01(ini.get(Dwarfs.PROP_HAPPY));
         sample03(ini);
         sample04(ini);
     }
 
 //|* Data model
 //|
-//| Data model for .ini files is represented by org.ini4j.Ini class. This class
-//| implements Map\<String,Section\>. It mean you can access sections using
-//| java.util.Map collection API interface. The Section is also a map, which is
-//| implements Map\<String,String\>.
+//| OptionMap implements Map\<String,String\>, so you can access options using
+//| standard collection api.
 //{
-    void sample01(Ini ini)
+    void sample01(Ini.Section section)
     {
-        Ini.Section section = ini.get("happy");
 
         //
         // read some values
@@ -81,49 +79,13 @@ public class IniTutorial extends AbstractTutorial
         String weight = section.get("weight");
         String homeDir = section.get("homeDir");
 
-        //
-        // .. or just use java.util.Map interface...
-        //
-        Map<String, String> map = ini.get("happy");
-
-        age = map.get("age");
-        weight = map.get("weight");
-        homeDir = map.get("homeDir");
-
-        // get all section names
-        Set<String> sectionNames = ini.keySet();
+        // get all option names
+        Set<String> optionNames = section.keySet();
 
 //}
-        Helper.assertEquals(DwarfsData.happy, section.as(Dwarf.class));
-    }
-
-//|
-//|* Loading and storing data
-//|
-//| There is several way to load data into Ini object. It can be done by using
-//| <<<load>>> methods or overloaded constructors. Data can be load from
-//| InputStream, Reader, URL or File.
-//|
-//| You can store data using <<<store>>> methods. Data can store to OutputStream,
-//| Writer, or File.
-//{
-    void sample02(File file) throws IOException
-    {
-        Ini ini = new Ini();
-
-        ini.load(new FileReader(file));
-
-        //
-        // or instantiate and load data:
-        //
-        ini = new Ini(new FileReader(file));
-        File copy = File.createTempFile("sample", ".ini");
-
-        ini.store(copy);
-//}
-        ini = new Ini(copy);
-        Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
-        copy.delete();
+        assertEquals(String.valueOf(DwarfsData.happy.age), age);
+        assertEquals(String.valueOf(DwarfsData.happy.weight), weight);
+        assertEquals(String.valueOf(DwarfsData.happy.homeDir), homeDir);
     }
 
 //|
@@ -186,7 +148,7 @@ public class IniTutorial extends AbstractTutorial
         String n4 = sneezy.get("fortuneNumber", 3);  // = 44
 
         // ok, lets do in it easier...
-        //   int[] n = sneezy.get("fortuneNumber", int[].class);
+        int[] n = sneezy.get("fortuneNumber", int[].class);
 //}
     }
 }

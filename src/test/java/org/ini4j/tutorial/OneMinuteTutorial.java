@@ -35,7 +35,10 @@ import java.io.IOException;
 //|                -------------------
 //|                One minute Tutorial
 //|
-//|One minute Tutorial
+//|One minute Tutorial - first step
+//|
+//| First step with \[ini4j\] library. No data model, no interfaces, no design
+//| patterns, simply read and write windows .ini files.
 //|
 //</editor-fold>
 public class OneMinuteTutorial extends AbstractTutorial
@@ -84,14 +87,23 @@ public class OneMinuteTutorial extends AbstractTutorial
 
 //}
 //| ... assuming there is a section with name <<<happy>>>, which contains at least
-//| the following options: <<<age>>>, <<<height>>> and <<<homeDir>>>.
+//| the following options: <<<age>>>, <<<height>>> and <<<homeDir>>>, something like
+//| this:
+//|
+//|+---------+
+//| [happy]
+//| age = 99
+//| height = 77.66
+//| homeDir = /home/happy
+//|+---------+
+//|
 //|
         assertEquals(DwarfsData.happy.age, age);
         assertEquals(DwarfsData.happy.height, height, Helper.DELTA);
         assertEquals(DwarfsData.happy.homeDir, dir);
     }
 
-//| Whats about writing values ...
+//| Now let see how to write values....
 //|
 //{
     void sample02(String filename) throws IOException
@@ -105,12 +117,19 @@ public class OneMinuteTutorial extends AbstractTutorial
 //}
 //| ... and then file will have a section <<<sleepy>>> and this section
 //| will contains at least two options: <<<age>>> with value <<<55>>> and <<<weight>>>
-//| with value <<<45.6>>>
+//| with value <<<45.6>>>, something like this:
+//|
+//|+---------+
+//| [sleepy]
+//| age = 55
+//| weight = 45.6
+//|+---------+
+//|
         assertEquals(55, (int) ini.get(Dwarfs.PROP_SLEEPY, Dwarf.PROP_AGE, int.class));
         assertEquals(45.6, (double) ini.get(Dwarfs.PROP_SLEEPY, Dwarf.PROP_WEIGHT, double.class), Helper.DELTA);
     }
 
 //|
 //| If you want to know more about this library, read
-//| {{{../tutorials.html}tutorials}}
+//| {{{../tutorial/index.html}tutorials}}
 }
