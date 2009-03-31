@@ -17,6 +17,8 @@ package org.ini4j;
 
 public interface OptionMap extends MultiMap<String, String>, CommentedMap<String, String>
 {
+    <T> T getAll(Object key, Class<T> clazz);
+
     void add(String key, Object value);
 
     void add(String key, Object value, int index);
@@ -33,6 +35,8 @@ public interface OptionMap extends MultiMap<String, String>, CommentedMap<String
 
     <T> T fetch(Object key, int index, Class<T> clazz);
 
+    <T> T fetchAll(Object key, Class<T> clazz);
+
     void from(Object bean);
 
     void from(Object bean, String keyPrefix);
@@ -44,6 +48,8 @@ public interface OptionMap extends MultiMap<String, String>, CommentedMap<String
     String put(String key, Object value);
 
     String put(String key, Object value, int index);
+
+    void putAll(String key, Object value);
 
     void to(Object bean);
 

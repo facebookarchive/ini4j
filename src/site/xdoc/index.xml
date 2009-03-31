@@ -31,7 +31,7 @@
  implementation based on the .ini file.
             </p>
             <menu>
-                <li><a href="tutorials.html"><img src="img/tutorial.png"/> Tutorials</a></li>
+                <li><a href="tutorial/index.html"><img src="img/tutorial.png"/> Tutorials</a></li>
                 <li><a href="documents.html"><img src="img/docs.png"/> Documents</a></li>
                 <li><a href="download.html"><img src="img/download.png"/> Download</a></li>
                 <li><a href="community.html"><img src="img/community.png"/> Community</a></li>
@@ -41,6 +41,7 @@
                     [ini4j] has very simple, but intuitive document model for windows .ini files.
                     Basicly it is two level of Maps. You can use full power of Collections API.
                     The Ini (Wini) class is map of Sections. Section is map of name/value pairs (options).
+                    <a href="tutorial/IniTutorial.java.html">--&gt; Ini Tutorial</a>
                 </p>
             </subsection>
             <subsection name="Multiply option/section values">
@@ -66,6 +67,24 @@
                     properties. Unlike original java.util.Properties, <code>Options</code> implements
                     Map&lt;String,String&gt;, so it more confortable to use
                     standard Collections api.
+                    <a href="tutorial/OptTutorial.java.html">--&gt; Options Tutorial</a>
+                </p>
+            </subsection>
+            <subsection name="Read/write Windows registry">
+                <p>
+                    Yes, it is possible now to read/write registry from java programs
+                    without native (JNI) code ! [ini4j] is able to read and write
+                    registry keys. And almost all .ini features (expression handling, multi value,
+                    bean interface, etc) works with windows registry.
+                    <a href="tutorial/WindowsRegistryTutorial.java.html">--&gt; Windows Registry Tutorial</a>
+                </p>
+            </subsection>
+            <subsection name="Handle .REG file format">
+                <p>
+                    On windows systems .REG file is common for registry import/export.
+                    It has similar but bit different syntax than old .ini format.
+                    [ini4j] fully support .REG file format.
+                    <a href="tutorial/RegTutorial.java.html">--&gt; Reg Tutorial</a>
                 </p>
             </subsection>
         </section>

@@ -101,6 +101,14 @@ public class BasicOptionMapTest
         assertNull(map.fetch(Dwarf.PROP_AGE, 0));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testFetchAllException()
+    {
+        OptionMap map = new BasicOptionMap();
+
+        map.fetchAll(Dwarf.PROP_FORTUNE_NUMBER, String.class);
+    }
+
     @Test public void testFromToAs() throws Exception
     {
         DwarfBean bean = new DwarfBean();
@@ -144,6 +152,14 @@ public class BasicOptionMapTest
         assertEquals(DwarfsData.bashful.homePage, map.fetch(Dwarf.PROP_HOME_PAGE, URI.class));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetAllException()
+    {
+        OptionMap map = new BasicOptionMap();
+
+        map.getAll(Dwarf.PROP_FORTUNE_NUMBER, String.class);
+    }
+
     @Test public void testPropertyFirstUpper()
     {
         DwarfBean bean;
@@ -177,6 +193,28 @@ public class BasicOptionMapTest
         map.put(Dwarf.PROP_FORTUNE_NUMBER, DwarfsData.sneezy.fortuneNumber[3], 2);
         map.add(Dwarf.PROP_FORTUNE_NUMBER, DwarfsData.sneezy.fortuneNumber[0], 0);
         Helper.assertEquals(DwarfsData.sneezy, map.as(Dwarf.class));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPutAllException()
+    {
+        OptionMap map = new BasicOptionMap();
+
+        map.putAll(Dwarf.PROP_FORTUNE_NUMBER, 0);
+    }
+
+    @Test public void testPutGetFetchAll()
+    {
+        OptionMap map = new BasicOptionMap();
+
+        map.putAll(Dwarf.PROP_FORTUNE_NUMBER, DwarfsData.sneezy.fortuneNumber);
+        assertEquals(DwarfsData.sneezy.fortuneNumber.length, map.length(Dwarf.PROP_FORTUNE_NUMBER));
+        assertArrayEquals(DwarfsData.sneezy.fortuneNumber, map.getAll(Dwarf.PROP_FORTUNE_NUMBER, int[].class));
+        assertArrayEquals(DwarfsData.sneezy.fortuneNumber, map.fetchAll(Dwarf.PROP_FORTUNE_NUMBER, int[].class));
+        map.putAll(Dwarf.PROP_FORTUNE_NUMBER, (int[]) null);
+        assertEquals(0, map.length(Dwarf.PROP_FORTUNE_NUMBER));
+        assertEquals(0, map.getAll(Dwarf.PROP_FORTUNE_NUMBER, int[].class).length);
+        assertEquals(0, map.fetchAll(Dwarf.PROP_FORTUNE_NUMBER, int[].class).length);
     }
 
     @Test public void testResolve() throws Exception

@@ -35,7 +35,7 @@ import java.io.IOException;
 //|                -------------------
 //|                One minute Tutorial
 //|
-//|One minute Tutorial - first step
+//|One minute Tutorial - First step
 //|
 //| First step with \[ini4j\] library. No data model, no interfaces, no design
 //| patterns, simply read and write windows .ini files.

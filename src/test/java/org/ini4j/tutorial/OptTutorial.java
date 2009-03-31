@@ -35,7 +35,7 @@ import java.util.Set;
 //|                ----------------
 //|                Options Tutorial
 //|
-//|Options Tutorial
+//|Options Tutorial - java.util.Properties replacement
 //|
 //| Options (org.ini4j.Options) is a java.util.Properties replacement with
 //| several useful features, like:

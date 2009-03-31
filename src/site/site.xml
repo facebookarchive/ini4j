@@ -66,7 +66,7 @@
         <menu name="Documents">
             <item name="Home" href="index.html"/>
             <item name="Overview" href="overview.html" />
-            <item name="Features" href="features.html" />
+<!--            <item name="Features" href="features.html" /> -->
             <item name="JavaDocs" href="apidocs/index.html"/>
             <item name="Goals" href="design.html"/>
             <item name="TODO" href="todo.html"/>
@@ -74,10 +74,10 @@
         <menu name="Tutorials">
             <item name="One minute" href="tutorial/OneMinuteTutorial.java.html"/>
             <item name="Ini" href="tutorial/IniTutorial.java.html"/>
-            <item name="Options" href="tutorial/OptTutorial.java.html"/>
             <item name="Reg" href="tutorial/RegTutorial.java.html"/>
-            <item name="Bean" href="tutorial/BeanTutorial.java.html"/>
             <item name="Windows Registry" href="tutorial/WindowsRegistryTutorial.java.html"/>
+            <item name="Options" href="tutorial/OptTutorial.java.html"/>
+            <item name="Bean" href="tutorial/BeanTutorial.java.html"/>
             <item name="Preferences" href="tutorial/PrefsTutorial.java.html"/>
         </menu>
         <menu name="Community">

@@ -16,17 +16,10 @@
 package org.ini4j.tutorial;
 
 import org.ini4j.Reg;
-import org.ini4j.Registry;
-
-import org.ini4j.sample.Dwarfs;
-
-import org.ini4j.test.DwarfsData;
-import org.ini4j.test.Helper;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 //<editor-fold defaultstate="collapsed" desc="apt documentation">
@@ -34,11 +27,10 @@ import java.io.IOException;
 //|                -------------------------
 //|                Windows Registry Tutorial
 //|
-//|Windows Registry Tutorial
+//|Windows Registry Tutorial - Read/Write windows registry
 //|
-//| The purpose of this document is to familiarize the reader with the usage of
-//| the [ini4j] library's .reg interface. Each chapter contains all the
-//| necessary code portions and explanation for a given function.
+//| Yes, it is possible now to read/write registry from java programs
+//| without native (JNI) code !
 //|
 //| Code sniplets in this tutorial tested with the following .reg file:
 //| {{{../sample/dwarfs.reg.html}dwarfs.reg}}
@@ -58,45 +50,59 @@ public class WindowsRegistryTutorial extends AbstractTutorial
 
     @Override protected void run(File arg) throws Exception
     {
-        Reg reg = new Reg(arg.toURI().toURL());
-
-        sample01(arg);
-        sample02(reg);
+        sample01();
+        sample02();
+        sample03();
     }
 
 //|
-//|* Instantiating
+//|* Write
 //|
-//| There is nothing special with instantiating Reg object, but there is a few
-//| constructor, to simplify loading data. These constructors simply call
-//| the <<<load()>>> method on newly created instance. Ofcource these
-//| constructors are throws IOException.
+//| Lets write something to registry
 //{
-    void sample01(File file) throws IOException
+    void sample01() throws IOException
     {
         Reg reg = new Reg();
+        Reg.Key key = reg.add("HKEY_CURRENT_USER\\hello");
 
-        //
-        // or instantiate and load data:
-        //
-        reg = new Reg(new FileInputStream(file));
+        key.put("world", "Hello World !");
+        reg.write();
 //}
-        assertNotNull(reg.get(Helper.DWARFS_REG_PATH + "\\dwarfs"));
-        Helper.assertEquals(DwarfsData.dwarfs, reg.as(Dwarfs.class, Helper.DWARFS_REG_PATH + "\\dwarfs\\"));
+//| This code will create a "hello" key in HKEY_CURRENT_USER hive, and
+//| put "Hello World !" with name "world".
     }
 
 //|
-//|* Tree
+//|* Read
+//|
+//| Lets read something from Control Panel settings...
 //{
-    void sample02(Reg reg)
+    void sample02() throws IOException
     {
-        Registry.Key base = reg.get(Reg.Hive.HKEY_CURRENT_USER + "\\Software\\ini4j-test");
-        Registry.Key dwarfs = base.getChild("dwarfs");
-        Registry.Key bashful = dwarfs.getChild("bashful");
-        String homePage = bashful.get("homePage");
+        Reg reg = new Reg("HKEY_CURRENT_USER\\Control Panel");
+        Reg.Key cp = reg.get("HKEY_CURRENT_USER\\Control Panel");
+        Reg.Key sound = cp.getChild("Sound");
+        String beep = sound.get("Beep");
+
 //}
 //|
+    }
 
-        assertEquals(DwarfsData.bashful.homePage.toString(), homePage);
+//|
+//|* Create environment variable
+//|
+//| Lets create some environment variable under current users environment....
+//{
+    void sample03() throws IOException
+    {
+        Reg reg = new Reg();
+        Reg.Key env = reg.add("HKEY_CURRENT_USER\\Environment");
+
+        env.put("SAMPLE_HOME", "c:\\sample");
+        reg.write();
+//}
+//| Thats it ! Now your environment contains variable SAMPLE_HOME ! Unfortunetly
+//| you have to restart Windows to see this variable.... but hey, we crated new
+//| environment variable from java without any native code !
     }
 }

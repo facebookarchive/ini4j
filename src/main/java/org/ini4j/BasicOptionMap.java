@@ -17,6 +17,9 @@ package org.ini4j;
 
 import org.ini4j.spi.BeanAccess;
 import org.ini4j.spi.BeanTool;
+import org.ini4j.spi.Warnings;
+
+import java.lang.reflect.Array;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,6 +46,22 @@ public class BasicOptionMap extends CommonMultiMap<String, String> implements Op
     public BasicOptionMap(boolean propertyFirstUpper)
     {
         _propertyFirstUpper = propertyFirstUpper;
+    }
+
+    @Override
+    @SuppressWarnings(Warnings.UNCHECKED)
+    public <T> T getAll(Object key, Class<T> clazz)
+    {
+        requireArray(clazz);
+        T value;
+
+        value = (T) Array.newInstance(clazz.getComponentType(), length(key));
+        for (int i = 0; i < length(key); i++)
+        {
+            Array.set(value, i, BeanTool.getInstance().parse(get(key, i), clazz.getComponentType()));
+        }
+
+        return value;
     }
 
     @Override public void add(String key, Object value)
@@ -97,6 +116,22 @@ public class BasicOptionMap extends CommonMultiMap<String, String> implements Op
         return BeanTool.getInstance().parse(fetch(key, index), clazz);
     }
 
+    @Override
+    @SuppressWarnings(Warnings.UNCHECKED)
+    public <T> T fetchAll(Object key, Class<T> clazz)
+    {
+        requireArray(clazz);
+        T value;
+
+        value = (T) Array.newInstance(clazz.getComponentType(), length(key));
+        for (int i = 0; i < length(key); i++)
+        {
+            Array.set(value, i, BeanTool.getInstance().parse(fetch(key, i), clazz.getComponentType()));
+        }
+
+        return value;
+    }
+
     @Override public void from(Object bean)
     {
         BeanTool.getInstance().inject(getDefaultBeanAccess(), bean);
@@ -125,6 +160,25 @@ public class BasicOptionMap extends CommonMultiMap<String, String> implements Op
     @Override public String put(String key, Object value, int index)
     {
         return super.put(key, ((value == null) || (value instanceof String)) ? (String) value : String.valueOf(value), index);
+    }
+
+    @Override public void putAll(String key, Object value)
+    {
+        if (value != null)
+        {
+            requireArray(value.getClass());
+        }
+
+        remove(key);
+        if (value != null)
+        {
+            int n = Array.getLength(value);
+
+            for (int i = 0; i < n; i++)
+            {
+                add(key, Array.get(value, i));
+            }
+        }
     }
 
     @Override public void to(Object bean)
@@ -190,6 +244,14 @@ public class BasicOptionMap extends CommonMultiMap<String, String> implements Op
                 buffer.replace(m.start(), m.end(), value);
                 m.reset(buffer);
             }
+        }
+    }
+
+    private void requireArray(Class clazz)
+    {
+        if (!clazz.isArray())
+        {
+            throw new IllegalArgumentException("Array required");
         }
     }
 

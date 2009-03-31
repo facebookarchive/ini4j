@@ -16,9 +16,8 @@
 package org.ini4j.tutorial;
 
 import org.ini4j.Reg;
-import org.ini4j.Registry;
 
-import org.ini4j.sample.Dwarfs;
+import org.ini4j.sample.Dwarf;
 
 import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
@@ -26,19 +25,20 @@ import org.ini4j.test.Helper;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+
+import java.net.URI;
 
 //<editor-fold defaultstate="collapsed" desc="apt documentation">
 //|
 //|                -------------
 //|                Reg Tutorial
 //|
-//|Reg Tutorial
+//|Reg Tutorial - Windows .REG file handling
 //|
-//| The purpose of this document is to familiarize the reader with the usage of
-//| the [ini4j] library's .reg interface. Each chapter contains all the
-//| necessary code portions and explanation for a given function.
+//| Windows regedit commands .REG file format is very close to .ini format.
+//| \[ini4j\] provides org.ini4j.Reg class to model .REG format. This tutorial
+//| show the differences between Ini and Reg classes.
 //|
 //| Code sniplets in this tutorial tested with the following .reg file:
 //| {{{../sample/dwarfs.reg.html}dwarfs.reg}}
@@ -58,42 +58,85 @@ public class RegTutorial extends AbstractTutorial
         Reg reg = new Reg(arg.toURI().toURL());
 
         sample01(arg);
-        sample02(reg);
+        sample02();
     }
 
 //|
-//|* Instantiating
+//|* Loading and storing
 //|
-//| There is nothing special with instantiating Reg object, but there is a few
-//| constructor, to simplify loading data. These constructors simply call
-//| the <<<load()>>> method on newly created instance. Ofcource these
-//| constructors are throws IOException.
+//| There is nothing special with loading and storing data, it works exactly same
+//| as in Ini class. But while loading data, Reg class will strip .REG special
+//| values (double qoute around strings, type data from option, etc). So after
+//| loading a .REG file, you can use it exactly same way as Ini class. Ofcource
+//| if you store Reg class, it will put all above meta information int file, so
+//| the result will be a valid .REG file. You don't need to worry about file
+//| encoding, version in first line, etc,etc.
+//|
+//| Assume you have a .REG file, with the following section/key:
+//|
+//|+---+
+//|[HKEY_CURRENT_USER\Software\ini4j-test\dwarfs\bashful]
+//|@="bashful"
+//|"weight"=hex(2):34,00,35,00,2e,00,37,00,00,00
+//|"height"="98.8"
+//|"age"=dword:00000043
+//|"homePage"="http://snowwhite.tale/~bashful"
+//|"homeDir"="/home/bashful"
+//|+---+
+//|
+//| As you see, "weight" and "age" is not simlpe strings. The "height" is a REG_DWORD
+//| type while "weight" is REG_EXPAND_SZ. Don't worry, Reg class take care about
+//| type conversion, you will access these as with regular .ini files:
 //{
     void sample01(File file) throws IOException
     {
-        Reg reg = new Reg();
+        Reg reg = new Reg(file);
+        Reg.Key hive = reg.get(Reg.Hive.HKEY_CURRENT_USER.toString());
+        Reg.Key bashful;
 
-        //
-        // or instantiate and load data:
-        //
-        reg = new Reg(new FileInputStream(file));
+        bashful = hive.lookup("Software", "ini4j-test", "dwarfs", "bashful");
+
+        // or ...
+        bashful = hive.lookup("Software\\ini4j-test\\dwarfs\\bashful");
+
+        // or even...
+        bashful = reg.get("HKEY_CURRENT_USER\\Software\\ini4j-test\\dwarfs\\bashful");
+
+        // read some data
+        double weight = bashful.get("weight", double.class);  // = 45.7
+        double height = bashful.get("height", double.class);  // = 98.8
+        int age = bashful.get("age", int.class);  // = 67
+        URI homePage = bashful.get("homePage", URI.class);  // = new URI("http://snowwhite.tale/~bashful");
+        String homeDir = bashful.get("homeDir");  // = "/home/bashful"
+
 //}
         assertNotNull(reg.get(Helper.DWARFS_REG_PATH + "\\dwarfs"));
-        Helper.assertEquals(DwarfsData.dwarfs, reg.as(Dwarfs.class, Helper.DWARFS_REG_PATH + "\\dwarfs\\"));
+        Helper.assertEquals(DwarfsData.bashful, bashful.as(Dwarf.class));
     }
 
 //|
-//|* Tree
+//|* Types
+//|
+//| When you load data into Reg class, it will preserve meta informations, such as
+//| type informations. If you create new values, by default these will have
+//| tpye REG_SZ. Ofcource you may specify type information for values.
 //{
-    void sample02(Reg reg)
+    void sample02()
     {
-        Registry.Key base = reg.get(Reg.Hive.HKEY_CURRENT_USER + "\\Software\\ini4j-test");
-        Registry.Key dwarfs = base.getChild("dwarfs");
-        Registry.Key bashful = dwarfs.getChild("bashful");
-        String homePage = bashful.get("homePage");
+        Reg reg = new Reg();
+        Reg.Key key = reg.add("HKEY_CURRENT_USER\\Software\\ini4j-test\\dwarfs\\sleepy");
+
+        key.put("fortuneNumber", 99);
+        key.putType("fortuneNumber", Reg.Type.REG_MULTI_SZ);
+
 //}
 //|
-
-        assertEquals(DwarfsData.bashful.homePage.toString(), homePage);
+//| If you store reg object above, it will contains a section similar to this:
+//|
+//|+---+
+//|[HKEY_CURRENT_USER\Software\ini4j-test\dwarfs\sleepy]
+//|"fortuneNumber"=hex(7):39,00,39,00,00,00,00,00
+//|+---+
+//|
     }
 }

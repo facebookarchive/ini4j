@@ -125,10 +125,10 @@ public class SampleRunnerTest
                     // tutorials
                     { OneMinuteTutorial.class },
                     { IniTutorial.class },
-                    { OptTutorial.class },
                     { RegTutorial.class },
-                    { BeanTutorial.class },
                     { WindowsRegistryTutorial.class },
+                    { OptTutorial.class },
+                    { BeanTutorial.class },
                     { PrefsTutorial.class },
                 });
     }

@@ -189,4 +189,42 @@ public class IniTutorial extends AbstractTutorial
         //   int[] n = sneezy.get("fortuneNumber", int[].class);
 //}
     }
+
+//|
+//|* Tree model
+//|
+//| Beyond two level map model, Ini class provides tree model. You can access
+//| Sections as tree. It means that section names becomes path names, with a
+//| path separator character ('/' and '\' on Wini and Reg).
+//|
+//{
+    void sample05()
+    {
+        Ini ini = new Ini();
+
+        // lets add a section, it will create needed intermediate sections as well
+        ini.add("root/child/sub");
+
+        //
+        Ini.Section root;
+        Ini.Section sec;
+
+        root = ini.get("root");
+        sec = root.getChild("child").getChild("sub");
+
+        // or...
+        sec = root.lookup("child", "sub");
+
+        // or...
+        sec = root.lookup("child/sub");
+
+        // or even...
+        sec = ini.get("root/child/sub");
+
+//}
+//| If you are using Wini instead of Ini class, the path separator become '\'.
+//|
+        assertNotNull(root.lookup("child", "sub"));
+        assertNotNull(ini.get("root/child"));
+    }
 }
