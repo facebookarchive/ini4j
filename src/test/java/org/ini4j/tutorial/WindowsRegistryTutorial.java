@@ -88,7 +88,7 @@ public class WindowsRegistryTutorial extends AbstractTutorial
 //|
 //|* Create environment variable
 //|
-//| Lets create some environment variable under current users environment....
+//| Lets create a new environment variable under current users environment....
 //{
     void sample03() throws IOException
     {

@@ -108,6 +108,9 @@
         </profile>
         <profile>
             <id>release-candidate</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
