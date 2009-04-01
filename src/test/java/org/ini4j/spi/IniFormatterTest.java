@@ -217,8 +217,6 @@ public class IniFormatterTest
         assertEquals(exp.toString(), writer.toString());
     }
 
-    // TODO test with globalSection
-    // TODO test with emptySection
     private void verify(Ini ini, IniHandler mock) throws Exception
     {
         StringWriter writer = new StringWriter();

@@ -25,14 +25,14 @@
     </url>
 
     <url>
-        <loc>http://ini4j.sourceforge.net/tutorials.html</loc>
+        <loc>http://ini4j.sourceforge.net/tutorial/index.html</loc>
         <lastmod>$release.dateRelease</lastmod>
         <priority>0.8</priority>
         <changefreq>monthly</changefreq>
     </url>
 
     <url>
-        <loc>http://ini4j.sourceforge.net/samples.html</loc>
+        <loc>http://ini4j.sourceforge.net/sample/index.html</loc>
         <lastmod>$release.dateRelease</lastmod>
         <priority>0.8</priority>
         <changefreq>monthly</changefreq>

@@ -25,7 +25,7 @@
     <bannerLeft>
         <name>[ini4j]</name>
         <src>img/ini4j-banner.png</src>
-        <href>/index.html</href>
+        <href>http://ini4j.sourceforge.net/index.html</href>
     </bannerLeft>
     <bannerRight>
         <name>SourceForge</name>
@@ -61,6 +61,7 @@
 <!--            <item name="Documents" href="/documents.html"/> -->
             <item name="Download" href="/download.html"/>
             <item name="Community" href="/community.html"/>
+            <item name="Search" href="/search.html"/>
         </breadcrumbs>
 
         <menu name="Documents">
@@ -69,7 +70,8 @@
 <!--            <item name="Features" href="features.html" /> -->
             <item name="JavaDocs" href="apidocs/index.html"/>
             <item name="Goals" href="design.html"/>
-            <item name="TODO" href="todo.html"/>
+            <item name="TODO" href="taglist.html"/>
+            <item name="Search" href="search.html"/>
         </menu>
         <menu name="Tutorials">
             <item name="One minute" href="tutorial/OneMinuteTutorial.java.html"/>

@@ -31,6 +31,7 @@ public interface Registry extends Profile
         HKEY_USERS;
     }
 
+    // TODO handle delete operations with special Type
     enum Type
     {
         REG_NONE("hex(0)"),

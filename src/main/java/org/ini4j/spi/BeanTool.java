@@ -157,8 +157,7 @@ public class BeanTool
 
     public <T> T proxy(Class<T> clazz, BeanAccess props)
     {
-        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz },
-                    new BeanInvocationHandler(props)));
+        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler(props)));
     }
 
     @SuppressWarnings("unchecked")
@@ -234,6 +233,7 @@ public class BeanTool
             }
             else
             {
+                // TODO handle constructor with String arg as converter from String
 
                 // look for "valueOf" converter method
                 Method parser = clazz.getMethod(PARSE_METHOD, new Class[] { String.class });

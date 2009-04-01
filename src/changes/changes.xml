@@ -23,6 +23,23 @@
   <body>
     <release version="0.5.0" description="Subsection handling, comment support, Windows registry handling">
       <action type="add" dev="szkiba">
+      Read/write Windows registry. The new Reg class is able to read/write
+      windows registry. This class is very similar to Ini class, has same data
+      model.
+      </action>
+      <action type="add" dev="szkiba">
+      Support for .REG (windows regedit) format. The file format is similar to .ini,
+      and now the org.ini4j.Reg class can handle it.
+      </action>
+      <action type="add" dev="szkiba">
+      Tree data model for ections. Now sections handled as a tree, with subsections.
+      It is based on section names. With a separator ('/' or '\') sectios can
+      organized into trees (like in .REG format).
+      </action>
+      <action type="update" dev="szkiba">
+      Improve project web site.
+      </action>
+      <action type="add" dev="szkiba">
       Bean property mapping with upper case first letter in key names (aka Mozilla .ini files)
       (Feature request #2706511)
       </action>

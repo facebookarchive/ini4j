@@ -423,11 +423,12 @@
                     <linkJavadoc>true</linkJavadoc>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
+                    <charset>UTF-8</charset>
                     <quiet>true</quiet>
                     <noqualifier>java.*</noqualifier>
                     <links>

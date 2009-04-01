@@ -32,9 +32,6 @@ import java.io.IOException;
 //| Yes, it is possible now to read/write registry from java programs
 //| without native (JNI) code !
 //|
-//| Code sniplets in this tutorial tested with the following .reg file:
-//| {{{../sample/dwarfs.reg.html}dwarfs.reg}}
-//|
 //</editor-fold>
 public class WindowsRegistryTutorial extends AbstractTutorial
 {
