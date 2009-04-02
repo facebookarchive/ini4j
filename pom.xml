@@ -77,6 +77,12 @@
             <version>2.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.beanshell</groupId>
+            <artifactId>bsh</artifactId>
+            <version>2.0b4</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <properties>
         <upload.url>scp://shell.sourceforge.net/incoming/s/sz/szkiba/uploads</upload.url>
@@ -109,7 +115,7 @@
         <profile>
             <id>release-candidate</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>
@@ -329,6 +335,22 @@
                             <attach>false</attach>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>demo</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/generated-site/resources</outputDirectory>
+                            <finalName>ini4j-demo</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>src/main/assembly/demo.xml</descriptor>
+                            </descriptors>
+                            <attach>false</attach>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -393,6 +415,33 @@
                     </execution>
                 </executions>
             </plugin>
+
+
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-dependency-plugin</artifactId>
+         <executions>
+           <execution>
+             <id>unpack</id>
+             <phase>generate-resources</phase>
+             <goals>
+               <goal>unpack</goal>
+             </goals>
+             <configuration>
+               <artifactItems>
+                 <artifactItem>
+                   <groupId>org.beanshell</groupId>
+                   <artifactId>bsh</artifactId>
+                   <type>jar</type>
+                   <overWrite>false</overWrite>
+                   <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
+                 </artifactItem>
+               </artifactItems>
+             </configuration>
+           </execution>
+         </executions>
+       </plugin>
+
 
         </plugins>
         <testResources>
