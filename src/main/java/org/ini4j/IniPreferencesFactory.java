@@ -54,7 +54,7 @@ public class IniPreferencesFactory implements PreferencesFactory
 
     String getIniLocation(String key)
     {
-        String location = System.getProperty(key);
+        String location = Config.getSystemProperty(key);
 
         if (location == null)
         {

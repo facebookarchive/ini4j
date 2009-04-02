@@ -54,7 +54,7 @@ public class Config implements Cloneable, Serializable
     public static final boolean DEFAULT_TREE = true;
     public static final boolean DEFAULT_PROPERTY_FIRST_UPPER = false;
     public static final char DEFAULT_PATH_SEPARATOR = '/';
-    public static final String DEFAULT_LINE_SEPARATOR = System.getProperty("line.separator");
+    public static final String DEFAULT_LINE_SEPARATOR = getSystemProperty("line.separator", "\n");
     public static final Charset DEFAULT_FILE_ENCODING = Charset.forName("UTF-8");
     private static final Config GLOBAL = new Config();
     private static final long serialVersionUID = 2865793267410367814L;
@@ -81,9 +81,51 @@ public class Config implements Cloneable, Serializable
         reset();
     }
 
+    public static String getEnvironment(String name)
+    {
+        return getEnvironment(name, null);
+    }
+
+    public static String getEnvironment(String name, String defaultValue)
+    {
+        String value;
+
+        try
+        {
+            value = System.getenv(name);
+        }
+        catch (SecurityException x)
+        {
+            value = null;
+        }
+
+        return (value == null) ? defaultValue : value;
+    }
+
     public static Config getGlobal()
     {
         return GLOBAL;
+    }
+
+    public static String getSystemProperty(String name)
+    {
+        return getSystemProperty(name, null);
+    }
+
+    public static String getSystemProperty(String name, String defaultValue)
+    {
+        String value;
+
+        try
+        {
+            value = System.getProperty(name);
+        }
+        catch (SecurityException x)
+        {
+            value = null;
+        }
+
+        return (value == null) ? defaultValue : value;
     }
 
     public boolean isEscape()
@@ -291,29 +333,27 @@ public class Config implements Cloneable, Serializable
 
     private boolean getBoolean(String name, boolean defaultValue)
     {
-        String key = KEY_PREFIX + name;
+        String value = getSystemProperty(KEY_PREFIX + name);
 
-        return System.getProperties().containsKey(key) ? Boolean.getBoolean(key) : defaultValue;
+        return (value == null) ? defaultValue : Boolean.parseBoolean(value);
     }
 
     private char getChar(String name, char defaultValue)
     {
-        String key = KEY_PREFIX + name;
+        String value = getSystemProperty(KEY_PREFIX + name);
 
-        return System.getProperties().containsKey(key) ? System.getProperty(key).charAt(0) : defaultValue;
+        return (value == null) ? defaultValue : value.charAt(0);
     }
 
     private Charset getCharset(String name, Charset defaultValue)
     {
-        String key = KEY_PREFIX + name;
+        String value = getSystemProperty(KEY_PREFIX + name);
 
-        return System.getProperties().containsKey(key) ? Charset.forName(System.getProperty(key)) : defaultValue;
+        return (value == null) ? defaultValue : Charset.forName(value);
     }
 
     private String getString(String name, String defaultValue)
     {
-        String key = KEY_PREFIX + name;
-
-        return System.getProperties().containsKey(key) ? System.getProperty(key) : defaultValue;
+        return getSystemProperty(KEY_PREFIX + name, defaultValue);
     }
 }

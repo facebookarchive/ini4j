@@ -179,11 +179,11 @@ public class BasicProfile extends CommonMultiMap<String, Profile.Section> implem
 
             if (SECTION_ENVIRONMENT.equals(sectionName))
             {
-                value = System.getenv(optionName);
+                value = Config.getEnvironment(optionName);
             }
             else if (SECTION_SYSTEM_PROPERTIES.equals(sectionName))
             {
-                value = System.getProperty(optionName);
+                value = Config.getSystemProperty(optionName);
             }
             else if (section != null)
             {

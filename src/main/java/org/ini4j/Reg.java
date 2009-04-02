@@ -41,7 +41,7 @@ public class Reg extends BasicRegistry implements Registry, Persistable, Configu
     protected static final String TMP_PREFIX = "reg-";
     private static final int STDERR_BUFF_SIZE = 8192;
     private static final String PROP_OS_NAME = "os.name";
-    private static final boolean WINDOWS = System.getProperty(PROP_OS_NAME).startsWith("Windows");
+    private static final boolean WINDOWS = Config.getSystemProperty(PROP_OS_NAME, "Unknown").startsWith("Windows");
     private static final char CR = '\r';
     private static final char LF = '\n';
     private Config _config;
@@ -308,7 +308,7 @@ public class Reg extends BasicRegistry implements Registry, Persistable, Configu
     {
         if (!WINDOWS)
         {
-            throw new UnsupportedOperationException("Unsupported operating system: " + System.getProperty(PROP_OS_NAME));
+            throw new UnsupportedOperationException("Unsupported operating system or runtime environment");
         }
     }
 }

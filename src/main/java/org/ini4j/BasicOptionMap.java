@@ -48,8 +48,7 @@ public class BasicOptionMap extends CommonMultiMap<String, String> implements Op
         _propertyFirstUpper = propertyFirstUpper;
     }
 
-    @Override
-    @SuppressWarnings(Warnings.UNCHECKED)
+    @Override @SuppressWarnings(Warnings.UNCHECKED)
     public <T> T getAll(Object key, Class<T> clazz)
     {
         requireArray(clazz);
@@ -116,8 +115,7 @@ public class BasicOptionMap extends CommonMultiMap<String, String> implements Op
         return BeanTool.getInstance().parse(fetch(key, index), clazz);
     }
 
-    @Override
-    @SuppressWarnings(Warnings.UNCHECKED)
+    @Override @SuppressWarnings(Warnings.UNCHECKED)
     public <T> T fetchAll(Object key, Class<T> clazz)
     {
         requireArray(clazz);
@@ -228,11 +226,11 @@ public class BasicOptionMap extends CommonMultiMap<String, String> implements Op
 
             if (name.startsWith(ENVIRONMENT_PREFIX))
             {
-                value = System.getenv(name.substring(ENVIRONMENT_PREFIX_LEN));
+                value = Config.getEnvironment(name.substring(ENVIRONMENT_PREFIX_LEN));
             }
             else if (name.startsWith(SYSTEM_PROPERTY_PREFIX))
             {
-                value = System.getProperty(name.substring(SYSTEM_PROPERTY_PREFIX_LEN));
+                value = Config.getSystemProperty(name.substring(SYSTEM_PROPERTY_PREFIX_LEN));
             }
             else
             {
