@@ -21,7 +21,7 @@
     <title>[ini4j] Changes</title>
   </properties>
   <body>
-    <release version="0.5.0" description="Subsection handling, comment support, Windows registry handling">
+    <release version="0.5.0" date="2009-04-02" description="Subsection handling, comment support, Windows registry handling">
       <action type="add" dev="szkiba">
       Read/write Windows registry. The new Reg class is able to read/write
       windows registry. This class is very similar to Ini class, has same data
