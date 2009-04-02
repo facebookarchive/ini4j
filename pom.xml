@@ -214,6 +214,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
                 <inherited>false</inherited>
+                <configuration>
+                    <templateDirectory>src/changes</templateDirectory>
+                    <templateEncoding>UTF-8</templateEncoding>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <id>releasenotes</id>
@@ -223,9 +228,6 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <template>ReleaseNotes.vm</template>
-                            <templateDirectory>src/changes</templateDirectory>
-                            <templateEncoding>UTF-8</templateEncoding>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
                     <execution>
@@ -236,9 +238,6 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <template>ChangeLog.vm</template>
-                            <templateDirectory>src/changes</templateDirectory>
-                            <templateEncoding>UTF-8</templateEncoding>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
                     <execution>
@@ -249,13 +248,9 @@
                         <phase>pre-site</phase>
                         <configuration>
                             <template>sitemap.vm</template>
-                            <templateDirectory>src/changes</templateDirectory>
-                            <templateEncoding>UTF-8</templateEncoding>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
-                <configuration />
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -378,6 +373,7 @@
                         <exclude>**/*.txt</exclude>
                         <exclude>**/*.apt</exclude>
                         <exclude>**/*.reg</exclude>
+                        <exclude>**/.htaccess</exclude>
                     </excludes>
                     <mapping>
                         <java>SLASHSTAR_STYLE</java>
@@ -432,6 +428,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <charset>UTF-8</charset>
+                    <encoding>ISO-8859-1</encoding>
                     <quiet>true</quiet>
                     <noqualifier>java.*</noqualifier>
                     <links>
@@ -453,6 +450,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>taglist-maven-plugin</artifactId>
                 <configuration>
+                    <encoding>UTF-8</encoding>
                     <tags>
                         <tag>TODO</tag>
                         <tag>FIXME</tag>
@@ -470,8 +468,17 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
                 <configuration>
+                    <templateEncoding>UTF-8</templateEncoding>
                     <issueLinkTemplate>http://sourceforge.net/tracker2/?func=detail&amp;atid=715133&amp;group_id=129580&amp;aid=%ISSUE%</issueLinkTemplate>
                 </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>changes-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+
             </plugin>
 
             <plugin>
