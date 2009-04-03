@@ -23,16 +23,21 @@ import bsh.util.JConsole;
 import org.ini4j.Config;
 import org.ini4j.Ini;
 import org.ini4j.Options;
+import org.ini4j.Persistable;
 import org.ini4j.Reg;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -42,50 +47,54 @@ import javax.swing.JTextArea;
 
 public class Demo
 {
-    public static enum Mode
+    private static enum Mode
     {
-        INI,
-        REG,
-        OPTIONS;
+        INI("ini"),
+        REG("reg"),
+        OPTIONS("options");
         private final String _data;
         private final String _help;
 
-        private Mode()
+        Mode(String prefix)
         {
-            _data = name().toLowerCase() + "-data.txt";
-            _help = name().toLowerCase() + "-help.txt";
+            _data = prefix + "-data.txt";
+            _help = prefix + "-help.txt";
         }
 
-        public String getData()
+        String getData()
         {
             return _data;
         }
 
-        public String getHelp()
+        String getHelp()
         {
             return _help;
         }
     }
 
+    private JConsole _console;
     private final Container _container;
-    private final Mode _mode;
+    private Persistable _data;
+    private JTextArea _inputTextArea;
+    private Interpreter _interpreter;
+    private Mode _mode = Mode.INI;
 
-    public Demo(Mode mode, Container container)
+    public Demo(Container container)
     {
         _container = container;
-        _mode = mode;
     }
 
     public void init()
     {
         _container.setBackground(Color.WHITE);
         _container.setLayout(new BoxLayout(_container, BoxLayout.PAGE_AXIS));
-        JConsole console = new JConsole();
+        _console = new JConsole();
         JTabbedPane input = new JTabbedPane(JTabbedPane.TOP);
 
+        input.setPreferredSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
         input.setBackground(Color.WHITE);
-        JTextArea inputText = new JTextArea();
-        JScrollPane sp = new JScrollPane(inputText);
+        _inputTextArea = new JTextArea();
+        JScrollPane sp = new JScrollPane(_inputTextArea);
 
         input.addTab("data", sp);
         JTextArea helpText = new JTextArea();
@@ -97,16 +106,31 @@ public class Demo
         JPanel buttons = new JPanel();
 
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
-        JButton reload = new JButton("reload");
-        JButton parse = new JButton("parse");
+        JButton reload = new JButton(new AbstractAction()
+                {
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        loadTestData();
+                    }
+                });
+        JButton parse = new JButton(new AbstractAction()
+                {
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        parseData();
+                    }
+                });
 
         buttons.add(parse);
         buttons.add(reload);
+        reload.setText("load test data");
+        parse.setText("parse data");
 
         //
         JTabbedPane output = new JTabbedPane(JTabbedPane.BOTTOM);
 
-        output.addTab("Interpreter", console);
+        output.setPreferredSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+        output.addTab("Interpreter", _console);
 
         //
         _container.add(input);
@@ -114,22 +138,14 @@ public class Demo
         _container.add(output);
 
         //
-        Interpreter interpreter = new Interpreter(console);
-        NameSpace namespace = interpreter.getNameSpace();
+        _interpreter = new Interpreter(_console);
+        NameSpace namespace = _interpreter.getNameSpace();
 
         namespace.importPackage("org.ini4j.spi");
         namespace.importPackage("org.ini4j");
         namespace.importPackage("org.ini4j.sample");
         try
         {
-            Ini ini = new Ini();
-            Options options = new Options();
-            Reg reg = new Reg();
-
-            interpreter.set("ini", ini);
-            interpreter.set("options", options);
-            interpreter.set("reg", reg);
-            inputText.setText(readResource(_mode.getData()));
             helpText.setText(readResource(_mode.getHelp()));
             helpText.setEditable(false);
         }
@@ -138,8 +154,58 @@ public class Demo
             x.printStackTrace();
         }
 
-        interpreter.setExitOnEOF(false);
-        new Thread(interpreter).start();
+        _interpreter.setExitOnEOF(false);
+        new Thread(_interpreter).start();
+    }
+
+    private void loadTestData()
+    {
+        try
+        {
+            _inputTextArea.setText(readResource(_mode.getData()));
+        }
+        catch (Exception x)
+        {
+            x.printStackTrace();
+        }
+    }
+
+    private Persistable newData()
+    {
+        Persistable ret = null;
+
+        switch (_mode)
+        {
+
+            case INI:
+                ret = new Ini();
+                break;
+
+            case REG:
+                ret = new Reg();
+                break;
+
+            case OPTIONS:
+                ret = new Options();
+                break;
+        }
+
+        return ret;
+    }
+
+    private void parseData()
+    {
+        Persistable data = newData();
+
+        try
+        {
+            data.load(new StringReader(_inputTextArea.getText()));
+            _interpreter.set("data", data);
+        }
+        catch (Exception x)
+        {
+            x.printStackTrace();
+        }
     }
 
     private String readResource(String path) throws IOException

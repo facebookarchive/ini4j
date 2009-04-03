@@ -26,7 +26,7 @@
     <body>
         <section name="Demo">
             <applet width="99%" height="500" archive="ini4j-demo.jar" code="org.ini4j.demo.DemoApplet">
-                <param name="mode" value="INI"/>
+                <!-- -->
             </applet>
         </section>
     </body>

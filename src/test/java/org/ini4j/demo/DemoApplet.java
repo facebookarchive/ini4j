@@ -36,8 +36,7 @@ public class DemoApplet extends JApplet
 
     @Override public void init()
     {
-        Demo.Mode mode = Demo.Mode.valueOf(getParameter("mode"));
-        Demo demo = new Demo(mode, getContentPane());
+        Demo demo = new Demo(getContentPane());
 
         demo.init();
     }
