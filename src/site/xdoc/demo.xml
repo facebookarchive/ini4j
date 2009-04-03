@@ -25,10 +25,8 @@
 
     <body>
         <section name="Demo">
-            <applet width="99%" height="250" archive="ini4j-demo.jar" code="org.ini4j.demo.DemoApplet">
+            <applet width="99%" height="500" archive="ini4j-demo.jar" code="org.ini4j.demo.DemoApplet">
             </applet>
-            <iframe width="99%" height="200" src="demo.txt">
-            </iframe>
         </section>
     </body>
 </document>

@@ -24,11 +24,13 @@ import org.ini4j.Ini;
 import org.ini4j.Options;
 import org.ini4j.Reg;
 
-import java.awt.BorderLayout;
-
 import java.net.URL;
 
+import javax.swing.BoxLayout;
 import javax.swing.JApplet;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 
 public class DemoApplet extends JApplet
 {
@@ -40,10 +42,24 @@ public class DemoApplet extends JApplet
 
     @Override public void init()
     {
-        getContentPane().setLayout(new BorderLayout());
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
         JConsole console = new JConsole();
+        JTabbedPane input = new JTabbedPane(JTabbedPane.TOP);
+        JTextArea iniText = new JTextArea();
+        JScrollPane sp = new JScrollPane(iniText);
 
-        getContentPane().add(BorderLayout.CENTER, console);
+        input.addTab("Ini", sp);
+
+        //
+        JTabbedPane output = new JTabbedPane(JTabbedPane.BOTTOM);
+
+        output.addTab("Interpreter", console);
+
+        //
+        getContentPane().add(input);
+        getContentPane().add(output);
+
+        //
         Interpreter interpreter = new Interpreter(console);
         NameSpace namespace = interpreter.getNameSpace();
 
@@ -64,11 +80,7 @@ public class DemoApplet extends JApplet
             x.printStackTrace();
         }
 
-        console.print("Hi hi hi");
         new Thread(interpreter).start();
-        console.println("Hi hi hi");
-        console.println("Hi hi hi");
-        console.println("Hi hi hi");
     }
 
     private static URL getResource(String path)
