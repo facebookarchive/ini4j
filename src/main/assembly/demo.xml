@@ -36,7 +36,7 @@
             <includes>
                 <include>bsh/**</include>
                 <include>org/ini4j/demo/*</include>
-                <include>org/ini4j/sample/dwarfs*</include>
+                <include>org/ini4j/sample/Dwarf*</include>
             </includes>
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>

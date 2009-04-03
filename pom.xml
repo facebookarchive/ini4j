@@ -453,6 +453,7 @@
                     <include>**/*.reg</include>
                     <include>**/*.properties</include>
                     <include>**/*.xml</include>
+                    <include>**/*.txt</include>
                 </includes>
             </testResource>
             <testResource>
