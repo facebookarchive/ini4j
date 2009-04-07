@@ -25,6 +25,11 @@
 
     <body>
         <section name="Demo">
+            <p>
+                If have Java enabled browser (with Java version 1.5 or above) you
+                can try [ini4j] library with this demo applet. Check the <em>help</em>
+                tab in applet for instructions.
+            </p>
             <applet width="99%" height="500" archive="ini4j-demo.jar" code="org.ini4j.demo.DemoApplet">
                 <!-- -->
             </applet>

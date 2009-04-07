@@ -41,6 +41,7 @@ public class DemoModel implements Runnable
         OPTIONS;
     }
 
+    private Persistable _data;
     private Interpreter _interpreter;
     private Mode _mode = Mode.INI;
 
@@ -54,6 +55,11 @@ public class DemoModel implements Runnable
         namespace.importPackage("org.ini4j.sample");
     }
 
+    public Object getData()
+    {
+        return _data;
+    }
+
     public Mode getMode()
     {
         return _mode;
@@ -62,6 +68,11 @@ public class DemoModel implements Runnable
     public void setMode(Mode mode)
     {
         _mode = mode;
+    }
+
+    public void clear() throws EvalError
+    {
+        _interpreter.unset("data");
     }
 
     public String help() throws IOException
@@ -80,6 +91,7 @@ public class DemoModel implements Runnable
 
         data.load(new StringReader(text));
         _interpreter.set("data", data);
+        _data = data;
     }
 
     @Override public void run()

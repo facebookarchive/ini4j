@@ -209,6 +209,11 @@ public class BasicMultiMap<K, V> implements MultiMap<K, V>, Serializable
         return _impl.size();
     }
 
+    @Override public String toString()
+    {
+        return _impl.toString();
+    }
+
     @Override public Collection<V> values()
     {
         List<V> all = new ArrayList<V>(_impl.size());
