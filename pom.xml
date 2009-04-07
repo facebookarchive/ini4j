@@ -349,6 +349,11 @@
                                 <descriptor>src/main/assembly/demo.xml</descriptor>
                             </descriptors>
                             <attach>false</attach>
+                            <archive>
+                                <manifest>
+                                    <mainClass>org.ini4j.demo.DemoMain</mainClass>
+                                </manifest>
+                            </archive>
                         </configuration>
                     </execution>
                 </executions>
@@ -417,30 +422,30 @@
             </plugin>
 
 
-       <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-dependency-plugin</artifactId>
-         <executions>
-           <execution>
-             <id>unpack</id>
-             <phase>generate-resources</phase>
-             <goals>
-               <goal>unpack</goal>
-             </goals>
-             <configuration>
-               <artifactItems>
-                 <artifactItem>
-                   <groupId>org.beanshell</groupId>
-                   <artifactId>bsh</artifactId>
-                   <type>jar</type>
-                   <overWrite>false</overWrite>
-                   <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
-                 </artifactItem>
-               </artifactItems>
-             </configuration>
-           </execution>
-         </executions>
-       </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.beanshell</groupId>
+                                    <artifactId>bsh</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
 
         </plugins>
