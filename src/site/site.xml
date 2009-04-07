@@ -58,6 +58,7 @@
             <item name="Home" href="/index.html"/>
             <item name="Tutorials" href="/tutorial/index.html"/>
             <item name="Samples" href="/sample/index.html"/>
+            <item name="Demo" href="/demo.html"/>
 <!--            <item name="Documents" href="/documents.html"/> -->
             <item name="Download" href="/download.html"/>
             <item name="Community" href="/community.html"/>
@@ -72,6 +73,7 @@
             <item name="Goals" href="design.html"/>
             <item name="TODO" href="taglist.html"/>
             <item name="Changes" href="changes-report.html"/>
+            <item name="Demo" href="demo.html"/>
             <item name="Search" href="search.html"/>
         </menu>
         <menu name="Tutorials">

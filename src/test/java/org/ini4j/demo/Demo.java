@@ -25,6 +25,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.io.IOException;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -53,6 +55,7 @@ public class Demo
     private JTextArea _dataTextArea;
     private JTextArea _helpTextArea;
     private DemoModel _model;
+    private JTextArea _tipTextArea;
     private ActionListener _actionListener = new ActionListener()
     {
         public void actionPerformed(ActionEvent event)
@@ -160,7 +163,7 @@ public class Demo
         _model.setMode(mode);
         try
         {
-            _helpTextArea.setText(_model.help());
+            _tipTextArea.setText(_model.tip());
         }
         catch (Exception x)
         {
@@ -217,6 +220,10 @@ public class Demo
         JScrollPane sp = new JScrollPane(_dataTextArea);
 
         inputPane.addTab("data", sp);
+        _tipTextArea = new JTextArea();
+        _tipTextArea.setEditable(false);
+        sp = new JScrollPane(_tipTextArea);
+        inputPane.addTab("tip", sp);
         _helpTextArea = new JTextArea();
         _helpTextArea.setEditable(false);
         sp = new JScrollPane(_helpTextArea);
@@ -238,6 +245,16 @@ public class Demo
         output.setBackground(Color.WHITE);
         output.setPreferredSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
         output.addTab("Interpreter", console);
+        try
+        {
+
+            //
+            _helpTextArea.setText(_model.help());
+        }
+        catch (IOException x)
+        {
+            exceptionThrown(x);
+        }
 
         //
         _container.add(output);

@@ -77,7 +77,7 @@ public class DemoModel implements Runnable
 
     public String help() throws IOException
     {
-        return readResource(_mode.name().toLowerCase() + "-help.txt");
+        return readResource("help.txt");
     }
 
     public String load() throws IOException
@@ -98,6 +98,11 @@ public class DemoModel implements Runnable
     {
         _interpreter.setExitOnEOF(false);
         _interpreter.run();
+    }
+
+    public String tip() throws IOException
+    {
+        return readResource(_mode.name().toLowerCase() + "-tip.txt");
     }
 
     private Persistable newData()

@@ -16,7 +16,7 @@
 package org.ini4j;
 
 import java.util.Map;
-import java.util.NavigableMap;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class CommonMultiMap<K, V> extends BasicMultiMap<K, V> implements CommentedMap<K, V>
@@ -24,9 +24,9 @@ public class CommonMultiMap<K, V> extends BasicMultiMap<K, V> implements Comment
     private static final long serialVersionUID = 3012579878005541746L;
     private static final String SEPARATOR = ";#;";
     private static final String FIRST_CATEGORY = "";
-    private static final String LAST_CATEGORY = "zzzzzz";
+    private static final String LAST_CATEGORY = "zzzzzzzzzzzzzzzzzzzzzz";
     private static final String META_COMMENT = "comment";
-    private NavigableMap<String, Object> _meta;
+    private SortedMap<String, Object> _meta;
 
     @Override public String getComment(Object key)
     {
@@ -102,7 +102,7 @@ public class CommonMultiMap<K, V> extends BasicMultiMap<K, V> implements Comment
     {
         if (_meta != null)
         {
-            _meta.subMap(makeKey(FIRST_CATEGORY, key), true, makeKey(LAST_CATEGORY, key), true).clear();
+            _meta.subMap(makeKey(FIRST_CATEGORY, key), makeKey(LAST_CATEGORY, key)).clear();
         }
     }
 

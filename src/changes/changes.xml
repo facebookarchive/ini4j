@@ -21,8 +21,17 @@
     <title>[ini4j] Changes</title>
   </properties>
   <body>
-    <release version="0.5.1" description="not yet">
+    <release version="0.5.1" date="2009-04-08" description="Maintenance release">
+      <action type="fix" dev="szkiba">
+      Removed java.util.NavigableMap reference from code, becasue it is break
+      java 1.5 compatibility.
+      </action>
       <action type="add" dev="szkiba">
+      Applet support: [ini4j] now able to run in applet environment.
+      </action>
+      <action type="add" dev="szkiba">
+      Demo applet: now project site contains a small demo applet to check
+      [ini4j] interactive mode from browser.
       </action>
     </release>
     <release version="0.5.0" date="2009-04-02" description="Subsection handling, comment support, Windows registry handling">
