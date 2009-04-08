@@ -21,6 +21,10 @@
     <title>[ini4j] Changes</title>
   </properties>
   <body>
+    <release version="0.5.2" description="?">
+      <action type="fix" dev="szkiba">
+      </action>
+    </release>
     <release version="0.5.1" date="2009-04-08" description="Maintenance release">
       <action type="fix" dev="szkiba">
       Removed java.util.NavigableMap reference from code, becasue it is break
