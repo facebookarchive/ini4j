@@ -23,7 +23,8 @@ import org.ini4j.sample.Dwarfs;
 import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.FileReader;
@@ -186,8 +187,19 @@ public class IniTutorial extends AbstractTutorial
         String n4 = sneezy.get("fortuneNumber", 3);  // = 44
 
         // ok, lets do in it easier...
-        //   int[] n = sneezy.get("fortuneNumber", int[].class);
+        int[] n = sneezy.getAll("fortuneNumber", int[].class);
 //}
+        // #2817399
+
+        assertEquals("11", n1);
+        assertEquals("22", n2);
+        assertEquals("33", n3);
+        assertEquals("44", n4);
+        assertEquals(4, n.length);
+        assertEquals(11, n[0]);
+        assertEquals(22, n[1]);
+        assertEquals(33, n[2]);
+        assertEquals(44, n[3]);
     }
 
 //|
