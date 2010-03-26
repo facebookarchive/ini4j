@@ -23,7 +23,10 @@ import org.ini4j.test.DwarfsData;
 import org.ini4j.test.DwarfsData.DwarfData;
 import org.ini4j.test.Helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -38,6 +41,35 @@ public class BasicProfileTest
     private static final String LOCATION = "location";
     private static final String LOCATION_1 = "http://www.ini4j.org";
     private static final String LOCATION_2 = "http://ini4j.org";
+
+    /*
+     * thanx to Gary Pampara for bug report
+     */
+    @Test public void bug_2817403() throws Exception
+    {
+        BasicProfile prof = new BasicProfile();
+        Profile.Section sec = prof.add("section");
+
+        sec.add("player.name", "Joe");
+        sec.add("player.greeting", "Hi ${player.name}!");
+        sec.add("player.domain", "foo.bar");
+        sec.add("player.email", "${player.name}@${player.domain}");
+
+        //
+        assertEquals("Joe", sec.fetch("player.name"));
+        assertEquals("Hi Joe!", sec.fetch("player.greeting"));
+        assertEquals("foo.bar", sec.fetch("player.domain"));
+        assertEquals("Joe@foo.bar", sec.fetch("player.email"));
+
+        //
+        sec = prof.add("other");
+        sec.add("option", "${section/player.name}");
+        assertEquals("Joe", sec.fetch("option"));
+        sec.put("option", "${section/player.email}");
+        assertEquals("Joe@foo.bar", sec.fetch("option"));
+        sec.put("option2", "${option} ${section/player.name} ${section/player.domain}");
+        assertEquals("Joe@foo.bar Joe foo.bar", sec.fetch("option2"));
+    }
 
     @Test public void testAddPut()
     {
