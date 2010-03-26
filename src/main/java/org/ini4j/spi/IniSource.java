@@ -17,7 +17,6 @@ package org.ini4j.spi;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
 
@@ -42,7 +41,7 @@ class IniSource
 
     IniSource(InputStream input, HandlerBase handler, boolean includeFlag, String comments, Charset fileEncoding)
     {
-        this(new InputStreamReader(input, fileEncoding), handler, includeFlag, comments, fileEncoding);
+        this(new UnicodeInputStreamReader(input, fileEncoding), handler, includeFlag, comments, fileEncoding);
     }
 
     IniSource(Reader input, HandlerBase handler, boolean includeFlag, String comments, Charset fileEncoding)
@@ -56,7 +55,7 @@ class IniSource
 
     IniSource(URL input, HandlerBase handler, boolean includeFlag, String comments, Charset fileEncoding) throws IOException
     {
-        this(new InputStreamReader(input.openStream(), fileEncoding), handler, includeFlag, comments, fileEncoding);
+        this(new UnicodeInputStreamReader(input.openStream(), fileEncoding), handler, includeFlag, comments, fileEncoding);
         _base = input;
     }
 

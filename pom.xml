@@ -122,6 +122,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>2.3</version>
                         <configuration>
                             <configLocation>${basedir}/src/conf/checkstyle.xml</configLocation>
                             <failOnViolation>true</failOnViolation>
@@ -401,6 +402,7 @@
                         <exclude>**/*.apt</exclude>
                         <exclude>**/*.reg</exclude>
                         <exclude>**/.htaccess</exclude>
+                        <exclude>**/UTF*.ini</exclude>
                     </excludes>
                     <mapping>
                         <java>SLASHSTAR_STYLE</java>
