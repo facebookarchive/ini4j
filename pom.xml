@@ -289,8 +289,8 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <tasks>
-                                        <junit  printsummary="on" haltonfailure="true" showoutput="true" fork="yes" forkMode="perBatch" jvm="${jdk14.home}/bin/java">
+                                    <tasks if="jdk14.home" unless="skip_jdk14_tests" >
+                                        <junit printsummary="on" haltonfailure="true" showoutput="true" fork="yes" forkMode="perBatch" jvm="${jdk14.home}/bin/java">
                                             <sysproperty key="java.util.prefs.PreferencesFactory" value="org.ini4j.IniPreferencesFactory"/>
                                             <sysproperty key="org.ini4j.prefs.user" value="org/ini4j/sample/dwarfs.ini"/>
                                             <sysproperty key="org.ini4j.prefs.system" value="org/ini4j/sample/dwarfs.ini"/>
