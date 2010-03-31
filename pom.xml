@@ -83,9 +83,16 @@
             <version>2.0b4</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.sf.retrotranslator</groupId>
+            <artifactId>retrotranslator-runtime</artifactId>
+            <version>1.2.4</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
     <properties>
         <upload.url>scp://shell.sourceforge.net/incoming/s/sz/szkiba/uploads</upload.url>
+        <jdk14.home>/usr/local/j2sdk1.4.2_19</jdk14.home>
     </properties>
     <profiles>
         <profile>
@@ -165,23 +172,142 @@
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>check</goal>
-<!--                                    <goal>cpd-check</goal> -->
                                 </goals>
                             </execution>
                         </executions>
                     </plugin>
-
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-junit</id>
+                                <phase>process-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>junit</groupId>
+                                            <artifactId>junit</artifactId>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.easymock</groupId>
+                                            <artifactId>easymock</artifactId>
+                                            <type>jar</type>
+                                            <overWrite>true</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${project.build.directory}/test-deps</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>retrotranslator-maven-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.sf.retrotranslator</groupId>
+                                <artifactId>retrotranslator-runtime</artifactId>
+                                <version>1.2.4</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <embed>org.ini4j.jdk14</embed>
+                            <advanced>true</advanced>
+                        </configuration>
                         <executions>
                             <execution>
+                                <id>translate-classes</id>
+                                <goals>
+                                    <goal>translate</goal>
+                                </goals>
+                                <phase>process-classes</phase>
+                                <configuration>
+                                    <destdir>${project.build.directory}/classes-jdk14</destdir>
+                                    <filesets>
+                                        <fileset>
+                                            <directory>${project.build.outputDirectory}</directory>
+                                        </fileset>
+                                    </filesets>
+                                    <embed>org.ini4j.jdk14</embed>
+                                    <advanced>true</advanced>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>translate-test-classes</id>
+                                <goals>
+                                    <goal>translate</goal>
+                                </goals>
+                                <phase>process-test-classes</phase>
+                                <configuration>
+                                    <destdir>${project.build.directory}/test-classes-jdk14</destdir>
+                                    <filesets>
+                                        <fileset>
+                                            <directory>${project.build.testOutputDirectory}</directory>
+                                        </fileset>
+                                        <fileset>
+                                            <directory>${project.build.directory}/test-deps</directory>
+                                        </fileset>
+                                    </filesets>
+                                    <embed>org.ini4j.jdk14</embed>
+                                    <advanced>true</advanced>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>translate-project</id>
                                 <goals>
                                     <goal>translate-project</goal>
                                 </goals>
                                 <configuration>
                                     <classifier>jdk14</classifier>
                                     <attach>true</attach>
+                                    <advanced>true</advanced>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.ant</groupId>
+                                <artifactId>ant-junit</artifactId>
+                                <version>1.7.0</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>test</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <junit  printsummary="on" haltonfailure="true" showoutput="true" fork="yes" forkMode="perBatch" jvm="${jdk14.home}/bin/java">
+                                            <sysproperty key="java.util.prefs.PreferencesFactory" value="org.ini4j.IniPreferencesFactory"/>
+                                            <sysproperty key="org.ini4j.prefs.user" value="org/ini4j/sample/dwarfs.ini"/>
+                                            <sysproperty key="org.ini4j.prefs.system" value="org/ini4j/sample/dwarfs.ini"/>
+                                            <sysproperty key="basedir" value="${basedir}"/>
+                                            <classpath>
+                                                <pathelement location="${basedir}/target/test-classes-jdk14"/>
+                                                <pathelement location="${basedir}/target/classes-jdk14"/>
+                                            </classpath>
+                                            <formatter type="plain" usefile="false" />
+                                            <batchtest>
+                                                <fileset dir="${basedir}/src/test/java">
+                                                    <include name="**/*Test.java"/>
+                                                    <exclude name="**/SampleRunnerTest.java"/>
+                                                </fileset>
+                                            </batchtest>
+                                        </junit>
+                                    </tasks>
                                 </configuration>
                             </execution>
                         </executions>
@@ -468,7 +594,7 @@
             </testResource>
         </testResources>
     </build>
-    
+
     <reporting>
         <plugins>
             <plugin>
@@ -502,7 +628,7 @@
                 </reportSets>
 
             </plugin>
-            
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>taglist-maven-plugin</artifactId>
@@ -515,12 +641,12 @@
                     </tags>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
@@ -554,8 +680,8 @@
                     </reportSet>
                 </reportSets>
             </plugin>
-            
+
         </plugins>
     </reporting>
-    
+
 </project>
