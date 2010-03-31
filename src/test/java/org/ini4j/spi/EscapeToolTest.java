@@ -15,12 +15,15 @@
  */
 package org.ini4j.spi;
 
-import static org.junit.Assert.*;
+import org.ini4j.Ini4jCase;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class EscapeToolTest
+public class EscapeToolTest extends Ini4jCase
 {
     private static final String VALUE1 = "simple";
     private static final String ESCAPE1 = "simple";
@@ -39,8 +42,9 @@ public class EscapeToolTest
     private static final String QUOTED3 = "";
     protected EscapeTool instance;
 
-    @Before public void setUp() throws Exception
+    @Before @Override public void setUp() throws Exception
     {
+        super.setUp();
         instance = EscapeTool.getInstance();
     }
 
@@ -52,10 +56,17 @@ public class EscapeToolTest
         assertEquals(ESCAPE4, instance.escape(VALUE4));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testInvalidUnicode()
+    @Test public void testInvalidUnicode()
     {
-        instance.unescape(INVALID_UNICODE);
+        try
+        {
+            instance.unescape(INVALID_UNICODE);
+            missing(IllegalArgumentException.class);
+        }
+        catch (IllegalArgumentException x)
+        {
+            //
+        }
     }
 
     @Test public void testQuote() throws Exception

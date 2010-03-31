@@ -32,7 +32,7 @@ import org.junit.Test;
 
 import java.net.URI;
 
-public class BasicProfileTest
+public class BasicProfileTest extends Ini4jCase
 {
     private static final String SECTION = "section";
     private static final String NUMBER = "number";

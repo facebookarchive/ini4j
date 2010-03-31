@@ -40,7 +40,6 @@ import org.ini4j.tutorial.PrefsTutorial;
 import org.ini4j.tutorial.RegTutorial;
 import org.ini4j.tutorial.WindowsRegistryTutorial;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -80,6 +79,27 @@ public class SampleRunnerTest
     private static final String CODE_BEGIN = "\n+----+\n";
     private static final String CODE_END = "+----+\n\n";
     private static File _documentDir;
+
+    static
+    {
+        System.setProperty("java.util.prefs.PreferencesFactory", "org.ini4j.IniPreferencesFactory");
+        _documentDir = new File(Helper.getBuildDirectory(), DOC_PATH);
+        _documentDir.mkdirs();
+        try
+        {
+            document(sourceFile(Dwarf.class), "//");
+            document(sourceFile(DwarfBean.class), "//");
+            document(sourceFile(Dwarfs.class), "//");
+            document(sourceFile(DwarfsBean.class), "//");
+            document(sourceFile(IniTutorial.class.getPackage()), "//");
+            document(sourceFile(IniSample.class.getPackage()), "//");
+        }
+        catch (Exception x)
+        {
+            throw new IllegalStateException(x);
+        }
+    }
+
     private final Class _clazz;
     private final File _sourceFile;
 
@@ -87,19 +107,6 @@ public class SampleRunnerTest
     {
         _clazz = sampleClass;
         _sourceFile = sourceFile(_clazz);
-    }
-
-    @BeforeClass public static void setUpClass() throws Exception
-    {
-        System.setProperty("java.util.prefs.PreferencesFactory", "org.ini4j.IniPreferencesFactory");
-        _documentDir = new File(Helper.getBuildDirectory(), DOC_PATH);
-        _documentDir.mkdirs();
-        document(sourceFile(Dwarf.class), "//");
-        document(sourceFile(DwarfBean.class), "//");
-        document(sourceFile(Dwarfs.class), "//");
-        document(sourceFile(DwarfsBean.class), "//");
-        document(sourceFile(IniTutorial.class.getPackage()), "//");
-        document(sourceFile(IniSample.class.getPackage()), "//");
     }
 
     @Parameters public static Collection data()

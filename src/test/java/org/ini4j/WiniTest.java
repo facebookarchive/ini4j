@@ -17,7 +17,9 @@ package org.ini4j;
 
 import org.ini4j.spi.WinEscapeToolTest;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -30,7 +32,7 @@ import java.io.Reader;
 
 import java.net.URL;
 
-public class WiniTest
+public class WiniTest extends Ini4jCase
 {
     @Test public void testConstructors() throws Exception
     {

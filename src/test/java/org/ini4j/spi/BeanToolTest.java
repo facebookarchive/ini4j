@@ -16,6 +16,7 @@
 package org.ini4j.spi;
 
 import org.ini4j.BasicOptionMapGate;
+import org.ini4j.Ini4jCase;
 
 import org.ini4j.sample.Dwarf;
 import org.ini4j.sample.DwarfBean;
@@ -23,7 +24,13 @@ import org.ini4j.sample.DwarfBean;
 import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,12 +43,13 @@ import java.net.URL;
 
 import java.util.TimeZone;
 
-public class BeanToolTest
+public class BeanToolTest extends Ini4jCase
 {
     protected BeanTool instance;
 
-    @Before public void setUp() throws Exception
+    @Before @Override public void setUp() throws Exception
     {
+        super.setUp();
         instance = BeanTool.getInstance();
     }
 
@@ -51,21 +59,35 @@ public class BeanToolTest
         testInject("dummy");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testInjectIllegalArgument1() throws Exception
+    @Test public void testInjectIllegalArgument1() throws Exception
     {
         TestMap map = new TestMap();
 
-        instance.inject(map.newBeanAccess(), new BadBean());
+        try
+        {
+            instance.inject(map.newBeanAccess(), new BadBean());
+            missing(IllegalArgumentException.class);
+        }
+        catch (IllegalArgumentException x)
+        {
+            //
+        }
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testInjectIllegalArgument2() throws Exception
+    @Test public void testInjectIllegalArgument2() throws Exception
     {
         TestMap map = new TestMap();
 
         map.put("name", "bad");
-        instance.inject(new BadBean(), map.newBeanAccess());
+        try
+        {
+            instance.inject(new BadBean(), map.newBeanAccess());
+            missing(IllegalArgumentException.class);
+        }
+        catch (IllegalArgumentException x)
+        {
+            //
+        }
     }
 
     @SuppressWarnings("empty-statement")

@@ -15,21 +15,13 @@
  */
 package org.ini4j;
 
-import org.ini4j.test.Helper;
-
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
 
-public class ConfigTest
+public class ConfigTest extends Ini4jCase
 {
-    @AfterClass public static void tearDownClass() throws Exception
-    {
-        Helper.resetConfig();
-    }
-
     @Test public void testDefaults()
     {
         Config def = newDefaultConfig();
@@ -150,6 +142,7 @@ public class ConfigTest
         cfg.setPathSeparator('?');
         cfg.setTree(!cfg.isTree());
         cfg.setPropertyFirstUpper(!cfg.isPropertyFirstUpper());
+
         //cfg.setLineSeparator("\t");
         //cfg.setFileEncoding(Charset.forName("ASCII"));
         return cfg;

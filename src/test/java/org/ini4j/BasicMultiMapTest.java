@@ -15,7 +15,12 @@
  */
 package org.ini4j;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +31,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class BasicMultiMapTest
+public class BasicMultiMapTest extends Ini4jCase
 {
     private static final String KEY1 = "key1";
     private static final String KEY2 = "key2";
@@ -37,8 +42,9 @@ public class BasicMultiMapTest
     private static final String[] VALUES = { VALUE1, VALUE2, VALUE3 };
     private MultiMap<String, String> _map;
 
-    @Before public void setUp()
+    @Before @Override public void setUp() throws Exception
     {
+        super.setUp();
         _map = new BasicMultiMap<String, String>();
     }
 

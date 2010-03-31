@@ -20,7 +20,10 @@ import org.ini4j.sample.Dwarfs;
 import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -34,7 +37,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 
-public class RegTest
+public class RegTest extends Ini4jCase
 {
     private static final String DWARFS_PATH = Helper.DWARFS_REG_PATH + "\\dwarfs\\";
 
@@ -51,10 +54,17 @@ public class RegTest
         Helper.assertEquals(DwarfsData.dwarfs, dwarfs);
     }
 
-    @Test(expected = InvalidFileFormatException.class)
-    public void testInvalidFileFormatException() throws Exception
+    @Test public void testInvalidFileFormatException() throws Exception
     {
-        new Reg(Helper.getResourceReader(Helper.DWARFS_INI));
+        try
+        {
+            new Reg(Helper.getResourceReader(Helper.DWARFS_INI));
+            missing(InvalidFileFormatException.class);
+        }
+        catch (InvalidFileFormatException x)
+        {
+            //
+        }
     }
 
     @Test public void testIsWindwos()
@@ -81,12 +91,19 @@ public class RegTest
         assertSame(f, r4.getFile());
     }
 
-    @Test(expected = FileNotFoundException.class)
-    public void testLoadFileNotFoundException() throws Exception
+    @Test public void testLoadFileNotFoundException() throws Exception
     {
         Reg reg = new Reg();
 
-        reg.load();
+        try
+        {
+            reg.load();
+            missing(FileNotFoundException.class);
+        }
+        catch (FileNotFoundException x)
+        {
+            //
+        }
     }
 
     @Test public void testLoadSave() throws Exception
@@ -96,10 +113,17 @@ public class RegTest
         checkLoadSave(Helper.TEST_REG, reg);
     }
 
-    @Test(expected = InvalidFileFormatException.class)
-    public void testMissingVersion() throws Exception
+    @Test public void testMissingVersion() throws Exception
     {
-        new Reg(new StringReader("\r\n\r\n[section]\r\n\"option\"=\"value\""));
+        try
+        {
+            new Reg(new StringReader("\r\n\r\n[section]\r\n\"option\"=\"value\""));
+            missing(InvalidFileFormatException.class);
+        }
+        catch (InvalidFileFormatException x)
+        {
+            //
+        }
     }
 
     @Test public void testNonWindwosExec() throws Exception
@@ -183,10 +207,17 @@ public class RegTest
         tmp.delete();
     }
 
-    @Test(expected = FileNotFoundException.class)
-    public void testStoreFileNotFoundException() throws Exception
+    @Test public void testStoreFileNotFoundException() throws Exception
     {
-        new Reg().store();
+        try
+        {
+            new Reg().store();
+            missing(FileNotFoundException.class);
+        }
+        catch (FileNotFoundException x)
+        {
+            //
+        }
     }
 
     @Test public void testUnsupportedOperatingSystem() throws Exception

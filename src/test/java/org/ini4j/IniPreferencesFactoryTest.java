@@ -17,22 +17,19 @@ package org.ini4j;
 
 import org.ini4j.test.Helper;
 
-import org.junit.AfterClass;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
 import java.util.prefs.Preferences;
 
-public class IniPreferencesFactoryTest
+public class IniPreferencesFactoryTest extends Ini4jCase
 {
     private static final String DUMMY = "dummy";
-
-    @AfterClass public static void tearDownClass() throws Exception
-    {
-        Helper.resetConfig();
-    }
 
     @Test public void testGetIniLocation() throws Exception
     {
@@ -40,7 +37,7 @@ public class IniPreferencesFactoryTest
 
         System.setProperty(DUMMY, DUMMY);
         assertEquals(DUMMY, factory.getIniLocation(DUMMY));
-        System.clearProperty(DUMMY);
+        System.getProperties().remove(DUMMY);
         assertNull(factory.getIniLocation(DUMMY));
     }
 
@@ -69,17 +66,21 @@ public class IniPreferencesFactoryTest
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNewIniPreferences()
+    @Test public void testNewIniPreferences()
     {
         System.setProperty(DUMMY, DUMMY);
         try
         {
             new IniPreferencesFactory().newIniPreferences(DUMMY);
+            missing(IllegalArgumentException.class);
+        }
+        catch (IllegalArgumentException x)
+        {
+            //
         }
         finally
         {
-            System.clearProperty(DUMMY);
+            System.getProperties().remove(DUMMY);
         }
     }
 

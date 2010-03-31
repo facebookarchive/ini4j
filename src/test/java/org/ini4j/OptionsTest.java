@@ -20,7 +20,12 @@ import org.ini4j.sample.Dwarf;
 import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -32,7 +37,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 
-public class OptionsTest
+public class OptionsTest extends Ini4jCase
 {
     private static final String[] _badOptions = { "=value\n", "\\u000d\\u000d=value\n" };
     private static final String COMMENT_ONLY = "# first line\n# second line\n";
@@ -107,12 +112,19 @@ public class OptionsTest
         Helper.assertEquals(DwarfsData.dopey, o6.as(Dwarf.class));
     }
 
-    @Test(expected = FileNotFoundException.class)
-    public void testLoadException() throws Exception
+    @Test public void testLoadException() throws Exception
     {
         Options opt = new Options();
 
-        opt.load();
+        try
+        {
+            opt.load();
+            missing(FileNotFoundException.class);
+        }
+        catch (FileNotFoundException x)
+        {
+            //
+        }
     }
 
     @Test public void testLowerCase() throws Exception
@@ -140,18 +152,26 @@ public class OptionsTest
         assertEquals(1, opts.length("option"));
     }
 
-    @Test(expected = InvalidFileFormatException.class)
-    public void testNoEmptyOption() throws Exception
+    @Test public void testNoEmptyOption() throws Exception
     {
         Config cfg = new Config();
         Options opts = new Options();
 
         opts.setConfig(cfg);
+        try
+        {
+            opts.load(new StringReader("foo\n"));
+            missing(InvalidFileFormatException.class);
+        }
+        catch (InvalidFileFormatException x)
+        {
+            //
+        }
+
+        cfg.setEmptyOption(true);
         opts.load(new StringReader("dummy\n"));
         assertTrue(opts.containsKey("dummy"));
         assertNull(opts.get("dummy"));
-        cfg.setEmptyOption(false);
-        opts.load(new StringReader("foo\n"));
     }
 
     @Test public void testOneHeaderOnly() throws Exception
@@ -179,11 +199,18 @@ public class OptionsTest
         }
     }
 
-    @Test(expected = FileNotFoundException.class)
-    public void testStoreException() throws Exception
+    @Test public void testStoreException() throws Exception
     {
         Options opt = new Options();
 
-        opt.store();
+        try
+        {
+            opt.store();
+            missing(FileNotFoundException.class);
+        }
+        catch (FileNotFoundException x)
+        {
+            //
+        }
     }
 }

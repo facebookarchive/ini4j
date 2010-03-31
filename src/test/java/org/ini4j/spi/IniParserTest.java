@@ -18,6 +18,7 @@ package org.ini4j.spi;
 import org.easymock.EasyMock;
 
 import org.ini4j.Config;
+import org.ini4j.Ini4jCase;
 import org.ini4j.InvalidFileFormatException;
 
 import org.ini4j.sample.Dwarf;
@@ -26,14 +27,16 @@ import org.ini4j.sample.Dwarfs;
 import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 
-public class IniParserTest
+public class IniParserTest extends Ini4jCase
 {
     private static final String[] BAD = { "[section\noption=value\n", "[]\noption=value", "section\noption=value", "[section]\noption\n", "[section]\n=value\n", "[section]\n\\u000d\\u000d=value\n" };
     private static final String CFG_LOWER = "[SectioN]\n\nOptioN=ValuE\n";

@@ -18,17 +18,19 @@ package org.ini4j.spi;
 import org.easymock.EasyMock;
 
 import org.ini4j.Config;
+import org.ini4j.Ini4jCase;
 
 import org.ini4j.test.Helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class IniSourceTest
+public class IniSourceTest extends Ini4jCase
 {
     private static final String COMMENTS = ";#";
     private static final String NESTED_TXT = "nested.txt";

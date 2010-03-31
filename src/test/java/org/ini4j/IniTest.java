@@ -20,7 +20,7 @@ import org.ini4j.sample.Dwarfs;
 import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -33,7 +33,7 @@ import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-public class IniTest
+public class IniTest extends Ini4jCase
 {
     private static final String COMMENT_ONLY = "# first line\n# second line\n";
     private static final String COMMENT_ONLY_VALUE = " first line\n second line";
@@ -73,12 +73,19 @@ public class IniTest
         Helper.assertEquals(DwarfsData.dwarfs, ini.as(Dwarfs.class));
     }
 
-    @Test(expected = FileNotFoundException.class)
-    public void testLoadException() throws Exception
+    @Test public void testLoadException() throws Exception
     {
         Ini ini = new Ini();
 
-        ini.load();
+        try
+        {
+            ini.load();
+            missing(FileNotFoundException.class);
+        }
+        catch (FileNotFoundException x)
+        {
+            //
+        }
     }
 
     @Test public void testMulti() throws Exception
@@ -155,11 +162,18 @@ public class IniTest
         file.delete();
     }
 
-    @Test(expected = FileNotFoundException.class)
-    public void testStoreException() throws Exception
+    @Test public void testStoreException() throws Exception
     {
         Ini ini = new Ini();
 
-        ini.store();
+        try
+        {
+            ini.store();
+            missing(FileNotFoundException.class);
+        }
+        catch (FileNotFoundException x)
+        {
+            //
+        }
     }
 }

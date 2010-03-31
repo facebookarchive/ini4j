@@ -13,33 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ini4j.spi;
+package org.ini4j;
 
-import org.ini4j.Ini4jCase;
+import junit.framework.TestCase;
 
-import static org.junit.Assert.assertEquals;
+import org.ini4j.test.Helper;
 
-import org.junit.Before;
-import org.junit.Test;
-
-public class RegEscapeToolTest extends Ini4jCase
+public class Ini4jCase extends TestCase
 {
-    protected RegEscapeTool instance;
-
-    @Before @Override public void setUp() throws Exception
+    @Override protected void setUp() throws Exception
     {
         super.setUp();
-        instance = RegEscapeTool.getInstance();
+        Helper.resetConfig();
     }
 
-    @Test public void testHexadecimal()
+    protected void missing(Class<? extends Exception> clazz)
     {
-        assertEquals(0, instance.hexadecimal(null).length());
-        assertEquals(0, instance.hexadecimal("").length());
-    }
-
-    @Test public void testSingleton() throws Exception
-    {
-        assertEquals(RegEscapeTool.class, RegEscapeTool.getInstance().getClass());
+        fail("Missing exception: " + clazz.getName());
     }
 }

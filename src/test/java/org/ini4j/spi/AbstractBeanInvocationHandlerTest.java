@@ -15,9 +15,19 @@
  */
 package org.ini4j.spi;
 
+import org.ini4j.Ini4jCase;
+
 import org.ini4j.sample.Dwarf;
 
-import static org.junit.Assert.*;
+import org.ini4j.test.Helper;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -30,9 +40,8 @@ import java.lang.reflect.Proxy;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.ini4j.test.Helper;
 
-public class AbstractBeanInvocationHandlerTest
+public class AbstractBeanInvocationHandlerTest extends Ini4jCase
 {
     private static final String PROP_AGE = Dwarf.PROP_AGE;
     private static final String PROP_HEIGHT = Dwarf.PROP_HEIGHT;
@@ -94,7 +103,6 @@ public class AbstractBeanInvocationHandlerTest
         handler.firePropertyChange(PROP_AGE, Integer.valueOf(1), Integer.valueOf(2));
         handler.fireVetoableChange(PROP_AGE, Integer.valueOf(1), Integer.valueOf(2));
     }
-
 
     @Test public void testPropertyChangeListener() throws Exception
     {

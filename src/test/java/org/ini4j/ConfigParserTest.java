@@ -23,7 +23,12 @@ import org.ini4j.test.Helper;
 
 import org.junit.After;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ConfigParserTest
+public class ConfigParserTest extends Ini4jCase
 {
     private static final String SECTION = "section";
     private static final String OPTION = "option";
@@ -54,12 +59,13 @@ public class ConfigParserTest
     private static final String DUMMY = "dummy";
     protected ConfigParser instance;
 
-    @Before public void setUp()
+    @Before @Override public void setUp() throws Exception
     {
+        super.setUp();
         instance = new ConfigParser();
     }
 
-    @After public void tearDown()
+    @After @Override public void tearDown()
     {
     }
 
@@ -79,17 +85,31 @@ public class ConfigParserTest
         assertFalse(instance.hasSection(SECTION));
     }
 
-    @Test(expected = ConfigParser.DuplicateSectionException.class)
-    public void testAddSectionDuplicate() throws Exception
+    @Test public void testAddSectionDuplicate() throws Exception
     {
         instance.addSection(SECTION);
-        instance.addSection(SECTION);
+        try
+        {
+            instance.addSection(SECTION);
+            missing(ConfigParser.DuplicateSectionException.class);
+        }
+        catch (ConfigParser.DuplicateSectionException x)
+        {
+            //
+        }
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddSectionIllegal() throws Exception
+    @Test public void testAddSectionIllegal() throws Exception
     {
-        instance.addSection(ConfigParser.PyIni.DEFAULT_SECTION_NAME);
+        try
+        {
+            instance.addSection(ConfigParser.PyIni.DEFAULT_SECTION_NAME);
+            missing(IllegalArgumentException.class);
+        }
+        catch (IllegalArgumentException x)
+        {
+            //
+        }
     }
 
     @Test public void testDefaults() throws Exception
@@ -149,37 +169,66 @@ public class ConfigParserTest
         assertEquals(1.2, instance.getDouble(SECTION, OPTION), Helper.DELTA);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetBooleanException() throws Exception
+    @Test public void testGetBooleanException() throws Exception
     {
         Ini.Section section = instance.getIni().add(SECTION);
 
         section.put(OPTION, "joe");
-        instance.getBoolean(SECTION, OPTION);
+        try
+        {
+            instance.getBoolean(SECTION, OPTION);
+            missing(IllegalArgumentException.class);
+        }
+        catch (IllegalArgumentException x)
+        {
+            //
+        }
     }
 
-    @Test(expected = ConfigParser.InterpolationMissingOptionException.class)
-    public void testGetMissinOptionException() throws Exception
+    @Test public void testGetMissinOptionException() throws Exception
     {
         instance.addSection(SECTION);
         instance.set(SECTION, OPTION, MISSING_REF);
-        instance.get(SECTION, OPTION);
+        try
+        {
+            instance.get(SECTION, OPTION);
+            missing(ConfigParser.InterpolationMissingOptionException.class);
+        }
+        catch (ConfigParser.InterpolationMissingOptionException x)
+        {
+            //
+        }
     }
 
-    @Test(expected = ConfigParser.NoOptionException.class)
-    public void testGetNoOption() throws Exception
+    @Test public void testGetNoOption() throws Exception
     {
         instance.getIni().add(SECTION);
-        instance.get(SECTION, OPTION);
+        try
+        {
+            instance.get(SECTION, OPTION);
+            missing(ConfigParser.NoOptionException.class);
+        }
+        catch (ConfigParser.NoOptionException x)
+        {
+            //
+        }
     }
 
-    @Test(expected = ConfigParser.NoSectionException.class)
-    public void testGetNoSection() throws Exception
+    @Test public void testGetNoSection() throws Exception
     {
-        instance.get(SECTION, OPTION);
+        try
+        {
+            instance.get(SECTION, OPTION);
+            missing(ConfigParser.NoSectionException.class);
+        }
+        catch (ConfigParser.NoSectionException x)
+        {
+            //
+        }
     }
 
-    @Test @SuppressWarnings("empty-statement")
+    @Test
+    @SuppressWarnings("empty-statement")
     public void testGetVars() throws Exception
     {
         Map<String, String> vars = new HashMap<String, String>();
@@ -262,28 +311,56 @@ public class ConfigParserTest
         instance.read(file.toURI().toURL());
     }
 
-    @Test(expected = ConfigParser.ParsingException.class)
-    public void testReadFileException() throws Exception
+    @Test public void testReadFileException() throws Exception
     {
-        instance.read(badFile());
+        try
+        {
+            instance.read(badFile());
+            missing(ConfigParser.ParsingException.class);
+        }
+        catch (ConfigParser.ParsingException x)
+        {
+            //
+        }
     }
 
-    @Test(expected = ConfigParser.ParsingException.class)
-    public void testReadReaderException() throws Exception
+    @Test public void testReadReaderException() throws Exception
     {
-        instance.read(new StringReader(BAD));
+        try
+        {
+            instance.read(new StringReader(BAD));
+            missing(ConfigParser.ParsingException.class);
+        }
+        catch (ConfigParser.ParsingException x)
+        {
+            //
+        }
     }
 
-    @Test(expected = ConfigParser.ParsingException.class)
-    public void testReadStreamException() throws Exception
+    @Test public void testReadStreamException() throws Exception
     {
-        instance.read(new ByteArrayInputStream(BAD.getBytes()));
+        try
+        {
+            instance.read(new ByteArrayInputStream(BAD.getBytes()));
+            missing(ConfigParser.ParsingException.class);
+        }
+        catch (ConfigParser.ParsingException x)
+        {
+            //
+        }
     }
 
-    @Test(expected = ConfigParser.ParsingException.class)
-    public void testReadURLException() throws Exception
+    @Test public void testReadURLException() throws Exception
     {
-        instance.read(badFile().toURI().toURL());
+        try
+        {
+            instance.read(badFile().toURI().toURL());
+            missing(ConfigParser.ParsingException.class);
+        }
+        catch (ConfigParser.ParsingException x)
+        {
+            //
+        }
     }
 
     @Test public void testSections() throws Exception
@@ -308,10 +385,17 @@ public class ConfigParserTest
         assertFalse(instance.hasOption(SECTION, OPTION));
     }
 
-    @Test(expected = ConfigParser.NoSectionException.class)
-    public void testSetNoSection() throws Exception
+    @Test public void testSetNoSection() throws Exception
     {
-        instance.set(SECTION, OPTION, "dummy");
+        try
+        {
+            instance.set(SECTION, OPTION, "dummy");
+            missing(ConfigParser.NoSectionException.class);
+        }
+        catch (ConfigParser.NoSectionException x)
+        {
+            //
+        }
     }
 
     @Test public void testWrite() throws Exception
@@ -354,7 +438,7 @@ public class ConfigParserTest
         f.deleteOnExit();
         FileWriter w = new FileWriter(f);
 
-        w.append(BAD);
+        w.write(BAD, 0, BAD.length());
         w.close();
 
         return f;
@@ -381,7 +465,8 @@ public class ConfigParserTest
         ConfigParser saved = new ConfigParser(instance.defaults());
 
         saved.read(file);
-        checkEquals(((ConfigParser.PyIni) instance.getIni()).getDefaultSection(), ((ConfigParser.PyIni) saved.getIni()).getDefaultSection());
+        checkEquals(((ConfigParser.PyIni) instance.getIni()).getDefaultSection(),
+            ((ConfigParser.PyIni) saved.getIni()).getDefaultSection());
         assertEquals(instance.sections().size(), saved.sections().size());
         for (String sectionName : instance.sections())
         {

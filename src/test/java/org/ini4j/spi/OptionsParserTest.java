@@ -18,6 +18,7 @@ package org.ini4j.spi;
 import org.easymock.EasyMock;
 
 import org.ini4j.Config;
+import org.ini4j.Ini4jCase;
 import org.ini4j.InvalidFileFormatException;
 
 import org.ini4j.sample.Dwarf;
@@ -26,7 +27,8 @@ import org.ini4j.sample.Dwarfs;
 import org.ini4j.test.DwarfsData;
 import org.ini4j.test.Helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
@@ -39,20 +41,27 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 
-public class OptionsParserTest
+public class OptionsParserTest extends Ini4jCase
 {
     private static final String CFG_EMPTY_OPTION = "option\n";
     private static final String NONAME = "=value\n";
     private static final String OPTION = "option";
     private static final String UNICODE_STRING = "áÁéÉíÍóÓöÖőŐúÚüÜűŰ-ÄÖÜäöü";
 
-    @Test(expected = InvalidFileFormatException.class)
-    public void testBad() throws Exception
+    @Test public void testBad() throws Exception
     {
         OptionsParser parser = new OptionsParser();
         OptionsHandler handler = EasyMock.createNiceMock(OptionsHandler.class);
 
-        parser.parse(new ByteArrayInputStream(NONAME.getBytes()), handler);
+        try
+        {
+            parser.parse(new ByteArrayInputStream(NONAME.getBytes()), handler);
+            missing(InvalidFileFormatException.class);
+        }
+        catch (InvalidFileFormatException x)
+        {
+            //
+        }
     }
 
     @Test public void testEmptyOption() throws Exception
