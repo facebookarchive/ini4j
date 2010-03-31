@@ -26,6 +26,72 @@ import java.nio.charset.Charset;
 class UnicodeInputStreamReader extends Reader
 {
     private static final int BOM_SIZE = 4;
+
+    private static enum Bom
+    {
+        UTF32BE("UTF-32BE", new byte[] { (byte) 0x00, (byte) 0x00, (byte) 0xFE, (byte) 0xFF }),
+        UTF32LE("UTF-32LE", new byte[] { (byte) 0xFF, (byte) 0xFE, (byte) 0x00, (byte) 0x00 }),
+        UTF16BE("UTF-16BE", new byte[] { (byte) 0xFE, (byte) 0xFF }),
+        UTF16LE("UTF-16LE", new byte[] { (byte) 0xFF, (byte) 0xFE }),
+        UTF8("UTF-8", new byte[] { (byte) 0xEF, (byte) 0xBB, (byte) 0xBF });
+        private final byte[] _bytes;
+        private Charset _charset;
+
+        @SuppressWarnings("PMD.ArrayIsStoredDirectly")
+        private Bom(String charsetName, byte[] bytes)
+        {
+            try
+            {
+                _charset = Charset.forName(charsetName);
+            }
+            catch (Exception x)
+            {
+                _charset = null;
+            }
+
+            _bytes = bytes;
+        }
+
+        private static Bom find(byte[] data)
+        {
+            Bom ret = null;
+
+            for (Bom bom : values())
+            {
+                if (bom.supported() && bom.match(data))
+                {
+                    ret = bom;
+
+                    break;
+                }
+            }
+
+            return ret;
+        }
+
+        private boolean match(byte[] data)
+        {
+            boolean ok = true;
+
+            for (int i = 0; i < _bytes.length; i++)
+            {
+                if (data[i] != _bytes[i])
+                {
+                    ok = false;
+
+                    break;
+                }
+            }
+
+            return ok;
+        }
+
+        private boolean supported()
+        {
+            return _charset != null;
+        }
+    }
+
     private final Charset _defaultEncoding;
     private InputStreamReader _reader;
     private final PushbackInputStream _stream;
@@ -85,58 +151,5 @@ class UnicodeInputStreamReader extends Reader
         }
 
         _reader = new InputStreamReader(_stream, encoding);
-    }
-
-    private static final class Bom
-    {
-        private static final Bom UTF32BE = new Bom("UTF-32BE", new byte[] { (byte) 0x00, (byte) 0x00, (byte) 0xFE, (byte) 0xFF });
-        private static final Bom UTF32LE = new Bom("UTF-32LE", new byte[] { (byte) 0xFF, (byte) 0xFE, (byte) 0x00, (byte) 0x00 });
-        private static final Bom UTF16BE = new Bom("UTF-16BE", new byte[] { (byte) 0xFE, (byte) 0xFF });
-        private static final Bom UTF16LE = new Bom("UTF-16LE", new byte[] { (byte) 0xFF, (byte) 0xFE });
-        private static final Bom UTF8 = new Bom("UTF-8", new byte[] { (byte) 0xEF, (byte) 0xBB, (byte) 0xBF });
-        private static final Bom[] VALUES = { UTF32BE, UTF32LE, UTF16BE, UTF16LE, UTF8 };
-        private final byte[] _bytes;
-        private final Charset _charset;
-
-        @SuppressWarnings("PMD.ArrayIsStoredDirectly")
-        private Bom(String charsetName, byte[] bytes)
-        {
-            _charset = Charset.forName(charsetName);
-            _bytes = bytes;
-        }
-
-        private static Bom find(byte[] data)
-        {
-            Bom ret = null;
-
-            for (int i = 0; i < VALUES.length; i++)
-            {
-                if (VALUES[i].match(data))
-                {
-                    ret = VALUES[i];
-
-                    break;
-                }
-            }
-
-            return ret;
-        }
-
-        private boolean match(byte[] data)
-        {
-            boolean ok = true;
-
-            for (int i = 0; i < _bytes.length; i++)
-            {
-                if (data[i] != _bytes[i])
-                {
-                    ok = false;
-
-                    break;
-                }
-            }
-
-            return ok;
-        }
     }
 }

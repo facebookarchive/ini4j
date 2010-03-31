@@ -63,7 +63,8 @@ public class ConfigParser implements Serializable
         {
             ret = true;
         }
-        else if ("0".equalsIgnoreCase(value) || "no".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value) || "off".equalsIgnoreCase(value))
+        else if ("0".equalsIgnoreCase(value) || "no".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value)
+              || "off".equalsIgnoreCase(value))
         {
             ret = false;
         }
@@ -126,8 +127,8 @@ public class ConfigParser implements Serializable
         return get(section, option, raw, Collections.EMPTY_MAP);
     }
 
-    public String get(String sectionName, String optionName, boolean raw, Map<String, String> variables) throws NoSectionException, NoOptionException,
-        InterpolationException
+    public String get(String sectionName, String optionName, boolean raw, Map<String, String> variables) throws NoSectionException,
+        NoOptionException, InterpolationException
     {
         String value = requireOption(sectionName, optionName);
 
@@ -158,7 +159,8 @@ public class ConfigParser implements Serializable
     }
 
     @SuppressWarnings(Warnings.UNCHECKED)
-    public List<Map.Entry<String, String>> items(String sectionName, boolean raw) throws NoSectionException, InterpolationMissingOptionException
+    public List<Map.Entry<String, String>> items(String sectionName, boolean raw) throws NoSectionException,
+        InterpolationMissingOptionException
     {
         return items(sectionName, raw, Collections.EMPTY_MAP);
     }
@@ -404,7 +406,8 @@ public class ConfigParser implements Serializable
 
         private ParsingException(Throwable cause)
         {
-            super(cause.getMessage(), cause);
+            super(cause.getMessage());
+            initCause(cause);
         }
     }
 
@@ -472,7 +475,8 @@ public class ConfigParser implements Serializable
             return _defaultSection;
         }
 
-        protected String fetch(Ini.Section section, String optionName, Map<String, String> variables) throws InterpolationMissingOptionException
+        protected String fetch(Ini.Section section, String optionName, Map<String, String> variables)
+            throws InterpolationMissingOptionException
         {
             String value = section.get(optionName);
 
