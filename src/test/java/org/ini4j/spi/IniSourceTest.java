@@ -74,7 +74,10 @@ public class IniSourceTest extends Ini4jCase
         outer.append("2" + OUTER + '\n');
         outer.append(";-2" + OUTER + '\n');
         InputStream in = new ByteArrayInputStream(outer.toString().getBytes());
-        IniSource src = new IniSource(in, handler, true, COMMENTS, Config.DEFAULT_FILE_ENCODING);
+        Config cfg = new Config();
+
+        cfg.setInclude(true);
+        IniSource src = new IniSource(in, handler, COMMENTS, cfg);
 
         assertEquals("1" + OUTER, src.readLine());
         assertEquals(2, src.getLineNumber());
@@ -119,7 +122,10 @@ public class IniSourceTest extends Ini4jCase
         handler.handleComment("-3" + NESTED);
         handler.handleComment("-4" + NESTED);
         EasyMock.replay(handler);
-        IniSource src = new IniSource(Helper.getResourceURL(NESTED_PATH), handler, false, COMMENTS, Config.DEFAULT_FILE_ENCODING);
+        Config cfg = new Config();
+
+        cfg.setInclude(false);
+        IniSource src = new IniSource(Helper.getResourceURL(NESTED_PATH), handler, COMMENTS, cfg);
 
         assertEquals("1" + NESTED, src.readLine());
         assertEquals("<include.txt>", src.readLine());

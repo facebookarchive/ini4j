@@ -15,6 +15,8 @@
  */
 package org.ini4j.spi;
 
+import org.ini4j.Config;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
@@ -22,40 +24,35 @@ import java.io.Reader;
 
 import java.net.URL;
 
-import java.nio.charset.Charset;
-
 class IniSource
 {
     public static final char INCLUDE_BEGIN = '<';
     public static final char INCLUDE_END = '>';
     public static final char INCLUDE_OPTIONAL = '?';
     private static final char ESCAPE_CHAR = '\\';
-    private static final String NEWLINE = "\n";
-    private final boolean _allowInclude;
     private URL _base;
     private IniSource _chain;
     private final String _commentChars;
-    private final Charset _fileEncoding;
+    private final Config _config;
     private final HandlerBase _handler;
     private final LineNumberReader _reader;
 
-    IniSource(InputStream input, HandlerBase handler, boolean includeFlag, String comments, Charset fileEncoding)
+    IniSource(InputStream input, HandlerBase handler, String comments, Config config)
     {
-        this(new UnicodeInputStreamReader(input, fileEncoding), handler, includeFlag, comments, fileEncoding);
+        this(new UnicodeInputStreamReader(input, config.getFileEncoding()), handler, comments, config);
     }
 
-    IniSource(Reader input, HandlerBase handler, boolean includeFlag, String comments, Charset fileEncoding)
+    IniSource(Reader input, HandlerBase handler, String comments, Config config)
     {
         _reader = new LineNumberReader(input);
         _handler = handler;
-        _allowInclude = includeFlag;
         _commentChars = comments;
-        _fileEncoding = fileEncoding;
+        _config = config;
     }
 
-    IniSource(URL input, HandlerBase handler, boolean includeFlag, String comments, Charset fileEncoding) throws IOException
+    IniSource(URL input, HandlerBase handler, String comments, Config config) throws IOException
     {
-        this(new UnicodeInputStreamReader(input.openStream(), fileEncoding), handler, includeFlag, comments, fileEncoding);
+        this(new UnicodeInputStreamReader(input.openStream(), config.getFileEncoding()), handler, comments, config);
         _base = input;
     }
 
@@ -115,7 +112,8 @@ class IniSource
     {
         String line = input;
 
-        if (_allowInclude && (line.length() > 2) && (line.charAt(0) == INCLUDE_BEGIN) && (line.charAt(line.length() - 1) == INCLUDE_END))
+        if (_config.isInclude() && (line.length() > 2) && (line.charAt(0) == INCLUDE_BEGIN)
+              && (line.charAt(line.length() - 1) == INCLUDE_END))
         {
             line = line.substring(1, line.length() - 1).trim();
             boolean optional = line.charAt(0) == INCLUDE_OPTIONAL;
@@ -131,7 +129,7 @@ class IniSource
             {
                 try
                 {
-                    _chain = new IniSource(loc, _handler, _allowInclude, _commentChars, _fileEncoding);
+                    _chain = new IniSource(loc, _handler, _commentChars, _config);
                 }
                 catch (IOException x)
                 {
@@ -144,7 +142,7 @@ class IniSource
             }
             else
             {
-                _chain = new IniSource(loc, _handler, _allowInclude, _commentChars, _fileEncoding);
+                _chain = new IniSource(loc, _handler, _commentChars, _config);
                 line = readLine();
             }
         }
@@ -184,7 +182,7 @@ class IniSource
             else if ((_commentChars.indexOf(line.charAt(0)) >= 0) && (buff.length() == 0))
             {
                 comment.append(line.substring(1));
-                comment.append(NEWLINE);
+                comment.append(_config.getLineSeparator());
             }
             else
             {

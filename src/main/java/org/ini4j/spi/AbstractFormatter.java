@@ -24,14 +24,13 @@ abstract class AbstractFormatter implements HandlerBase
     private static final char OPERATOR = '=';
     private static final char COMMENT = '#';
     private static final char SPACE = ' ';
-    private static final String NEWLINE = "\n";
     private Config _config = Config.getGlobal();
     private boolean _header = true;
     private PrintWriter _output;
 
     @Override public void handleComment(String comment)
     {
-        for (String line : comment.split(NEWLINE))
+        for (String line : comment.split(getConfig().getLineSeparator()))
         {
             getOutput().print(COMMENT);
             getOutput().print(line);

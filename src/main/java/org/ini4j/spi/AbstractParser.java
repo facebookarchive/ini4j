@@ -55,17 +55,17 @@ abstract class AbstractParser
 
     IniSource newIniSource(InputStream input, HandlerBase handler)
     {
-        return new IniSource(input, handler, getConfig().isInclude(), _comments, getConfig().getFileEncoding());
+        return new IniSource(input, handler, _comments, getConfig());
     }
 
     IniSource newIniSource(Reader input, HandlerBase handler)
     {
-        return new IniSource(input, handler, getConfig().isInclude(), _comments, getConfig().getFileEncoding());
+        return new IniSource(input, handler, _comments, getConfig());
     }
 
     IniSource newIniSource(URL input, HandlerBase handler) throws IOException
     {
-        return new IniSource(input, handler, getConfig().isInclude(), _comments, getConfig().getFileEncoding());
+        return new IniSource(input, handler, _comments, getConfig());
     }
 
     void parseOptionLine(String line, HandlerBase handler, int lineNumber) throws InvalidFileFormatException
