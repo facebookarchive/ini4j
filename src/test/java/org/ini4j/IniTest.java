@@ -176,4 +176,71 @@ public class IniTest extends Ini4jCase
             //
         }
     }
+
+    @Test public void testWithComment() throws Exception
+    {
+        Ini ini = new Ini();
+
+        ini.load(Helper.getResourceStream(Helper.DWARFS_INI));
+        assertNotNull(ini.getComment());
+        for (Ini.Section sec : ini.values())
+        {
+            assertNotNull(ini.getComment(sec.getName()));
+        }
+    }
+
+    @Test public void testWithoutComment() throws Exception
+    {
+        Ini ini = new Ini();
+        Config cfg = new Config();
+
+        cfg.setComment(false);
+        ini.setConfig(cfg);
+        ini.load(Helper.getResourceStream(Helper.DWARFS_INI));
+        assertNull(ini.getComment());
+        for (Ini.Section sec : ini.values())
+        {
+            assertNull(ini.getComment(sec.getName()));
+        }
+
+        ini = new Ini();
+        ini.setConfig(cfg);
+        ini.setComment("comment");
+        Ini.Section sec = ini.add("section");
+
+        sec.add("option", "value");
+        ini.putComment("section", "section-comment");
+        StringWriter writer = new StringWriter();
+
+        ini.store(writer);
+        assertEquals("[section]\noption = value\n\n", writer.toString());
+    }
+
+    @Test public void testWithoutHeaderComment() throws Exception
+    {
+        Ini ini = new Ini();
+        Config cfg = new Config();
+
+        cfg.setHeaderComment(false);
+        cfg.setComment(true);
+        ini.setConfig(cfg);
+        ini.load(Helper.getResourceStream(Helper.DWARFS_INI));
+        assertNull(ini.getComment());
+        for (Ini.Section sec : ini.values())
+        {
+            assertNotNull(ini.getComment(sec.getName()));
+        }
+
+        ini = new Ini();
+        ini.setConfig(cfg);
+        ini.setComment("comment");
+        Ini.Section sec = ini.add("section");
+
+        sec.add("option", "value");
+        ini.putComment("section", "section-comment");
+        StringWriter writer = new StringWriter();
+
+        ini.store(writer);
+        assertEquals("#section-comment\n[section]\noption = value\n\n", writer.toString());
+    }
 }

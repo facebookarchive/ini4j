@@ -29,7 +29,8 @@ public class BasicProfile extends CommonMultiMap<String, Profile.Section> implem
 {
     private static final String SECTION_SYSTEM_PROPERTIES = "@prop";
     private static final String SECTION_ENVIRONMENT = "@env";
-    private static final Pattern EXPRESSION = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[\\}]+)(\\[([0-9]+)\\])?/)?([^\\[^/\\}]+)(\\[(([0-9]+))\\])?\\}");
+    private static final Pattern EXPRESSION = Pattern.compile(
+            "(?<!\\\\)\\$\\{(([^\\[\\}]+)(\\[([0-9]+)\\])?/)?([^\\[^/\\}]+)(\\[(([0-9]+))\\])?\\}");
     private static final int G_SECTION = 2;
     private static final int G_SECTION_IDX = 4;
     private static final int G_OPTION = 5;
@@ -96,7 +97,8 @@ public class BasicProfile extends CommonMultiMap<String, Profile.Section> implem
 
     @Override public <T> T as(Class<T> clazz, String prefix)
     {
-        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz }, new BeanInvocationHandler(prefix)));
+        return clazz.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { clazz },
+                    new BeanInvocationHandler(prefix)));
     }
 
     @Override public String fetch(Object sectionName, Object optionName)
@@ -223,10 +225,7 @@ public class BasicProfile extends CommonMultiMap<String, Profile.Section> implem
 
     void store(IniHandler formatter, String comment)
     {
-        if ((comment != null) && (comment.length() != 0))
-        {
-            formatter.handleComment(comment);
-        }
+        formatter.handleComment(comment);
     }
 
     void store(IniHandler formatter, Section section, String option)

@@ -213,4 +213,35 @@ public class OptionsTest extends Ini4jCase
             //
         }
     }
+
+    @Test public void testWithComment() throws Exception
+    {
+        Options opts = new Options();
+
+        opts.load(Helper.getResourceStream(Helper.DWARFS_OPT));
+        assertNotNull(opts.getComment());
+    }
+
+    @Test public void testWithoutComment() throws Exception
+    {
+        Options opts = new Options();
+        Config cfg = new Config();
+
+        cfg.setComment(false);
+        opts.setConfig(cfg);
+        opts.load(Helper.getResourceStream(Helper.DWARFS_OPT));
+        assertNull(opts.getComment());
+    }
+
+    @Test public void testWithoutHeaderComment() throws Exception
+    {
+        Options opts = new Options();
+        Config cfg = new Config();
+
+        cfg.setComment(true);
+        cfg.setHeaderComment(false);
+        opts.setConfig(cfg);
+        opts.load(Helper.getResourceStream(Helper.DWARFS_OPT));
+        assertNull(opts.getComment());
+    }
 }

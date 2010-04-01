@@ -52,6 +52,8 @@ public class ConfigTest extends Ini4jCase
         setBoolean(Config.PROP_PROPERTY_FIRST_UPPER, exp.isPropertyFirstUpper());
         setString(Config.PROP_LINE_SEPARATOR, exp.getLineSeparator());
         setCharset(Config.PROP_FILE_ENCODING, exp.getFileEncoding());
+        setBoolean(Config.PROP_COMMENT, exp.isComment());
+        setBoolean(Config.PROP_HEADER_COMMENT, exp.isHeaderComment());
         Config cfg = new Config();
 
         assertEquals(exp, cfg);
@@ -96,6 +98,8 @@ public class ConfigTest extends Ini4jCase
         Assert.assertEquals(exp.isPropertyFirstUpper(), act.isPropertyFirstUpper());
         Assert.assertEquals(exp.getLineSeparator(), act.getLineSeparator());
         Assert.assertEquals(exp.getFileEncoding(), act.getFileEncoding());
+        Assert.assertEquals(exp.isComment(), act.isComment());
+        Assert.assertEquals(exp.isHeaderComment(), act.isHeaderComment());
     }
 
     private Config newDefaultConfig()
@@ -119,6 +123,8 @@ public class ConfigTest extends Ini4jCase
         cfg.setPropertyFirstUpper(false);
         cfg.setLineSeparator(System.getProperty("line.separator"));
         cfg.setFileEncoding(Charset.forName("UTF-8"));
+        cfg.setComment(true);
+        cfg.setHeaderComment(true);
 
         return cfg;
     }
@@ -142,6 +148,8 @@ public class ConfigTest extends Ini4jCase
         cfg.setPathSeparator('?');
         cfg.setTree(!cfg.isTree());
         cfg.setPropertyFirstUpper(!cfg.isPropertyFirstUpper());
+        cfg.setComment(!cfg.isComment());
+        cfg.setHeaderComment(!cfg.isHeaderComment());
 
         //cfg.setLineSeparator("\t");
         //cfg.setFileEncoding(Charset.forName("ASCII"));

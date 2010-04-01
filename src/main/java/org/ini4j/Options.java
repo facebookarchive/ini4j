@@ -191,9 +191,6 @@ public class Options extends BasicOptionMap implements Persistable, Configurable
 
     private void storeComment(OptionsHandler formatter, String comment)
     {
-        if ((comment != null) && (comment.length() != 0))
-        {
-            formatter.handleComment(comment);
-        }
+        formatter.handleComment(comment);
     }
 }

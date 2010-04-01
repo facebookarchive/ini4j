@@ -15,6 +15,7 @@
  */
 package org.ini4j.spi;
 
+import org.ini4j.CommentedMap;
 import org.ini4j.Config;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
@@ -31,7 +32,7 @@ abstract class AbstractProfileBuilder implements IniHandler
         // comment only .ini files....
         if ((_lastComment != null) && _header)
         {
-            getProfile().setComment(_lastComment);
+            setHeaderComment();
         }
     }
 
@@ -44,8 +45,8 @@ abstract class AbstractProfileBuilder implements IniHandler
     {
         if ((_lastComment != null) && _header)
         {
-            getProfile().setComment(_lastComment);
             _header = false;
+            setHeaderComment();
         }
 
         _lastComment = comment;
@@ -65,14 +66,17 @@ abstract class AbstractProfileBuilder implements IniHandler
 
         if (_lastComment != null)
         {
-            _currentSection.putComment(name, _lastComment);
+            putComment(_currentSection, name);
             _lastComment = null;
         }
     }
 
     @Override public void startIni()
     {
-        _header = true;
+        if (getConfig().isHeaderComment())
+        {
+            _header = true;
+        }
     }
 
     @Override public void startSection(String sectionName)
@@ -92,11 +96,11 @@ abstract class AbstractProfileBuilder implements IniHandler
         {
             if (_header)
             {
-                getProfile().setComment(_lastComment);
+                setHeaderComment();
             }
             else
             {
-                getProfile().putComment(sectionName, _lastComment);
+                putComment(getProfile(), sectionName);
             }
 
             _lastComment = null;
@@ -112,5 +116,21 @@ abstract class AbstractProfileBuilder implements IniHandler
     Profile.Section getCurrentSection()
     {
         return _currentSection;
+    }
+
+    private void setHeaderComment()
+    {
+        if (getConfig().isComment())
+        {
+            getProfile().setComment(_lastComment);
+        }
+    }
+
+    private void putComment(CommentedMap<String, ?> map, String key)
+    {
+        if (getConfig().isComment())
+        {
+            map.putComment(key, _lastComment);
+        }
     }
 }

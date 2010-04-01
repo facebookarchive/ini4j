@@ -30,18 +30,22 @@ abstract class AbstractFormatter implements HandlerBase
 
     @Override public void handleComment(String comment)
     {
-        for (String line : comment.split(getConfig().getLineSeparator()))
+        if (getConfig().isComment() && (!_header || getConfig().isHeaderComment()) && (comment != null) && (comment.length() != 0))
         {
-            getOutput().print(COMMENT);
-            getOutput().print(line);
-            getOutput().print(getConfig().getLineSeparator());
+            for (String line : comment.split(getConfig().getLineSeparator()))
+            {
+                getOutput().print(COMMENT);
+                getOutput().print(line);
+                getOutput().print(getConfig().getLineSeparator());
+            }
+
+            if (_header)
+            {
+                getOutput().print(getConfig().getLineSeparator());
+            }
         }
 
-        if (_header)
-        {
-            getOutput().print(getConfig().getLineSeparator());
-            setHeader(false);
-        }
+        _header = false;
     }
 
     @Override public void handleOption(String optionName, String optionValue)

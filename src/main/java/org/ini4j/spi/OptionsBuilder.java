@@ -44,7 +44,7 @@ public class OptionsBuilder implements OptionsHandler
         // comment only .opt file ...
         if ((_lastComment != null) && _header)
         {
-            _options.setComment(_lastComment);
+            setHeaderComment();
         }
     }
 
@@ -52,7 +52,7 @@ public class OptionsBuilder implements OptionsHandler
     {
         if ((_lastComment != null) && _header)
         {
-            _options.setComment(_lastComment);
+            setHeaderComment();
             _header = false;
         }
 
@@ -74,11 +74,11 @@ public class OptionsBuilder implements OptionsHandler
         {
             if (_header)
             {
-                _options.setComment(_lastComment);
+                setHeaderComment();
             }
             else
             {
-                _options.putComment(name, _lastComment);
+                putComment(name);
             }
 
             _lastComment = null;
@@ -89,7 +89,10 @@ public class OptionsBuilder implements OptionsHandler
 
     @Override public void startOptions()
     {
-        _header = true;
+        if (getConfig().isHeaderComment())
+        {
+            _header = true;
+        }
     }
 
     protected static OptionsBuilder newInstance()
@@ -100,5 +103,21 @@ public class OptionsBuilder implements OptionsHandler
     private Config getConfig()
     {
         return _options.getConfig();
+    }
+
+    private void setHeaderComment()
+    {
+        if (getConfig().isComment())
+        {
+            _options.setComment(_lastComment);
+        }
+    }
+
+    private void putComment(String key)
+    {
+        if (getConfig().isComment())
+        {
+            _options.putComment(key, _lastComment);
+        }
     }
 }

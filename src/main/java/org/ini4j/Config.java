@@ -19,6 +19,7 @@ import java.io.Serializable;
 
 import java.nio.charset.Charset;
 
+@SuppressWarnings("PMD.ExcessivePublicCount")
 public class Config implements Cloneable, Serializable
 {
     public static final String KEY_PREFIX = "org.ini4j.config.";
@@ -39,6 +40,8 @@ public class Config implements Cloneable, Serializable
     public static final String PROP_PROPERTY_FIRST_UPPER = "propertyFirstUpper";
     public static final String PROP_FILE_ENCODING = "fileEncoding";
     public static final String PROP_LINE_SEPARATOR = "lineSeparator";
+    public static final String PROP_COMMENT = "comment";
+    public static final String PROP_HEADER_COMMENT = "headerComment";
     public static final boolean DEFAULT_EMPTY_OPTION = false;
     public static final boolean DEFAULT_EMPTY_SECTION = false;
     public static final boolean DEFAULT_GLOBAL_SECTION = false;
@@ -53,17 +56,21 @@ public class Config implements Cloneable, Serializable
     public static final boolean DEFAULT_ESCAPE = true;
     public static final boolean DEFAULT_TREE = true;
     public static final boolean DEFAULT_PROPERTY_FIRST_UPPER = false;
+    public static final boolean DEFAULT_COMMENT = true;
+    public static final boolean DEFAULT_HEADER_COMMENT = true;
     public static final char DEFAULT_PATH_SEPARATOR = '/';
     public static final String DEFAULT_LINE_SEPARATOR = getSystemProperty("line.separator", "\n");
     public static final Charset DEFAULT_FILE_ENCODING = Charset.forName("UTF-8");
     private static final Config GLOBAL = new Config();
     private static final long serialVersionUID = 2865793267410367814L;
+    private boolean _comment;
     private boolean _emptyOption;
     private boolean _emptySection;
     private boolean _escape;
     private Charset _fileEncoding;
     private boolean _globalSection;
     private String _globalSectionName;
+    private boolean _headerComment;
     private boolean _include;
     private String _lineSeparator;
     private boolean _lowerCaseOption;
@@ -128,6 +135,11 @@ public class Config implements Cloneable, Serializable
         return (value == null) ? defaultValue : value;
     }
 
+    public void setComment(boolean value)
+    {
+        _comment = value;
+    }
+
     public boolean isEscape()
     {
         return _escape;
@@ -181,6 +193,11 @@ public class Config implements Cloneable, Serializable
     public void setGlobalSectionName(String value)
     {
         _globalSectionName = value;
+    }
+
+    public void setHeaderComment(boolean value)
+    {
+        _headerComment = value;
     }
 
     public void setInclude(boolean value)
@@ -288,6 +305,16 @@ public class Config implements Cloneable, Serializable
         _strictOperator = value;
     }
 
+    public boolean isComment()
+    {
+        return _comment;
+    }
+
+    public boolean isHeaderComment()
+    {
+        return _headerComment;
+    }
+
     public void setTree(boolean value)
     {
         _tree = value;
@@ -329,6 +356,8 @@ public class Config implements Cloneable, Serializable
         _propertyFirstUpper = getBoolean(PROP_PROPERTY_FIRST_UPPER, DEFAULT_PROPERTY_FIRST_UPPER);
         _lineSeparator = getString(PROP_LINE_SEPARATOR, DEFAULT_LINE_SEPARATOR);
         _fileEncoding = getCharset(PROP_FILE_ENCODING, DEFAULT_FILE_ENCODING);
+        _comment = getBoolean(PROP_COMMENT, DEFAULT_COMMENT);
+        _headerComment = getBoolean(PROP_HEADER_COMMENT, DEFAULT_HEADER_COMMENT);
     }
 
     private boolean getBoolean(String name, boolean defaultValue)
