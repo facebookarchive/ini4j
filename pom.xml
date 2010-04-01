@@ -91,7 +91,7 @@
         </dependency>
     </dependencies>
     <properties>
-        <upload.url>scp://shell.sourceforge.net/incoming/s/sz/szkiba/uploads</upload.url>
+        <upload.url>scp://shell.sourceforge.net//home/frs/project/i/in/ini4j</upload.url>
         <jdk14.home>/usr/local/j2sdk1.4.2_19</jdk14.home>
     </properties>
     <profiles>
@@ -403,6 +403,20 @@
                             </tasks>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>release-notes-changelog-copy</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <property name="dir" value="${basedir}/target" />
+                                <copy file="target/ReleaseNotes.vm" tofile="target/ReleaseNotes.txt" />
+                                <copy file="target/ChangeLog.vm" tofile="target/ChangeLog.txt" />
+                            </tasks>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -490,7 +504,7 @@
                 <artifactId>wagon-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>upload</id>
+                        <id>upload-all</id>
                         <goals>
                             <goal>upload</goal>
                         </goals>
@@ -498,8 +512,34 @@
                         <configuration>
                             <serverId>ini4j-upload</serverId>
                             <fromDir>${project.build.directory}</fromDir>
-                            <includes>${project.build.finalName}-src*,${project.build.finalName}-bin*,${project.build.finalName}-all*</includes>
-                            <url>${upload.url}</url>
+                            <includes>${project.build.finalName}-all.zip,ReleaseNotest.txt</includes>
+                            <url>${upload.url}/ini4j/${project.version}</url>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>upload-src</id>
+                        <goals>
+                            <goal>upload</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <serverId>ini4j-upload</serverId>
+                            <fromDir>${project.build.directory}</fromDir>
+                            <includes>${project.build.finalName}-src.zip,ReleaseNotest.txt</includes>
+                            <url>${upload.url}/ini4j-src/${project.version}</url>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>upload-bin</id>
+                        <goals>
+                            <goal>upload</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <serverId>ini4j-upload</serverId>
+                            <fromDir>${project.build.directory}</fromDir>
+                            <includes>${project.build.finalName}-bin.zip,ReleaseNotest.txt</includes>
+                            <url>${upload.url}/ini4j-bin/${project.version}</url>
                         </configuration>
                     </execution>
                 </executions>
