@@ -21,8 +21,30 @@
     <title>[ini4j] Changes</title>
   </properties>
   <body>
-    <release version="0.5.2" description="?">
-      <action type="fix" dev="szkiba">
+    <release version="0.5.2" date="2010-04-01" description="Bugfix release">
+      <action type="fix" dev="szkiba" issue="2908623" due-to="Markus">
+      Backport to java 1.4 fixed. There were a lot of problem. Now all junit tests
+      are run both on current java and on 1.4 jvm. This way backported version
+      is junit tested (on real 1.4 jvm) as the normal version.
+      </action>
+      <action type="fix" dev="szkiba" issue="2778337" >
+      Removed UnicodeLittle/UnicodeBig charset references because these break
+      the backported version.
+      </action>
+      <action type="fix" dev="szkiba" issue="2866427" due-to="Lilian Valero">
+      Add BOM (byte order mark) support. Workaround on java BOM/UTF8 problem.
+      </action>
+      <action type="fix" dev="szkiba" issue="2817399" >
+      Fixed typo in Options Tutorial.
+      </action>
+      <action type="fix" dev="szkiba" issue="2817403" dua-to="Gary Pampara">
+      Multiply macro substituton per value fixed. There were a bug in
+      variable/macro substitution if more than one macro used in one option value.
+      </action>
+      <action type="fix" dev="szkiba" issue="2971952" due-to="René Krell">
+      Configurable comment handling. The header comment can be disable/enable via
+      Config.setHeaderComment(boolean). Also the whole comment handling can be
+      disable/enable via Config.setComment(boolean).
       </action>
     </release>
     <release version="0.5.1" date="2009-04-08" description="Maintenance release">
@@ -343,7 +365,7 @@
       </action>
     </release>
 
-    <release version="0.10" date="2005-01-30" description="First release">
+    <release version="0.1.0" date="2005-01-30" description="First release">
       <action type="add" dev="szkiba">
       Initial version
       </action>
