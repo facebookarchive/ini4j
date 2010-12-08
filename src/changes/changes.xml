@@ -21,6 +21,15 @@
     <title>[ini4j] Changes</title>
   </properties>
   <body>
+    <release version="0.5.3" date="2010-12-13" description="Bugfix release">
+      <action type="fix" dev="szkiba" issue="3038645" >
+      Fix backslash at end of line problem. Normaly backslash at end of line mean
+      line concatenation. Unfortunetly when escaping disabled, this feature stil remain active.
+      Now there is a new config option: escapeNewline. When this option true, it disables
+      line concatenation. For Wini this otions set true by default.
+      </action>
+    </release>
+
     <release version="0.5.2" date="2010-04-01" description="Bugfix release">
       <action type="fix" dev="szkiba" issue="2908623" due-to="Markus">
       Backport to java 1.4 fixed. There were a lot of problem. Now all junit tests
