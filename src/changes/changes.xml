@@ -28,6 +28,10 @@
       Now there is a new config option: escapeNewline. When this option true, it disables
       line concatenation. For Wini this otions set true by default.
       </action>
+      <action type="add" dev="szkiba" issue="3047041">
+      Added support for default value in get and fetch methods. As last parameter, caller
+      may provide default value for missing options.
+      </action>
     </release>
 
     <release version="0.5.2" date="2010-04-01" description="Bugfix release">
