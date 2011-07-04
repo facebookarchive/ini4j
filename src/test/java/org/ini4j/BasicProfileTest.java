@@ -45,7 +45,7 @@ public class BasicProfileTest extends Ini4jCase
     /*
      * thanx to Gary Pampara for bug report
      */
-    @Test public void bug_2817403() throws Exception
+    @Test public void test_bug_2817403() throws Exception
     {
         BasicProfile prof = new BasicProfile();
         Profile.Section sec = prof.add("section");

@@ -31,7 +31,7 @@ public class BasicOptionMap extends CommonMultiMap<String, String> implements Op
     private static final String ENVIRONMENT_PREFIX = "@env/";
     private static final int SYSTEM_PROPERTY_PREFIX_LEN = SYSTEM_PROPERTY_PREFIX.length();
     private static final int ENVIRONMENT_PREFIX_LEN = ENVIRONMENT_PREFIX.length();
-    private static final Pattern EXPRESSION = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[]+)(\\[([0-9]+)\\])?)\\}");
+    private static final Pattern EXPRESSION = Pattern.compile("(?<!\\\\)\\$\\{(([^\\[\\}]+)(\\[([0-9]+)\\])?)\\}");
     private static final int G_OPTION = 2;
     private static final int G_INDEX = 4;
     private static final long serialVersionUID = 325469712293707584L;

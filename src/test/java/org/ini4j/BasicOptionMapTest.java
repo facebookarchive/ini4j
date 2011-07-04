@@ -43,6 +43,22 @@ public class BasicOptionMapTest extends Ini4jCase
         _map.putAll(Helper.newDwarfsOpt());
     }
 
+    @Test public void test_bug_2817403() throws Exception
+    {
+        OptionMap map = new BasicOptionMap();
+
+        map.add("player.name", "Joe");
+        map.add("player.greeting", "Hi ${player.name}!");
+        map.add("player.domain", "foo.bar");
+        map.add("player.email", "${player.name}@${player.domain}");
+
+        //
+        assertEquals("Joe", map.fetch("player.name"));
+        assertEquals("Hi Joe!", map.fetch("player.greeting"));
+        assertEquals("foo.bar", map.fetch("player.domain"));
+        assertEquals("Joe@foo.bar", map.fetch("player.email"));
+    }
+
     @Test public void testAddPutNullAndString()
     {
         OptionMap map = new BasicOptionMap();

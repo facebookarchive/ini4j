@@ -21,7 +21,7 @@
     <title>[ini4j] Changes</title>
   </properties>
   <body>
-    <release version="0.5.3" date="2010-12-13" description="Bugfix release">
+    <release version="0.5.4" date="2011-12-13" description="Bugfix release">
       <action type="fix" dev="szkiba" issue="3038645" >
       Fix backslash at end of line problem. Normaly backslash at end of line mean
       line concatenation. Unfortunetly when escaping disabled, this feature stil remain active.
@@ -32,9 +32,6 @@
       Added support for default value in get and fetch methods. As last parameter, caller
       may provide default value for missing options.
       </action>
-    </release>
-
-    <release version="0.5.2" date="2010-04-01" description="Bugfix release">
       <action type="fix" dev="szkiba" issue="2908623" due-to="Markus">
       Backport to java 1.4 fixed. There were a lot of problem. Now all junit tests
       are run both on current java and on 1.4 jvm. This way backported version
