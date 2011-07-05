@@ -16,17 +16,17 @@
         <repository>
             <id>ini4j-release</id>
             <name>[ini4j] releases on SourceForge</name>
-            <url>scp://shell.sourceforge.net/home/groups/i/in/ini4j/repository/release</url>
+            <url>scp://shell.sourceforge.net/home/project-web/ini4j/repository/release</url>
         </repository>
         <snapshotRepository>
             <id>ini4j-snapshot</id>
             <name>[ini4j] snapshots on SourceForge</name>
-            <url>scp://shell.sourceforge.net/home/groups/i/in/ini4j/repository/snapshot</url>
+            <url>scp://shell.sourceforge.net/home/project-web/ini4j/repository/snapshot</url>
         </snapshotRepository>
         <site>
             <id>ini4j-site</id>
             <name>[ini4j] site on SourceForge</name>
-            <url>scp://shell.sourceforge.net/home/groups/i/in/ini4j/htdocs</url>
+            <url>scp://shell.sourceforge.net/home/project-web/ini4j/htdocs</url>
         </site>
     </distributionManagement>
     <issueManagement>
@@ -91,7 +91,7 @@
         </dependency>
     </dependencies>
     <properties>
-        <upload.url>scp://shell.sourceforge.net//home/frs/project/i/in/ini4j</upload.url>
+        <upload.url>scp://shell.sourceforge.net/home/frs/project/i/in/ini4j</upload.url>
         <jdk14.home>/usr/local/j2sdk1.4.2_19</jdk14.home>
     </properties>
     <profiles>
