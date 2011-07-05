@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ini4j</groupId>
     <artifactId>ini4j</artifactId>
-    <version>0.5.2-SNAPSHOT</version>
+    <version>0.5.2</version>
     <name>ini4j</name>
     <description>Java API for handling configuration files in Windows .ini format. The library includes its own Map based API, Java Preferences API and Java Beans API for handling .ini files. Additionally, the library includes a feature rich (variable/macro substitution, multiply property values, etc) java.util.Properties replacement.</description>
     <packaging>jar</packaging>
     <url>http://www.ini4j.org</url>
     <scm>
-        <connection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j/trunk</connection>
-        <developerConnection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j/trunk</developerConnection>
+        <connection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j/tags/ini4j-0.5.2</connection>
+        <developerConnection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j/tags/ini4j-0.5.2</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
@@ -289,21 +289,21 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <tasks if="jdk14.home" unless="skip_jdk14_tests" >
+                                    <tasks if="jdk14.home" unless="skip_jdk14_tests">
                                         <junit printsummary="on" haltonfailure="true" showoutput="true" fork="yes" forkMode="perBatch" jvm="${jdk14.home}/bin/java">
-                                            <sysproperty key="java.util.prefs.PreferencesFactory" value="org.ini4j.IniPreferencesFactory"/>
-                                            <sysproperty key="org.ini4j.prefs.user" value="org/ini4j/sample/dwarfs.ini"/>
-                                            <sysproperty key="org.ini4j.prefs.system" value="org/ini4j/sample/dwarfs.ini"/>
-                                            <sysproperty key="basedir" value="${basedir}"/>
+                                            <sysproperty key="java.util.prefs.PreferencesFactory" value="org.ini4j.IniPreferencesFactory" />
+                                            <sysproperty key="org.ini4j.prefs.user" value="org/ini4j/sample/dwarfs.ini" />
+                                            <sysproperty key="org.ini4j.prefs.system" value="org/ini4j/sample/dwarfs.ini" />
+                                            <sysproperty key="basedir" value="${basedir}" />
                                             <classpath>
-                                                <pathelement location="${basedir}/target/test-classes-jdk14"/>
-                                                <pathelement location="${basedir}/target/classes-jdk14"/>
+                                                <pathelement location="${basedir}/target/test-classes-jdk14" />
+                                                <pathelement location="${basedir}/target/classes-jdk14" />
                                             </classpath>
                                             <formatter type="plain" usefile="false" />
                                             <batchtest>
                                                 <fileset dir="${basedir}/src/test/java">
-                                                    <include name="**/*Test.java"/>
-                                                    <exclude name="**/SampleRunnerTest.java"/>
+                                                    <include name="**/*Test.java" />
+                                                    <exclude name="**/SampleRunnerTest.java" />
                                                 </fileset>
                                             </batchtest>
                                         </junit>
