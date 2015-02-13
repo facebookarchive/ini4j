@@ -53,7 +53,7 @@ public class IniFormatter extends AbstractFormatter implements IniHandler
         if (!getConfig().isGlobalSection() || !sectionName.equals(getConfig().getGlobalSectionName()))
         {
             getOutput().print(IniParser.SECTION_BEGIN);
-            getOutput().print(escapeFilter(sectionName));
+            getOutput().print(escapeKey(sectionName));
             getOutput().print(IniParser.SECTION_END);
             getOutput().print(getConfig().getLineSeparator());
         }

@@ -87,8 +87,8 @@ abstract class AbstractParser
         }
         else
         {
-            name = unescapeFilter(line.substring(0, idx)).trim();
-            value = unescapeFilter(line.substring(idx + 1)).trim();
+            name = unescapeKey(line.substring(0, idx)).trim();
+            value = unescapeValue(line.substring(idx + 1)).trim();
         }
 
         if (name.length() == 0)
@@ -104,9 +104,14 @@ abstract class AbstractParser
         handler.handleOption(name, value);
     }
 
-    String unescapeFilter(String line)
+    String unescapeKey(String line)
     {
         return getConfig().isEscape() ? EscapeTool.getInstance().unescape(line) : line;
+    }
+
+    String unescapeValue(String line)
+    {
+        return (getConfig().isEscape() && !getConfig().isEscapeKeyOnly()) ? EscapeTool.getInstance().unescape(line) : line;
     }
 
     private int indexOfOperator(String line)
@@ -117,10 +122,22 @@ abstract class AbstractParser
         {
             int index = line.indexOf(c);
 
-            if ((index >= 0) && ((idx == -1) || (index < idx)))
+            while ((index >= 0))
             {
-                idx = index;
+                if ((index >= 0) && ((index == 0) || (line.charAt(index - 1) != '\\')) && ((idx == -1) || (index < idx)))
+                {
+                    idx = index;
+
+                    break;
+                }
+
+                index = (index == (line.length() - 1)) ? -1 : line.indexOf(c, index + 1);
             }
+
+            //if ((index >= 0) && ((index == 0) || (line.charAt(index - 1) != '\\')) && ((idx == -1) || (index < idx)))
+            // {
+            //     idx = index;
+            // }
         }
 
         return idx;

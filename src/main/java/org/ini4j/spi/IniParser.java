@@ -119,7 +119,7 @@ public class IniParser extends AbstractParser
             parseError(line, source.getLineNumber());
         }
 
-        sectionName = unescapeFilter(line.substring(1, line.length() - 1).trim());
+        sectionName = unescapeKey(line.substring(1, line.length() - 1).trim());
         if ((sectionName.length() == 0) && !getConfig().isUnnamedSection())
         {
             parseError(line, source.getLineNumber());

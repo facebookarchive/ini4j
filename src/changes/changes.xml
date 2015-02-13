@@ -21,6 +21,16 @@
     <title>[ini4j] Changes</title>
   </properties>
   <body>
+    <release version="0.5.3" date="2015-02-13" description="Bugfix release">
+      <action type="fix" dev="szkiba" >
+      Fix operator (':' or '=') in property/option name bug. Operators should be
+      escape in names both in parser and formatter.
+      </action>
+      <action type="add" dev="szkiba" >
+      New config option: escapeKeyOnly. When escape config option true, the escapeKeyOnly
+      config option can use to disable escaping value.
+      </action>
+    </release>
     <release version="0.5.2" date="2011-12-13" description="Bugfix release">
       <action type="fix" dev="szkiba" issue="3038645" >
       Fix backslash at end of line problem. Normaly backslash at end of line mean

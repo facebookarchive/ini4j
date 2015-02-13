@@ -40,6 +40,82 @@ public class OptionsFormatterTest extends Ini4jCase
 {
     private static final String NL = System.getProperty("line.separator");
     private static final String DUMMY = "dummy";
+    private static final String ESCAPE_KEY_UNESCAPED = "apple:orange=lemon";
+    private static final String ESCAPE_KEY_ESCAPED = "apple\\:orange\\=lemon";
+    private static final String ESCAPE_VALUE_UNESCAPED = "http://foo.bar?parameter=1";
+    private static final String ESCAPE_VALUE_ESCAPED = "http\\://foo.bar?parameter\\=1";
+
+    @Test public void testEscape() throws Exception
+    {
+        Config cfg = new Config();
+
+        cfg.setStrictOperator(false);
+        cfg.setEscape(true);
+        cfg.setEscapeKeyOnly(false);
+        Options opts = new Options();
+
+        opts.setConfig(cfg);
+        opts.put(ESCAPE_KEY_UNESCAPED, ESCAPE_VALUE_UNESCAPED);
+        opts.put(Dwarf.PROP_WEIGHT, null);
+        StringWriter writer = new StringWriter();
+
+        opts.store(writer);
+        StringBuilder exp = new StringBuilder();
+
+        exp.append(ESCAPE_KEY_ESCAPED);
+        exp.append(" = ");
+        exp.append(ESCAPE_VALUE_ESCAPED);
+        exp.append(NL);
+        assertEquals(exp.toString(), writer.toString());
+    }
+
+    @Test public void testEscapeFalse() throws Exception
+    {
+        Config cfg = new Config();
+
+        cfg.setStrictOperator(false);
+        cfg.setEscape(false);
+        cfg.setEscapeKeyOnly(false);
+        Options opts = new Options();
+
+        opts.setConfig(cfg);
+        opts.put(ESCAPE_KEY_UNESCAPED, ESCAPE_VALUE_UNESCAPED);
+        opts.put(Dwarf.PROP_WEIGHT, null);
+        StringWriter writer = new StringWriter();
+
+        opts.store(writer);
+        StringBuilder exp = new StringBuilder();
+
+        exp.append(ESCAPE_KEY_UNESCAPED);
+        exp.append(" = ");
+        exp.append(ESCAPE_VALUE_UNESCAPED);
+        exp.append(NL);
+        assertEquals(exp.toString(), writer.toString());
+    }
+
+    @Test public void testEscapeKeyOnly() throws Exception
+    {
+        Config cfg = new Config();
+
+        cfg.setStrictOperator(false);
+        cfg.setEscape(true);
+        cfg.setEscapeKeyOnly(true);
+        Options opts = new Options();
+
+        opts.setConfig(cfg);
+        opts.put(ESCAPE_KEY_UNESCAPED, ESCAPE_VALUE_UNESCAPED);
+        opts.put(Dwarf.PROP_WEIGHT, null);
+        StringWriter writer = new StringWriter();
+
+        opts.store(writer);
+        StringBuilder exp = new StringBuilder();
+
+        exp.append(ESCAPE_KEY_ESCAPED);
+        exp.append(" = ");
+        exp.append(ESCAPE_VALUE_UNESCAPED);
+        exp.append(NL);
+        assertEquals(exp.toString(), writer.toString());
+    }
 
     @Test public void testFormat() throws Exception
     {
@@ -195,6 +271,78 @@ public class OptionsFormatterTest extends Ini4jCase
         exp.append(NL);
         exp.append(Dwarf.PROP_WEIGHT);
         exp.append('=');
+        exp.append(NL);
+        assertEquals(exp.toString(), writer.toString());
+    }
+
+    @Test public void testWithStrictOperatorEscape() throws Exception
+    {
+        Config cfg = new Config();
+
+        cfg.setStrictOperator(true);
+        cfg.setEscape(true);
+        cfg.setEscapeKeyOnly(false);
+        Options opts = new Options();
+
+        opts.setConfig(cfg);
+        opts.put(ESCAPE_KEY_UNESCAPED, ESCAPE_VALUE_UNESCAPED);
+        opts.put(Dwarf.PROP_WEIGHT, null);
+        StringWriter writer = new StringWriter();
+
+        opts.store(writer);
+        StringBuilder exp = new StringBuilder();
+
+        exp.append(ESCAPE_KEY_ESCAPED);
+        exp.append('=');
+        exp.append(ESCAPE_VALUE_ESCAPED);
+        exp.append(NL);
+        assertEquals(exp.toString(), writer.toString());
+    }
+
+    @Test public void testWithStrictOperatorEscapeFalse() throws Exception
+    {
+        Config cfg = new Config();
+
+        cfg.setStrictOperator(true);
+        cfg.setEscape(false);
+        cfg.setEscapeKeyOnly(false);
+        Options opts = new Options();
+
+        opts.setConfig(cfg);
+        opts.put(ESCAPE_KEY_UNESCAPED, ESCAPE_VALUE_UNESCAPED);
+        opts.put(Dwarf.PROP_WEIGHT, null);
+        StringWriter writer = new StringWriter();
+
+        opts.store(writer);
+        StringBuilder exp = new StringBuilder();
+
+        exp.append(ESCAPE_KEY_UNESCAPED);
+        exp.append('=');
+        exp.append(ESCAPE_VALUE_UNESCAPED);
+        exp.append(NL);
+        assertEquals(exp.toString(), writer.toString());
+    }
+
+    @Test public void testWithStrictOperatorEscapeKeyOnly() throws Exception
+    {
+        Config cfg = new Config();
+
+        cfg.setStrictOperator(true);
+        cfg.setEscape(true);
+        cfg.setEscapeKeyOnly(true);
+        Options opts = new Options();
+
+        opts.setConfig(cfg);
+        opts.put(ESCAPE_KEY_UNESCAPED, ESCAPE_VALUE_UNESCAPED);
+        opts.put(Dwarf.PROP_WEIGHT, null);
+        StringWriter writer = new StringWriter();
+
+        opts.store(writer);
+        StringBuilder exp = new StringBuilder();
+
+        exp.append(ESCAPE_KEY_ESCAPED);
+        exp.append('=');
+        exp.append(ESCAPE_VALUE_UNESCAPED);
         exp.append(NL);
         assertEquals(exp.toString(), writer.toString());
     }

@@ -81,6 +81,10 @@ public class OptionsParserTest extends Ini4jCase
         EasyMock.verify(handler);
     }
 
+    @Test public void testEscape() throws Exception
+    {
+    }
+
     @Test public void testNewInstance() throws Exception
     {
         Config cfg = new Config();

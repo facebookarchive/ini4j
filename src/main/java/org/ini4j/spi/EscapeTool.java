@@ -17,8 +17,8 @@ package org.ini4j.spi;
 
 public class EscapeTool
 {
-    private static final String ESCAPE_LETTERS = "\\tnfbr";
-    private static final String ESCAPEABLE_CHARS = "\\\t\n\f\b\r";
+    private static final String ESCAPE_LETTERS = "\\tnfbr:=";
+    private static final String ESCAPEABLE_CHARS = "\\\t\n\f\b\r:=";
     private static final char ESCAPE_CHAR = '\\';
     static final char[] HEX = "0123456789abcdef".toCharArray();
     private static final EscapeTool INSTANCE = ServiceFinder.findService(EscapeTool.class);

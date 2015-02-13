@@ -92,7 +92,8 @@
     </dependencies>
     <properties>
         <upload.url>scp://shell.sourceforge.net/home/frs/project/i/in/ini4j</upload.url>
-        <jdk14.home>/usr/local/j2sdk1.4.2_19</jdk14.home>
+        <check.skip>true</check.skip>
+        <!-- <jdk14.home>/usr/local/j2sdk1.4.2_19</jdk14.home> -->
     </properties>
     <profiles>
         <profile>
