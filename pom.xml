@@ -9,8 +9,8 @@
     <packaging>jar</packaging>
     <url>http://www.ini4j.org</url>
     <scm>
-        <connection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j/tags/ini4j-0.5.3</connection>
-        <developerConnection>scm:svn:https://ini4j.svn.sourceforge.net/svnroot/ini4j/tags/ini4j-0.5.3</developerConnection>
+        <connection>scm:svn+ssh://svn.code.sf.net/p/ini4j/code/trunk</connection>
+        <developerConnection>scm:svn+ssh://svn.code.sf.net/p/ini4j/code/trunk</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
