@@ -21,6 +21,11 @@
     <title>[ini4j] Changes</title>
   </properties>
   <body>
+    <release version="0.5.4" date="2015-02-16" description="Bugfix release">
+      <action type="fix" dev="szkiba" >
+      Update release part of build process doue to maven central repo policy changes.
+      </action>
+    </release>
     <release version="0.5.3" date="2015-02-13" description="Bugfix release">
       <action type="fix" dev="szkiba" >
       Fix operator (':' or '=') in property/option name bug. Operators should be

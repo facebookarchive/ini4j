@@ -15,13 +15,13 @@
     <distributionManagement>
         <repository>
             <id>ini4j-release</id>
-            <name>[ini4j] releases on SourceForge</name>
-            <url>scpexe://shell.sourceforge.net/home/project-web/ini4j/repository/release</url>
+            <name>[ini4j] releases on OSSRH</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
         <snapshotRepository>
             <id>ini4j-snapshot</id>
-            <name>[ini4j] snapshots on SourceForge</name>
-            <url>scpexe://shell.sourceforge.net/home/project-web/ini4j/repository/snapshot</url>
+            <name>[ini4j] snapshots on OSSRH</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <site>
             <id>ini4j-site</id>
@@ -91,7 +91,7 @@
         </dependency>
     </dependencies>
     <properties>
-        <upload.url>scpexe://shell.sourceforge.net/home/frs/project/i/in/ini4j</upload.url>
+        <upload.url>scpexe://shell.sourceforge.net/home/frs/project/ini4j</upload.url>
         <check.skip>true</check.skip>
         <!-- <jdk14.home>/usr/local/j2sdk1.4.2_19</jdk14.home> -->
     </properties>
@@ -344,14 +344,39 @@
     </profiles>
     <build>
         <extensions>
-          <!-- Enabling the use of SSH -->
-          <extension>
-            <groupId>org.apache.maven.wagon</groupId>
-            <artifactId>wagon-ssh-external</artifactId>
-            <version>1.0-beta-6</version>
-          </extension>
+            <!-- Enabling the use of SSH -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh-external</artifactId>
+                <version>1.0-beta-6</version>
+            </extension>
         </extensions>		
         <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
