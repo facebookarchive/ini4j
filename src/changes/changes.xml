@@ -21,9 +21,14 @@
     <title>[ini4j] Changes</title>
   </properties>
   <body>
+    <release version="0.5.5" date="2015-02-17" description="Bugfix release">
+      <action type="fix" dev="szkiba" >
+      Fix scm url in pom.xml, to allow deploy to central maven repo.
+      </action>
+    </release>
     <release version="0.5.4" date="2015-02-16" description="Bugfix release">
       <action type="fix" dev="szkiba" >
-      Update release part of build process doue to maven central repo policy changes.
+      Update release part of build process due to maven central repo policy changes.
       </action>
     </release>
     <release version="0.5.3" date="2015-02-13" description="Bugfix release">

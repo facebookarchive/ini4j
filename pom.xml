@@ -11,6 +11,7 @@
     <scm>
         <connection>scm:svn:svn+ssh://szkiba@svn.code.sf.net/p/ini4j/code/trunk</connection>
         <developerConnection>scm:svn:svn+ssh://szkiba@svn.code.sf.net/p/ini4j/code/trunk</developerConnection>
+        <url>https://svn.code.sf.net/p/ini4j/code/trunk/</url>
     </scm>
     <distributionManagement>
         <repository>
