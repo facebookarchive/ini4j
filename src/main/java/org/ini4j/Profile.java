@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
  * Copyright 2005,2009 Ivan SZKIBA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +44,7 @@ public interface Profile extends MultiMap<String, Profile.Section>, CommentedMap
 
     Section remove(Profile.Section section);
 
-    String remove(Object sectionName, Object optionName);
+    String removeValue(Object sectionName, Object optionName);
 
     interface Section extends OptionMap
     {

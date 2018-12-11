@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
  * Copyright 2005,2009 Ivan SZKIBA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -86,10 +87,10 @@ public class BasicProfileTest extends Ini4jCase
         prof.add(SECTION, Dwarf.PROP_FORTUNE_NUMBER, DwarfsData.sneezy.fortuneNumber[2]);
         prof.add(SECTION, Dwarf.PROP_FORTUNE_NUMBER, DwarfsData.sneezy.fortuneNumber[3]);
         Helper.assertEquals(DwarfsData.sneezy, prof.get(SECTION).as(Dwarf.class));
-        assertNotNull(prof.remove(SECTION, Dwarf.PROP_FORTUNE_NUMBER));
+        assertNotNull(prof.removeValue(SECTION, Dwarf.PROP_FORTUNE_NUMBER));
         assertEquals(0, prof.get(SECTION).length(Dwarf.PROP_FORTUNE_NUMBER));
         assertNotNull(prof.remove(SECTION));
-        assertNull(prof.remove(SECTION, Dwarf.PROP_FORTUNE_NUMBER));
+        assertNull(prof.removeValue(SECTION, Dwarf.PROP_FORTUNE_NUMBER));
     }
 
     @Test public void testFirstUpper()
