@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
  * Copyright 2005,2009 Ivan SZKIBA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -135,7 +136,7 @@ public class RegTest extends Ini4jCase
 
         Reg reg = new Reg();
 
-        reg.exec(new String[] { "/bin/true" });
+        reg.exec(new String[] { "true" });
         try
         {
             reg.exec(new String[] { "/bin/ls", "no such file" });
