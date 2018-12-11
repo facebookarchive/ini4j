@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
  * Copyright 2005,2009 Ivan SZKIBA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -68,7 +69,7 @@ public class OptionsParser extends AbstractParser
         handler.startOptions();
         for (String line = source.readLine(); line != null; line = source.readLine())
         {
-            parseOptionLine(line, handler, source.getLineNumber());
+            parseOptionLine(line, handler, source.getUrl(), source.getLineNumber());
         }
 
         handler.endOptions();

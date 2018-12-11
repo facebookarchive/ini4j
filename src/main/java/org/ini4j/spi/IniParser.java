@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
  * Copyright 2005,2009 Ivan SZKIBA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -94,11 +95,11 @@ public class IniParser extends AbstractParser
                     }
                     else
                     {
-                        parseError(line, source.getLineNumber());
+                        parseError(line, source.getUrl(), source.getLineNumber());
                     }
                 }
 
-                parseOptionLine(line, handler, source.getLineNumber());
+                parseOptionLine(line, handler, source.getUrl(), source.getLineNumber());
             }
         }
 
@@ -116,13 +117,13 @@ public class IniParser extends AbstractParser
 
         if (line.charAt(line.length() - 1) != SECTION_END)
         {
-            parseError(line, source.getLineNumber());
+            parseError(line, source.getUrl(), source.getLineNumber());
         }
 
         sectionName = unescapeKey(line.substring(1, line.length() - 1).trim());
         if ((sectionName.length() == 0) && !getConfig().isUnnamedSection())
         {
-            parseError(line, source.getLineNumber());
+            parseError(line, source.getUrl(), source.getLineNumber());
         }
 
         if (getConfig().isLowerCaseSection())

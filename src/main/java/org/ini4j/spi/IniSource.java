@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
  * Copyright 2005,2009 Ivan SZKIBA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,6 +55,16 @@ class IniSource
     {
         this(new UnicodeInputStreamReader(input.openStream(), config.getFileEncoding()), handler, comments, config);
         _base = input;
+    }
+
+    URL getUrl() {
+        if (_chain != null) {
+            return _chain.getUrl();
+        } else if (_base != null) {
+            return _base;
+        } else {
+            return null;
+        }
     }
 
     int getLineNumber()

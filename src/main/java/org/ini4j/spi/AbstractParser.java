@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
  * Copyright 2005,2009 Ivan SZKIBA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +23,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 
+import java.net.URISyntaxException;
 import java.net.URL;
 
+import java.nio.file.Paths;
 import java.util.Locale;
 
 abstract class AbstractParser
@@ -48,9 +51,20 @@ abstract class AbstractParser
         _config = value;
     }
 
-    protected void parseError(String line, int lineNumber) throws InvalidFileFormatException
+    protected void parseError(String line, URL url, int lineNumber) throws InvalidFileFormatException
     {
-        throw new InvalidFileFormatException("parse error (at line: " + lineNumber + "): " + line);
+        String message;
+        if(url == null) {
+            message = String.format("parse error (at line: %d): %s", lineNumber, line);
+        } else {
+            try {
+                // Handle windows paths, without this conversion, they look like /C:/foo/bar
+                message = String.format("parse error (in %s at line %d): %s", Paths.get(url.toURI()), lineNumber, line);
+            } catch (URISyntaxException e) {
+                message = String.format("parse error (in %s at line %d): %s", url, lineNumber, line);
+            }
+        }
+        throw new InvalidFileFormatException(message);
     }
 
     IniSource newIniSource(InputStream input, HandlerBase handler)
@@ -68,7 +82,7 @@ abstract class AbstractParser
         return new IniSource(input, handler, _comments, getConfig());
     }
 
-    void parseOptionLine(String line, HandlerBase handler, int lineNumber) throws InvalidFileFormatException
+    void parseOptionLine(String line, HandlerBase handler, URL url, int lineNumber) throws InvalidFileFormatException
     {
         int idx = indexOfOperator(line);
         String name = null;
@@ -82,7 +96,7 @@ abstract class AbstractParser
             }
             else
             {
-                parseError(line, lineNumber);
+                parseError(line, url, lineNumber);
             }
         }
         else
@@ -93,7 +107,7 @@ abstract class AbstractParser
 
         if (name.length() == 0)
         {
-            parseError(line, lineNumber);
+            parseError(line, url, lineNumber);
         }
 
         if (getConfig().isLowerCaseOption())
